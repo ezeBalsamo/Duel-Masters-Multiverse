@@ -44,12 +44,5 @@ BaselineOfDuelMastersPlays >> setUpPackages: spec [
 		group: 'Deployment' with: 'Duel-Masters-Plays-Model';
 		package: 'Duel-Masters-Plays-Model-Tests'
 			with: [ spec requires: #('Duel-Masters-Plays-Model' 'Dependent-SUnit-Extensions') ];
-		group: 'Tests' with: 'Duel-Masters-Plays-Model-Tests'.
-
-	spec
-		package: 'Duel-Masters-Plays-SUnit-Model' with: [ spec requires: 'Superluminal-SUnit' ];
-		group: 'Dependent-SUnit-Extensions' with: 'Duel-Masters-Plays-SUnit-Model';
-		package: 'Duel-Masters-Plays-SUnit-Model-Tests'
-			with: [ spec requires: 'Duel-Masters-Plays-SUnit-Model' ];
-		group: 'Tests' with: 'Duel-Masters-Plays-SUnit-Model-Tests'
+		group: 'Tests' with: 'Duel-Masters-Plays-Model-Tests'
 ]
