@@ -6,10 +6,10 @@ You can load **Duel Masters Plays** evaluating:
 ```smalltalk
 Metacello new
 	baseline: 'DuelMastersPlays';
-	repository: 'github://ezeBalsamo/Duel-Masters-Plays:master/source';
+	repository: 'github://ezeBalsamo/Duel-Masters-Plays:release-candidate/source';
 	load.
 ```
->  Change `master` to some released version if you want a pinned version
+>  Change `release-candidate` to some released version if you want a pinned version
 
 ## Using as dependency
 
