@@ -13,8 +13,8 @@
 </p>
 
 [![GitHub release](https://img.shields.io/github/release/ezeBalsamo/Duel-Masters-Plays.svg)](https://github.com/ezeBalsamo/Duel-Masters-Plays/releases/latest)
-[![Build Status](https://github.com/ezeBalsamo/Duel-Masters-Plays/workflows/Build/badge.svg?branch=master)](https://github.com/ezeBalsamo/Duel-Masters-Plays/actions?query=workflow%3ABuild)
-[![Coverage Status](https://codecov.io/github/ezeBalsamo/Duel-Masters-Plays/coverage.svg?branch=master)](https://codecov.io/gh/ezeBalsamo/Duel-Masters-Plays/branch/master)
+[![Build Status](https://github.com/ezeBalsamo/Duel-Masters-Plays/workflows/Build/badge.svg?branch=release-candidate)](https://github.com/ezeBalsamo/Duel-Masters-Plays/actions?query=workflow%3ABuild)
+[![Coverage Status](https://codecov.io/github/ezeBalsamo/Duel-Masters-Plays/coverage.svg?branch=release-candidate)](https://codecov.io/gh/ezeBalsamo/Duel-Masters-Plays/branch/release-candidate)
 [![Pharo 7.0](https://img.shields.io/badge/Pharo-7.0-informational)](https://pharo.org)
 [![Pharo 8.0](https://img.shields.io/badge/Pharo-8.0-informational)](https://pharo.org)
 
