@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/logos/128x128.png">
  <h1 align="center">Duel Masters Plays</h1>
   <p align="center">
-    What is this thing? “the motto”, the goals, the vision.
+    Duel Masters Plays Global!
     <br>
     <a href="docs/"><strong>Explore the docs »</strong></a>
     <br>
@@ -19,7 +19,7 @@
 [![Pharo 8.0](https://img.shields.io/badge/Pharo-8.0-informational)](https://pharo.org)
 
 
-Why would I care about this thing? When to use it? For whom is it designed? When not to use it?
+The idea is not to translate the existing Duel Masters PLAY'S game, developed by Takara Tomy and DeNA, but to complement it so that most of us can have much more fun with it!
 
 ## License
 
