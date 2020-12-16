@@ -30,19 +30,17 @@ BaselineOfDuelMastersPlays >> setUpDependencies: spec [
 
 	spec
 		baseline: 'Superluminal' with: [ spec repository: 'github://ba-st/Superluminal:v1.2.0/source' ];
-		project: 'Superluminal-Deployment' copyFrom: 'Superluminal' with: [ spec loads: 'Deployment' ];
-		project: 'Superluminal-SUnit'
-			copyFrom: 'Superluminal'
-			with: [ spec loads: 'Dependent-SUnit-Extensions' ]
+		project: 'Superluminal-Deployment-Core' copyFrom: 'Superluminal' with: [ spec loads: 'Core' ];
+		project: 'Superluminal-Tests' copyFrom: 'Superluminal' with: [ spec loads: 'Tests' ]
 ]
 
 { #category : #accessing }
 BaselineOfDuelMastersPlays >> setUpPackages: spec [
 
 	spec
-		package: 'Duel-Masters-Plays-Model' with: [ spec requires: 'Superluminal-Deployment' ];
+		package: 'Duel-Masters-Plays-Model' with: [ spec requires: 'Superluminal-Deployment-Core' ];
 		group: 'Deployment' with: 'Duel-Masters-Plays-Model';
 		package: 'Duel-Masters-Plays-Model-Tests'
-			with: [ spec requires: #('Duel-Masters-Plays-Model' 'Dependent-SUnit-Extensions') ];
+			with: [ spec requires: #('Duel-Masters-Plays-Model' 'Superluminal-Tests') ];
 		group: 'Tests' with: 'Duel-Masters-Plays-Model-Tests'
 ]
