@@ -2,18 +2,11 @@ Class {
 	#name : #WikitextTemplate,
 	#superclass : #Object,
 	#instVars : [
-		'templateName',
-		'wikitextArguments'
+		'wikitextArguments',
+		'name'
 	],
 	#category : #'Duel-Masters-Plays-Model'
 }
-
-{ #category : #asserting }
-WikitextTemplate class >> assertIsNotEmpty: aWikitextArgumentCollection [
-
-	aWikitextArgumentCollection
-		ifEmpty: [ InstanceCreationFailed signal: 'The Template must have at least one argument.' ]
-]
 
 { #category : #'instance creation' }
 WikitextTemplate class >> named: aTemplateName withArgument: aWikitextArgument [
@@ -24,29 +17,48 @@ WikitextTemplate class >> named: aTemplateName withArgument: aWikitextArgument [
 { #category : #'instance creation' }
 WikitextTemplate class >> named: aTemplateName withArguments: aWikitextArgumentCollection [
 
-	self assertIsNotEmpty: aWikitextArgumentCollection.
-
 	^ self new initializeNamed: aTemplateName withArguments: aWikitextArgumentCollection
 ]
 
-{ #category : #'accessing-testing' }
-WikitextTemplate >> hasArgumentNamed: aPotentialArgumentName withContent: aPotentialArgumentContent [
+{ #category : #testing }
+WikitextTemplate >> hasArgumentNamed: aPotentialName withContent: aPotentialContent [
 
 	^ wikitextArguments
-		detect: [ :aWikitextArgument | aWikitextArgument isNamed: aPotentialArgumentName ]
-		ifFound: [ :foundWikitextArgument | foundWikitextArgument hasContent: aPotentialArgumentContent ]
+		detect: [ :aWikitextArgument | aWikitextArgument isNamed: aPotentialName ]
+		ifFound: [ :foundWikitextArgument | foundWikitextArgument hasContent: aPotentialContent ]
 		ifNone: [ false ]
+]
+
+{ #category : #'testing - private' }
+WikitextTemplate >> hasEquivalentArgument: aPotentialWikitextArgument [
+
+	^ wikitextArguments
+		anySatisfy: [ :aWikitextArgument | aWikitextArgument isEquivalentTo: aPotentialWikitextArgument ]
+]
+
+{ #category : #'testing - private' }
+WikitextTemplate >> hasEquivalentArguments: aWikitextTemplate [
+
+	^ wikitextArguments
+		allSatisfy: [ :aWikitextArgument | aWikitextTemplate hasEquivalentArgument: aWikitextArgument ]
 ]
 
 { #category : #initialization }
 WikitextTemplate >> initializeNamed: aTemplateName withArguments: aWikitextArgumentCollection [
 
-	templateName := aTemplateName.
+	name := aTemplateName.
 	wikitextArguments := aWikitextArgumentCollection
 ]
 
-{ #category : #'accessing-testing' }
-WikitextTemplate >> isNamed: aPotentialTemplateName [
+{ #category : #testing }
+WikitextTemplate >> isEquivalentTo: aWikitextTemplate [
 
-	^ templateName = aPotentialTemplateName
+	^ ( aWikitextTemplate isNamed: name )
+		and: [ self hasEquivalentArguments: aWikitextTemplate ]
+]
+
+{ #category : #testing }
+WikitextTemplate >> isNamed: aPotentialName [
+
+	^ name = aPotentialName
 ]
