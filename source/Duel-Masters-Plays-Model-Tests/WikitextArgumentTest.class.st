@@ -15,8 +15,8 @@ WikitextArgumentTest >> testNamedWikitextArgument [
 	wikitextArgument := WikitextArgument named: name content: content.
 
 	self
-		assert: wikitextArgument name equals: name;
-		assert: wikitextArgument content equals: content
+		assert: ( wikitextArgument isNamed: name );
+		assert: ( wikitextArgument hasContent: content )
 ]
 
 { #category : #tests }
@@ -27,6 +27,6 @@ WikitextArgumentTest >> testUnnamedWikitextArgument [
 	content := 'Fire'.
 	wikitextArgument := WikitextArgument unnamedWithContent: content.
 	self
-		should: [ wikitextArgument name ] raise: Error withMessageText: 'No se definió un nombre.';
-		assert: wikitextArgument content equals: content
+		deny: ( wikitextArgument isNamed: 'i am not a name' );
+		assert: ( wikitextArgument hasContent: content )
 ]

@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'content',
-		'nameBinding'
+		'nameOptional'
 	],
 	#category : #'Duel-Masters-Plays-Model'
 }
@@ -11,44 +11,59 @@ Class {
 { #category : #'instance creation' }
 WikitextArgument class >> named: aName content: aContent [
 
-	^ self namedBinding: ( Binding to: aName ) withContent: aContent
+	^ self namedOptional: ( Optional containing: aName ) withContent: aContent
 ]
 
 { #category : #'instance creation' }
-WikitextArgument class >> namedBinding: aNameBinding withContent: aContent [
+WikitextArgument class >> namedOptional: aNameBinding withContent: aContent [
 
-	^ self new initializeNamedBinding: aNameBinding withContent: aContent
-]
-
-{ #category : #accessing }
-WikitextArgument class >> notDefinedNameMessageText [
-
-	^ 'No se definió un nombre.'
+	^ self new initializeNamedOptional: aNameBinding withContent: aContent
 ]
 
 { #category : #'instance creation' }
 WikitextArgument class >> unnamedWithContent: aContent [
 
-	^ self
-		namedBinding: ( Binding undefinedExplainedBy: self notDefinedNameMessageText raising: Error )
-		withContent: aContent
+	^ self namedOptional: Optional unused withContent: aContent
 ]
 
-{ #category : #accessing }
-WikitextArgument >> content [
+{ #category : #'accessing-testing' }
+WikitextArgument >> hasContent: aPotentialContent [
 
-	^ content
+	^ content = aPotentialContent
 ]
 
 { #category : #initialization }
-WikitextArgument >> initializeNamedBinding: aNameBinding withContent: aContent [
+WikitextArgument >> initializeNamedOptional: aNameOptional withContent: aContent [
 
-	nameBinding := aNameBinding.
+	nameOptional := aNameOptional.
 	content := aContent
 ]
 
-{ #category : #accessing }
-WikitextArgument >> name [
+{ #category : #'accessing-testing' }
+WikitextArgument >> isNamed: aPotentialArgumentName [
 
-	^ nameBinding content
+	^ nameOptional withContentDo: [ :name | name = aPotentialArgumentName ] ifUnused: [ false ]
+]
+
+{ #category : #printing }
+WikitextArgument >> printNameOptionalOn: aStream [
+
+	nameOptional
+		withContentDo: [ :aName | 
+			aStream
+				nextPutAll: 'named ';
+				nextPutAll: aName
+			]
+		ifUnused: [ aStream nextPutAll: 'unnamed' ]
+]
+
+{ #category : #printing }
+WikitextArgument >> printOn: aStream [
+
+	aStream nextPutAll: 'Wikitext argument '.
+	self printNameOptionalOn: aStream.
+
+	aStream
+		nextPutAll: ' with ';
+		nextPutAll: content
 ]
