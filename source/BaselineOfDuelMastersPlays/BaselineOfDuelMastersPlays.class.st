@@ -30,9 +30,14 @@ BaselineOfDuelMastersPlays >> setUpDependencies: spec [
 
 	spec
 		baseline: 'Superluminal'
-		with: [ spec
+			with: [ spec
 				repository: 'github://ba-st/Superluminal:v1.2.0/source';
 				loads: #('Core')
+			];
+		baseline: 'Buoy'
+			with: [ spec
+				repository: 'github://ba-st/Buoy:v6/source';
+				loads: #('Dependent-SUnit-Extensions')
 			]
 ]
 
@@ -42,6 +47,7 @@ BaselineOfDuelMastersPlays >> setUpPackages: spec [
 	spec
 		package: 'Duel-Masters-Plays-Model' with: [ spec requires: #('Superluminal') ];
 		group: 'Deployment' with: 'Duel-Masters-Plays-Model';
-		package: 'Duel-Masters-Plays-Model-Tests' with: [ spec requires: #('Duel-Masters-Plays-Model') ];
+		package: 'Duel-Masters-Plays-Model-Tests'
+			with: [ spec requires: #('Duel-Masters-Plays-Model' 'Buoy') ];
 		group: 'Tests' with: 'Duel-Masters-Plays-Model-Tests'
 ]
