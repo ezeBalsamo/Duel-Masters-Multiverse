@@ -8,6 +8,56 @@ Class {
 	#category : #'Duel-Masters-Plays-Model'
 }
 
+{ #category : #asserting }
+WikitextTemplate class >> assertNoRepeatedNameIn: aWikitextArgumentCollection [
+
+	aWikitextArgumentCollection
+		ifEmpty: [ "do nothing.- ebalsamo" ]
+		ifNotEmpty: [ self
+				assertNoWikitextArgumentIn: aWikitextArgumentCollection withoutFirst
+				namedSameThan: aWikitextArgumentCollection first
+			]
+]
+
+{ #category : #asserting }
+WikitextTemplate class >> assertNoUnnamedArgumentsWithSameContentIn: aWikitextArgumentCollection [
+
+	| unnamedWikitextArguments |
+
+	unnamedWikitextArguments := aWikitextArgumentCollection select: #isUnnamed.
+
+	unnamedWikitextArguments
+		ifEmpty: [ "do nothing. -ebalsamo" ]
+		ifNotEmpty: [ self
+				assertNoUnnamedWikitextArgumentIn: aWikitextArgumentCollection withoutFirst
+				withSameContentThan: aWikitextArgumentCollection first
+			]
+]
+
+{ #category : #asserting }
+WikitextTemplate class >> assertNoUnnamedWikitextArgumentIn: aWikitextArgumentCollection
+	withSameContentThan: aWikitextArgumentToCompare [
+
+
+	aWikitextArgumentCollection
+		detect: [ :aWikitextArgument | aWikitextArgument hasSameContentThan: aWikitextArgumentToCompare ]
+		ifFound: [ InstanceCreationFailed
+				signal: 'Wikitext Template can''t have more than one unnamed argument with the same content.'
+			]
+		ifNone: [ self assertNoUnnamedArgumentsWithSameContentIn: aWikitextArgumentCollection ]
+]
+
+{ #category : #asserting }
+WikitextTemplate class >> assertNoWikitextArgumentIn: aWikitextArgumentCollection namedSameThan: aWikitextArgumentToCompare [
+
+	aWikitextArgumentCollection
+		detect: [ :aWikitextArgument | aWikitextArgument hasSameNameThan: aWikitextArgumentToCompare ]
+		ifFound: [ InstanceCreationFailed
+				signal: 'Wikitext Template can''t have more than one argument with the same name.'
+			]
+		ifNone: [ self assertNoRepeatedNameIn: aWikitextArgumentCollection ]
+]
+
 { #category : #'instance creation' }
 WikitextTemplate class >> named: aTemplateName withArgument: aWikitextArgument [
 
@@ -16,6 +66,10 @@ WikitextTemplate class >> named: aTemplateName withArgument: aWikitextArgument [
 
 { #category : #'instance creation' }
 WikitextTemplate class >> named: aTemplateName withArguments: aWikitextArgumentCollection [
+
+	self
+		assertNoRepeatedNameIn: aWikitextArgumentCollection;
+		assertNoUnnamedArgumentsWithSameContentIn: aWikitextArgumentCollection.
 
 	^ self new initializeNamed: aTemplateName withArguments: aWikitextArgumentCollection
 ]
@@ -27,6 +81,12 @@ WikitextTemplate >> hasArgumentNamed: aPotentialName withContent: aPotentialCont
 		detect: [ :aWikitextArgument | aWikitextArgument isNamed: aPotentialName ]
 		ifFound: [ :foundWikitextArgument | foundWikitextArgument hasContent: aPotentialContent ]
 		ifNone: [ false ]
+]
+
+{ #category : #testing }
+WikitextTemplate >> hasArguments [
+
+	^ wikitextArguments notEmpty
 ]
 
 { #category : #'testing - private' }
@@ -43,6 +103,15 @@ WikitextTemplate >> hasEquivalentArguments: aWikitextTemplate [
 		allSatisfy: [ :aWikitextArgument | aWikitextTemplate hasEquivalentArgument: aWikitextArgument ]
 ]
 
+{ #category : #testing }
+WikitextTemplate >> hasUnnamedArgumentWithContent: aContent [
+
+	^ wikitextArguments
+		detect: [ :aWikitextArgument | aWikitextArgument isUnnamed and: [ aWikitextArgument hasContent: aContent ] ]
+		ifFound: [ true ]
+		ifNone: [ false ]
+]
+
 { #category : #initialization }
 WikitextTemplate >> initializeNamed: aTemplateName withArguments: aWikitextArgumentCollection [
 
@@ -54,7 +123,9 @@ WikitextTemplate >> initializeNamed: aTemplateName withArguments: aWikitextArgum
 WikitextTemplate >> isEquivalentTo: aWikitextTemplate [
 
 	^ ( aWikitextTemplate isNamed: name )
-		and: [ self hasEquivalentArguments: aWikitextTemplate ]
+		and: [ ( self hasEquivalentArguments: aWikitextTemplate )
+				and: [ aWikitextTemplate hasEquivalentArguments: self ]
+			]
 ]
 
 { #category : #testing }
