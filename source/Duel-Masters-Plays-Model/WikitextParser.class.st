@@ -4,6 +4,12 @@ Class {
 	#category : #'Duel-Masters-Plays-Model'
 }
 
+{ #category : #testing }
+WikitextParser >> hasArguments: aTemplateNameAndArgumentsCollection [
+
+	^ aTemplateNameAndArgumentsCollection size > 1
+]
+
 { #category : #parsing }
 WikitextParser >> parse: aWikitext [
 
@@ -22,16 +28,17 @@ WikitextParser >> parse: aWikitext [
 { #category : #'parsing - private' }
 WikitextParser >> parseArgumentsFrom: aTemplateNameAndArgumentsCollection [
 
-	| argumentNameAndContent argumentNameAndContentSplitted |
+	| argumentNameAndContentSplitted |
 
-	argumentNameAndContent := aTemplateNameAndArgumentsCollection second.
-	argumentNameAndContentSplitted := argumentNameAndContent splitOn: '='.
-
-	^ Array
-		with:
-			( WikitextArgument
-				named: argumentNameAndContentSplitted first
-				content: argumentNameAndContentSplitted second )
+	^ ( self hasArguments: aTemplateNameAndArgumentsCollection )
+		then: [ argumentNameAndContentSplitted := aTemplateNameAndArgumentsCollection second splitOn: '='.
+			Array
+				with:
+					( WikitextArgument
+						named: argumentNameAndContentSplitted first
+						content: argumentNameAndContentSplitted second )
+			]
+		otherwise: [ #() ]
 ]
 
 { #category : #'parsing - private' }

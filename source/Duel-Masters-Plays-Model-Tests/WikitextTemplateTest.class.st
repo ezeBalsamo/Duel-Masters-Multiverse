@@ -13,7 +13,7 @@ WikitextTemplateTest >> test01WikitextTemplateWithZeroArguments [
 	| templateName wikitextTemplate |
 
 	templateName := 'Cardtable'.
-	wikitextTemplate := WikitextTemplate named: templateName withArguments: #().
+	wikitextTemplate := WikitextTemplate withoutArgumentsNamed: templateName.
 
 	self
 		assert: ( wikitextTemplate isNamed: templateName );

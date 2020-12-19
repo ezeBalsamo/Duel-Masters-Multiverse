@@ -74,6 +74,12 @@ WikitextTemplate class >> named: aTemplateName withArguments: aWikitextArgumentC
 	^ self new initializeNamed: aTemplateName withArguments: aWikitextArgumentCollection
 ]
 
+{ #category : #'instance creation' }
+WikitextTemplate class >> withoutArgumentsNamed: aTemplateName [
+
+	^ self named: aTemplateName withArguments: #()
+]
+
 { #category : #testing }
 WikitextTemplate >> hasArgumentNamed: aPotentialName withContent: aPotentialContent [
 

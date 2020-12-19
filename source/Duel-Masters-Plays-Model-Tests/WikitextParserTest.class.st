@@ -8,7 +8,19 @@ Class {
 }
 
 { #category : #tests }
-WikitextParserTest >> test01ParsingAClosedWikitextWithOneTemplateWithOneArgument [
+WikitextParserTest >> test01ParsingAClosedWikitextWithOneTemplateWithoutArguments [
+
+	| wikitext wikitextTemplate parsedWikitextTemplate |
+
+	wikitext := '{{Double Breaker}}'.
+	wikitextTemplate := WikitextTemplate withoutArgumentsNamed: 'Double Breaker'.
+
+	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
+]
+
+{ #category : #tests }
+WikitextParserTest >> test02ParsingAClosedWikitextWithOneTemplateWithOneArgument [
 
 	| wikitext wikitextArgument wikitextTemplate parsedWikitextTemplate |
 
@@ -23,7 +35,7 @@ WikitextParserTest >> test01ParsingAClosedWikitextWithOneTemplateWithOneArgument
 ]
 
 { #category : #tests }
-WikitextParserTest >> test02ParsingANotClosedWikitextWithOneTemplateWithOneArgument [
+WikitextParserTest >> test03ParsingANotClosedWikitextWithOneTemplateWithOneArgument [
 
 	| wikitext wikitextArgument wikitextTemplate parsedWikitextTemplate |
 
