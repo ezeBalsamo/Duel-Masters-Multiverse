@@ -26,10 +26,30 @@ WikitextArgument class >> unnamedWithContent: aContent [
 	^ self namedOptional: Optional unused withContent: aContent
 ]
 
-{ #category : #'accessing-testing' }
+{ #category : #testing }
 WikitextArgument >> hasContent: aPotentialContent [
 
 	^ content = aPotentialContent
+]
+
+{ #category : #'testing-private' }
+WikitextArgument >> hasEquivalentNamingThan: aPotentialWikitextArgument [
+
+	^ nameOptional
+		withContentDo: [ :name | aPotentialWikitextArgument isNamed: name ]
+		ifUnused: [ aPotentialWikitextArgument isUnnamed ]
+]
+
+{ #category : #testing }
+WikitextArgument >> hasSameContentThan: aWikitextArgument [
+
+	^ aWikitextArgument hasContent: content
+]
+
+{ #category : #testing }
+WikitextArgument >> hasSameNameThan: aWikitextArgument [
+
+	^ nameOptional withContentDo: [ :name | aWikitextArgument isNamed: name ] ifUnused: [ false ]
 ]
 
 { #category : #initialization }
@@ -39,10 +59,23 @@ WikitextArgument >> initializeNamedOptional: aNameOptional withContent: aContent
 	content := aContent
 ]
 
-{ #category : #'accessing-testing' }
-WikitextArgument >> isNamed: aPotentialArgumentName [
+{ #category : #testing }
+WikitextArgument >> isEquivalentTo: aWikitextArgument [
 
-	^ nameOptional withContentDo: [ :name | name = aPotentialArgumentName ] ifUnused: [ false ]
+	^ ( self hasSameContentThan: aWikitextArgument )
+		and: [ self hasEquivalentNamingThan: aWikitextArgument ]
+]
+
+{ #category : #testing }
+WikitextArgument >> isNamed: aPotentialName [
+
+	^ nameOptional withContentDo: [ :name | name = aPotentialName ] ifUnused: [ false ]
+]
+
+{ #category : #testing }
+WikitextArgument >> isUnnamed [
+
+	^ nameOptional withContentDo: [ :name | false ] ifUnused: [ true ]
 ]
 
 { #category : #printing }
@@ -60,7 +93,7 @@ WikitextArgument >> printNameOptionalOn: aStream [
 { #category : #printing }
 WikitextArgument >> printOn: aStream [
 
-	aStream nextPutAll: 'Wikitext argument '.
+	aStream nextPutAll: 'Wikitext Argument '.
 	self printNameOptionalOn: aStream.
 
 	aStream
