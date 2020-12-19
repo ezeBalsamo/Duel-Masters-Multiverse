@@ -1,0 +1,16 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'DuelMastersPlays',
+      #directory : 'source',
+      #load : [ 'CI' ],
+      #platforms : [  #pharo ]
+    }
+  ],
+  #testing : {
+    #coverage : {
+      #packages : [ 'Duel-Masters-Plays*' ],
+      #format: #lcov
+    }
+  }
+}
