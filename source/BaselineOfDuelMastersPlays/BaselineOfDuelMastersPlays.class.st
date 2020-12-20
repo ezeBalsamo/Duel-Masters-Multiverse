@@ -37,7 +37,7 @@ BaselineOfDuelMastersPlays >> setUpDependencies: spec [
 		baseline: 'Buoy'
 			with: [ spec
 				repository: 'github://ba-st/Buoy:v6/source';
-				loads: #('Deployment Dependent-SUnit-Extensions')
+				loads: #('Deployment' 'Dependent-SUnit-Extensions')
 			]
 ]
 
