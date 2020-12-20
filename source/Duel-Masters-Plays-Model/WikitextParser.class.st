@@ -4,41 +4,13 @@ Class {
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #testing }
-WikitextParser >> hasArguments: aTemplateNameAndArgumentsCollection [
-
-	^ aTemplateNameAndArgumentsCollection size > 1
-]
-
 { #category : #parsing }
 WikitextParser >> parse: aWikitext [
 
-	| wikitextWithoutCurlyBraces templateNameAndArgumentsSplitted templateName arguments |
+	| wikitextWithoutCurlyBraces |
 
 	wikitextWithoutCurlyBraces := self withoutCurlyBraces: aWikitext.
-	templateNameAndArgumentsSplitted := self
-		splitTemplateNameFromArgumentsIn: wikitextWithoutCurlyBraces.
-
-	templateName := self parseTemplateNameFrom: templateNameAndArgumentsSplitted.
-	arguments := self parseArgumentsFrom: templateNameAndArgumentsSplitted.
-
-	^ WikitextTemplate named: templateName withArguments: arguments
-]
-
-{ #category : #'parsing - private' }
-WikitextParser >> parseArgumentsFrom: aTemplateNameAndArgumentsCollection [
-
-	| argumentNameAndContentSplitted |
-
-	^ ( self hasArguments: aTemplateNameAndArgumentsCollection )
-		then: [ argumentNameAndContentSplitted := aTemplateNameAndArgumentsCollection second splitOn: '='.
-			Array
-				with:
-					( WikitextArgument
-						named: argumentNameAndContentSplitted first
-						content: argumentNameAndContentSplitted second )
-			]
-		otherwise: [ #() ]
+	^ self parseWikitextTemplateFrom: wikitextWithoutCurlyBraces
 ]
 
 { #category : #'parsing - private' }
@@ -48,9 +20,35 @@ WikitextParser >> parseTemplateNameFrom: aTemplateNameAndArgumentsCollection [
 ]
 
 { #category : #'parsing - private' }
-WikitextParser >> splitTemplateNameFromArgumentsIn: aWikitext [
+WikitextParser >> parseWikitextArgumentFrom: aWikitextArgumentToParse [
 
-	^ aWikitext splitOn: '|'
+	^ ( WikitextArgumentParser toParse: aWikitextArgumentToParse ) parse
+]
+
+{ #category : #'parsing - private' }
+WikitextParser >> parseWikitextArgumentsFrom: aTemplateNameAndArgumentsCollection [
+
+	^ aTemplateNameAndArgumentsCollection allButFirst
+		collect: [ :aWikitextArgumentToParse | self parseWikitextArgumentFrom: aWikitextArgumentToParse ]
+]
+
+{ #category : #'parsing - private' }
+WikitextParser >> parseWikitextTemplateFrom: aWikitextTemplateToParse [
+
+	| templateNameAndArgumentsSplitted templateName arguments |
+
+	templateNameAndArgumentsSplitted := self splitTemplateNameFromArgumentsIn: aWikitextTemplateToParse.
+
+	templateName := self parseTemplateNameFrom: templateNameAndArgumentsSplitted.
+	arguments := self parseWikitextArgumentsFrom: templateNameAndArgumentsSplitted.
+
+	^ WikitextTemplate named: templateName withArguments: arguments
+]
+
+{ #category : #'parsing - private' }
+WikitextParser >> splitTemplateNameFromArgumentsIn: aWikitextToParse [
+
+	^ aWikitextToParse splitOn: '|'
 ]
 
 { #category : #'parsing - private' }
