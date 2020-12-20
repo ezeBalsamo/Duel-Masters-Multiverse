@@ -13,23 +13,11 @@ WikitextArgumentParser class >> canHandle: aWikitextArgumentToParse [
 	self subclassResponsibility
 ]
 
-{ #category : #signaling }
-WikitextArgumentParser class >> signalNoSuitableClassFoundFor: aWikitextArgumentToParse [
-
-	^ ProgrammingError
-		signal:
-			( #'Not found wikitext argument parser suitable for <1s>.'
-				expandMacrosWith: aWikitextArgumentToParse )
-]
-
 { #category : #'instance creation' }
 WikitextArgumentParser class >> toParse: aWikitextArgumentToParse [
 
-	^ ( SuitableClassFinder
-		findDirectSubclassOf: self
-		suitableFor: aWikitextArgumentToParse
-		ifNone: [ self signalNoSuitableClassFoundFor: aWikitextArgumentToParse ] ) value new
-		initializeToParse: aWikitextArgumentToParse
+	^ ( SuitableClassFinder findDirectSubclassOf: self suitableFor: aWikitextArgumentToParse ) value
+		new initializeToParse: aWikitextArgumentToParse
 ]
 
 { #category : #initialization }
