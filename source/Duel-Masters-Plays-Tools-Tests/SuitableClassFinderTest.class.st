@@ -9,7 +9,8 @@ Class {
 		'concreteNumberOneClass',
 		'concreteNumberTwoClass',
 		'concreteNumberThreeClass',
-		'abstractNumbersTwoAndThreeClass'
+		'abstractNumbersTwoAndThreeClass',
+		'allLeafSubclasses'
 	],
 	#category : #'Duel-Masters-Plays-Tools-Tests'
 }
@@ -67,6 +68,8 @@ SuitableClassFinderTest >> setUp [
 	concreteNumberThreeClass := self
 		createSubclassOf: abstractNumbersTwoAndThreeClass
 		named: 'ConcreteNumberThree'.
+
+	allLeafSubclasses := abstractNumberClass allLeafSubclasses.
 
 	self
 		compileCanHandleMethodFor: #(1) inMetaclassOf: concreteNumberOneClass;
@@ -483,6 +486,224 @@ SuitableClassFinderTest >> test20FindSubclassOfSuitableForWithIfNoneifMultipleEx
 		assert:
 			( SuitableClassFinder
 				findSubclassOf: abstractNumberClass
+				suitableFor: 2
+				with: 'two'
+				ifMultiple: [ :suitableClassFinder :classes | expectedScenario ]
+				ifNone: [ self fail ] ) value
+		equals: expectedScenario.
+
+	anotherConcreteNumberTwoClass removeFromSystem
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test21FindInSuitableFor [
+
+	self
+		assert: ( SuitableClassFinder findIn: allLeafSubclasses suitableFor: 1 ) value
+		equals: concreteNumberOneClass.
+
+	self
+		assert: ( SuitableClassFinder findIn: allLeafSubclasses suitableFor: 3 ) value
+		equals: concreteNumberThreeClass
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test22FindInSuitableForIfNoneDefault [
+
+	self
+		should: [ ( SuitableClassFinder findIn: allLeafSubclasses suitableFor: 5 ) value ]
+		raise: ProgrammingError
+		withMessageText:
+			#'No class is suitable for handling 5. Classes selected for analysis were ConcreteNumberOne, ConcreteNumberTwo and ConcreteNumberThree.'
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test23FindInSuitableForIfNoneExplicit [
+
+	| expectedScenario |
+
+	expectedScenario := 'not found!'.
+
+	self
+		assert:
+			( SuitableClassFinder
+				findIn: allLeafSubclasses
+				suitableFor: 2
+				ifNone: [ :suitableClassFinder | self fail ] ) value
+		equals: concreteNumberTwoClass.
+
+	self
+		assert:
+			( SuitableClassFinder
+				findIn: allLeafSubclasses
+				suitableFor: 5
+				ifNone: [ :suitableClassFinder | expectedScenario ] ) value
+		equals: expectedScenario
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test24FindInSuitableForIfNoneifMultipleDefault [
+
+	| anotherConcreteNumberTwoClass expectedMultipleClassNames allLeafSubclassesWithNewConcreteClass |
+
+	anotherConcreteNumberTwoClass := self
+		createSubclassOf: abstractNumbersTwoAndThreeClass
+		named: 'AnotherConcreteNumberTwo'.
+
+	self compileCanHandleMethodFor: #(2) inMetaclassOf: abstractNumberClass.
+
+	expectedMultipleClassNames := 'ConcreteNumberTwo and AnotherConcreteNumberTwo'.
+
+	allLeafSubclassesWithNewConcreteClass := OrderedCollection new
+		addAll: allLeafSubclasses;
+		add: anotherConcreteNumberTwoClass;
+		yourself.
+
+	self
+		should: [ ( SuitableClassFinder
+				findIn: allLeafSubclassesWithNewConcreteClass
+				suitableFor: 2
+				ifNone: [ self fail ] ) value
+			]
+		raise: ProgrammingError
+		withMessageText: ( #'Multiple classes can handle 2. They are <1s>.' expandMacrosWith: expectedMultipleClassNames ).
+
+	anotherConcreteNumberTwoClass removeFromSystem
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test25FindInSuitableForIfNoneifMultipleExplicit [
+
+	| anotherConcreteNumberTwoClass expectedScenario allLeafSubclassesWithNewConcreteClass |
+
+	anotherConcreteNumberTwoClass := self
+		createSubclassOf: abstractNumberClass
+		named: 'AnotherConcreteNumberTwo'.
+
+	self compileCanHandleMethodFor: #(2) inMetaclassOf: abstractNumberClass.
+
+	allLeafSubclassesWithNewConcreteClass := OrderedCollection new
+		addAll: allLeafSubclasses;
+		add: anotherConcreteNumberTwoClass;
+		yourself.
+
+	expectedScenario := 'multiple classes!'.
+
+	self
+		assert:
+			( SuitableClassFinder
+				findIn: allLeafSubclassesWithNewConcreteClass
+				suitableFor: 2
+				ifMultiple: [ :suitableClassFinder :classes | expectedScenario ]
+				ifNone: [ self fail ] ) value
+		equals: expectedScenario.
+
+	anotherConcreteNumberTwoClass removeFromSystem
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test26FindInSuitableForWith [
+
+	self
+		assert: ( SuitableClassFinder findIn: allLeafSubclasses suitableFor: 1 with: 'one' ) value
+		equals: concreteNumberOneClass.
+
+	self
+		assert: ( SuitableClassFinder findIn: allLeafSubclasses suitableFor: 3 with: 'three' ) value
+		equals: concreteNumberThreeClass
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test27FindInSuitableForWithIfNoneDefault [
+
+	self
+		should: [ ( SuitableClassFinder findIn: allLeafSubclasses suitableFor: 5 ) value ]
+		raise: ProgrammingError
+		withMessageText:
+			#'No class is suitable for handling 5. Classes selected for analysis were ConcreteNumberOne, ConcreteNumberTwo and ConcreteNumberThree.'
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test28FindInSuitableForWithIfNoneExplicit [
+
+	| expectedScenario |
+
+	expectedScenario := 'not found!'.
+
+	self
+		assert:
+			( SuitableClassFinder
+				findIn: allLeafSubclasses
+				suitableFor: 2
+				with: 'two'
+				ifNone: [ :suitableClassFinder | self fail ] ) value
+		equals: concreteNumberTwoClass.
+
+	self
+		assert:
+			( SuitableClassFinder
+				findIn: allLeafSubclasses
+				suitableFor: 5
+				with: 'five'
+				ifNone: [ :suitableClassFinder | expectedScenario ] ) value
+		equals: expectedScenario
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test29FindInSuitableForWithIfNoneifMultipleDefault [
+
+	| anotherConcreteNumberTwoClass expectedMultipleClassNames allLeafSubclassesWithNewConcreteClass |
+
+	anotherConcreteNumberTwoClass := self
+		createSubclassOf: abstractNumbersTwoAndThreeClass
+		named: 'AnotherConcreteNumberTwo'.
+
+	self compileCanHandleMethodFor: #(2) with: 'two' inMetaclassOf: anotherConcreteNumberTwoClass.
+
+	allLeafSubclassesWithNewConcreteClass := OrderedCollection new
+		addAll: allLeafSubclasses;
+		add: anotherConcreteNumberTwoClass;
+		yourself.
+
+	expectedMultipleClassNames := 'ConcreteNumberTwo and AnotherConcreteNumberTwo'.
+
+	self
+		should: [ ( SuitableClassFinder
+				findIn: allLeafSubclassesWithNewConcreteClass
+				suitableFor: 2
+				with: 'two'
+				ifNone: [ self fail ] ) value
+			]
+		raise: ProgrammingError
+		withMessageText:
+			( #'Multiple classes can handle 2 and two. They are <1s>.'
+				expandMacrosWith: expectedMultipleClassNames ).
+
+	anotherConcreteNumberTwoClass removeFromSystem
+]
+
+{ #category : #tests }
+SuitableClassFinderTest >> test30FindInSuitableForWithIfNoneifMultipleExplicit [
+
+	| anotherConcreteNumberTwoClass expectedScenario allLeafSubclassesWithNewConcreteClass |
+
+	anotherConcreteNumberTwoClass := self
+		createSubclassOf: abstractNumberClass
+		named: 'AnotherConcreteNumberTwo'.
+
+	self compileCanHandleMethodFor: #(2) with: 'two' inMetaclassOf: anotherConcreteNumberTwoClass.
+
+	allLeafSubclassesWithNewConcreteClass := OrderedCollection new
+		addAll: allLeafSubclasses;
+		add: anotherConcreteNumberTwoClass;
+		yourself.
+
+	expectedScenario := 'multiple classes!'.
+
+	self
+		assert:
+			( SuitableClassFinder
+				findIn: allLeafSubclassesWithNewConcreteClass
 				suitableFor: 2
 				with: 'two'
 				ifMultiple: [ :suitableClassFinder :classes | expectedScenario ]
