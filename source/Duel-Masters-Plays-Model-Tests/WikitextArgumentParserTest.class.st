@@ -12,13 +12,13 @@ WikitextArgumentParserTest >> test01ParsingANamedWikitextArgumentWithBasicConten
 
 	| wikitextArgumentToParse wikitextArgumentParser parsedWikitextArgument expectedWikitextArgument |
 
-	wikitextArgumentToParse := 'civilization=Water'.
+	wikitextArgumentToParse := 'arg_name=basic_content'.
 
 	wikitextArgumentParser := WikitextArgumentParser toParse: wikitextArgumentToParse.
 	parsedWikitextArgument := wikitextArgumentParser parse.
 	expectedWikitextArgument := WikitextArgument
-		named: 'civilization'
-		content: ( WikitextBasicContent being: 'Water' ).
+		named: 'arg_name'
+		content: ( WikitextBasicContent being: 'basic_content' ).
 
 	self
 		assert: ( wikitextArgumentParser isA: NamedWikitextArgumentParser );
@@ -30,12 +30,12 @@ WikitextArgumentParserTest >> test02ParsingAnUnamedWikitextArgumentWithBasicCont
 
 	| wikitextArgumentToParse wikitextArgumentParser parsedWikitextArgument expectedWikitextArgument |
 
-	wikitextArgumentToParse := 'Return one of your opponent''s creatures to their hand.'.
+	wikitextArgumentToParse := 'basic_content'.
 
 	wikitextArgumentParser := WikitextArgumentParser toParse: wikitextArgumentToParse.
 	parsedWikitextArgument := wikitextArgumentParser parse.
 	expectedWikitextArgument := WikitextArgument
-		unnamedWithContent: ( WikitextBasicContent being: wikitextArgumentToParse ).
+		unnamedWithContent: ( WikitextBasicContent being: 'basic_content' ).
 
 	self
 		assert: ( wikitextArgumentParser isAn: UnnamedWikitextArgumentWithBasicContentParser );
@@ -43,43 +43,18 @@ WikitextArgumentParserTest >> test02ParsingAnUnamedWikitextArgumentWithBasicCont
 ]
 
 { #category : #tests }
-WikitextArgumentParserTest >> test03ParsingANamedWikitextArgumentWithWikitextContentWithoutArguments [
+WikitextArgumentParserTest >> test03ParsingAnUnnamedWikitextArgumentWithWikitextContentWithoutArguments [
 
 	| wikitextArgumentToParse wikitextArgumentParser parsedWikitextArgument expectedWikitextArgument |
 
-	wikitextArgumentToParse := 'arg_name={{inner_temp_name}}'.
+	wikitextArgumentToParse := '{{inner_temp_name}}'.
 
 	wikitextArgumentParser := WikitextArgumentParser toParse: wikitextArgumentToParse.
 	parsedWikitextArgument := wikitextArgumentParser parse.
 	expectedWikitextArgument := WikitextArgument
-		named: 'arg_name'
-		content: ( WikitextTemplate withoutArgumentsNamed: 'inner_temp_name' ).
+		unnamedWithContent: ( WikitextTemplate withoutArgumentsNamed: 'inner_temp_name' ).
 
 	self
-		assert: ( wikitextArgumentParser isA: NamedWikitextArgumentParser );
-		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
-]
-
-{ #category : #tests }
-WikitextArgumentParserTest >> test04ParsingANamedWikitextArgumentWithWikitextContentWithOneNamedArgumentWithBasicContent [
-
-	| wikitextArgumentToParse wikitextArgumentParser parsedWikitextArgument expectedWikitextArgument |
-
-	wikitextArgumentToParse := 'arg_name={{inner_temp_name|inner_arg_name_2=basic_content_2}}'.
-
-	wikitextArgumentParser := WikitextArgumentParser toParse: wikitextArgumentToParse.
-	parsedWikitextArgument := wikitextArgumentParser parse.
-	expectedWikitextArgument := WikitextArgument
-		named: 'arg_name'
-		content:
-			( WikitextTemplate
-				named: 'inner_temp_name'
-				withArgument:
-					( WikitextArgument
-						named: 'inner_arg_name_2'
-						content: ( WikitextBasicContent being: 'basic_content_2' ) ) ).
-
-	self
-		assert: ( wikitextArgumentParser isA: NamedWikitextArgumentParser );
+		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentWithWikitextContentParser );
 		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
 ]

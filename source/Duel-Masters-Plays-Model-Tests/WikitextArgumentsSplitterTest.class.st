@@ -23,67 +23,7 @@ WikitextArgumentsSplitterTest >> test01SplittingTwoNamedWikitextArgumentsWithBas
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test02SplittingNamedWikitextArgumentWithBasicContentFromUnnamedWikitextArgumentWithBasicContent [
-
-	| wikitextArgumentToSplit wikitextArgumentsSplitted |
-
-	wikitextArgumentToSplit := 'arg_name_1=basic_content_1|basic_content_2'.
-
-	wikitextArgumentsSplitted := ( WikitextArgumentsSplitter splitting: wikitextArgumentToSplit ) split.
-
-	self
-		assert: wikitextArgumentsSplitted size equals: 2;
-		assert: wikitextArgumentsSplitted first equals: 'arg_name_1=basic_content_1';
-		assert: wikitextArgumentsSplitted second equals: 'basic_content_2'
-]
-
-{ #category : #tests }
-WikitextArgumentsSplitterTest >> test03SplittingTwoUnnamedWikitextArgumentsWithBasicContent [
-
-	| wikitextArgumentToSplit wikitextArgumentsSplitted |
-
-	wikitextArgumentToSplit := 'basic_content_1|basic_content_2'.
-
-	wikitextArgumentsSplitted := ( WikitextArgumentsSplitter splitting: wikitextArgumentToSplit ) split.
-
-	self
-		assert: wikitextArgumentsSplitted size equals: 2;
-		assert: wikitextArgumentsSplitted first equals: 'basic_content_1';
-		assert: wikitextArgumentsSplitted second equals: 'basic_content_2'
-]
-
-{ #category : #tests }
-WikitextArgumentsSplitterTest >> test04SplittingUnnamedWikitextArgumentWithBasicContentFromNamedWikitextArgumentWithBasicContent [
-
-	| wikitextArgumentToSplit wikitextArgumentsSplitted |
-
-	wikitextArgumentToSplit := 'basic_content_1|arg_name_2=basic_content_2'.
-
-	wikitextArgumentsSplitted := ( WikitextArgumentsSplitter splitting: wikitextArgumentToSplit ) split.
-
-	self
-		assert: wikitextArgumentsSplitted size equals: 2;
-		assert: wikitextArgumentsSplitted first equals: 'basic_content_1';
-		assert: wikitextArgumentsSplitted second equals: 'arg_name_2=basic_content_2'
-]
-
-{ #category : #tests }
-WikitextArgumentsSplitterTest >> test05SplittingNamedWikitextArgumentWithBasicContentFromNamedWikitextArgumentWithWikitextContentWithoutArguments [
-
-	| wikitextArgumentToSplit wikitextArgumentsSplitted |
-
-	wikitextArgumentToSplit := 'arg_name_1=basic_content_1|arg_name_2={{inner_temp_name}}'.
-
-	wikitextArgumentsSplitted := ( WikitextArgumentsSplitter splitting: wikitextArgumentToSplit ) split.
-
-	self
-		assert: wikitextArgumentsSplitted size equals: 2;
-		assert: wikitextArgumentsSplitted first equals: 'arg_name_1=basic_content_1';
-		assert: wikitextArgumentsSplitted second equals: 'arg_name_2={{inner_temp_name}}'
-]
-
-{ #category : #tests }
-WikitextArgumentsSplitterTest >> test06SplittingNamedWikitextArgumentWithBasicContentFromNamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContent [
+WikitextArgumentsSplitterTest >> test02SplittingNamedWikitextArgumentWithBasicContentFromNamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContent [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -99,7 +39,7 @@ WikitextArgumentsSplitterTest >> test06SplittingNamedWikitextArgumentWithBasicCo
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test07SplittingNamedWikitextArgumentWithWikitextContentWithoutArgumentsFromNamedWikitextArgumentWithBasicContent [
+WikitextArgumentsSplitterTest >> test03SplittingNamedWikitextArgumentWithWikitextContentWithoutArgumentsFromNamedWikitextArgumentWithBasicContent [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -114,7 +54,7 @@ WikitextArgumentsSplitterTest >> test07SplittingNamedWikitextArgumentWithWikitex
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test08NamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContentFromSplittingNamedWikitextArgumentWithBasicContent [
+WikitextArgumentsSplitterTest >> test04NamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContentFromSplittingNamedWikitextArgumentWithBasicContent [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -130,7 +70,7 @@ WikitextArgumentsSplitterTest >> test08NamedWikitextArgumentWithWikitextContentW
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test09SplittingAnEmptyWikitextArgumentShouldRaiseParsingFailed [
+WikitextArgumentsSplitterTest >> test05SplittingAnEmptyWikitextArgumentShouldRaiseParsingFailed [
 
 	self
 		should: [ WikitextArgumentsSplitter splitting: '' ]
