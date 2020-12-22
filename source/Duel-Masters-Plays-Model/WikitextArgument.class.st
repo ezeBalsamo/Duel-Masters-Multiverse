@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-WikitextArgument class >> named: aName content: aContent [
+WikitextArgument class >> named: aName withContent: aContent [
 
 	^ self namedOptional: ( Optional containing: aName ) withContent: aContent
 ]

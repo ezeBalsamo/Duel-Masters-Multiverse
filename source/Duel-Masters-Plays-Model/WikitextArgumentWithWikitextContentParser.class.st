@@ -22,5 +22,5 @@ WikitextArgumentWithWikitextContentParser >> initializeToParse: aWikitextArgumen
 { #category : #initialization }
 WikitextArgumentWithWikitextContentParser >> parse [
 
-	^ WikitextParser new parse: wikitextArgumentContentToParse
+	^ WikitextParser parse: wikitextArgumentContentToParse
 ]

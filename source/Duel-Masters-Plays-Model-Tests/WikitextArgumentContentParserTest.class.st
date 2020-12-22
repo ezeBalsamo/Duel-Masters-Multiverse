@@ -53,7 +53,7 @@ WikitextArgumentContentParserTest >> test03ParsingAWikitextContentWithOneNamedAr
 		withArgument:
 			( WikitextArgument
 				named: 'inner_arg_name_2'
-				content: ( WikitextBasicContent being: 'basic_content_2' ) ).
+				withContent: ( WikitextBasicContent being: 'basic_content_2' ) ).
 
 	self
 		assert: ( wikitextContentParser isA: WikitextArgumentWithWikitextContentParser );

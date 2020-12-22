@@ -26,7 +26,7 @@ NamedWikitextArgumentParser >> parse [
 	argumentName := self parseArgumentNameFrom: argumentNameAndContentSplitted.
 	argumentContent := self parseArgumentContentFrom: argumentNameAndContentSplitted.
 
-	^ WikitextArgument named: argumentName content: argumentContent
+	^ WikitextArgument named: argumentName withContent: argumentContent
 ]
 
 { #category : #'parsing - private' }

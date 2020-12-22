@@ -12,7 +12,7 @@ WikitextArgumentTest >> test01NamedWikitextArgument [
 	name := 'Civilization'.
 	content := WikitextBasicContent being: 'Fire'.
 
-	wikitextArgument := WikitextArgument named: name content: content.
+	wikitextArgument := WikitextArgument named: name withContent: content.
 
 	self
 		assert: ( wikitextArgument isNamed: name );
@@ -38,7 +38,7 @@ WikitextArgumentTest >> test03PrintingANamedWikitextArgument [
 
 	wikitextArgument := WikitextArgument
 		named: 'Civilization'
-		content: ( WikitextBasicContent being: 'Fire' ).
+		withContent: ( WikitextBasicContent being: 'Fire' ).
 	expectedPrintString := 'Wikitext Argument named Civilization with Basic Content: Fire'.
 
 	self assert: wikitextArgument printString equals: expectedPrintString
@@ -64,8 +64,8 @@ WikitextArgumentTest >> test05NamedWikitextArgumentEquivalentToAnotherNamedWikit
 
 	name := 'Civilization'.
 	content := WikitextBasicContent being: 'Fire'.
-	wikitextArgument := WikitextArgument named: name content: content.
-	anotherWikitextArgument := WikitextArgument named: name content: content.
+	wikitextArgument := WikitextArgument named: name withContent: content.
+	anotherWikitextArgument := WikitextArgument named: name withContent: content.
 
 	self
 		assert: ( wikitextArgument hasSameNameThan: anotherWikitextArgument );
@@ -93,7 +93,7 @@ WikitextArgumentTest >> test07NamedWikitextArgumentIsNotEquivalentToAnUnnamedWik
 	| content wikitextArgument anotherWikitextArgument |
 
 	content := WikitextBasicContent being: 'Fire'.
-	wikitextArgument := WikitextArgument named: 'civilization' content: content.
+	wikitextArgument := WikitextArgument named: 'civilization' withContent: content.
 	anotherWikitextArgument := WikitextArgument unnamedWithContent: content.
 
 	self deny: ( wikitextArgument isEquivalentTo: anotherWikitextArgument )
@@ -105,8 +105,8 @@ WikitextArgumentTest >> test08NamedWikitextArgumentIsNotEquivalentToAnotherWikit
 	| content wikitextArgument anotherWikitextArgument |
 
 	content := WikitextBasicContent being: 'Fire'.
-	wikitextArgument := WikitextArgument named: 'civilization' content: content.
-	anotherWikitextArgument := WikitextArgument named: 'type' content: content.
+	wikitextArgument := WikitextArgument named: 'civilization' withContent: content.
+	anotherWikitextArgument := WikitextArgument named: 'type' withContent: content.
 
 	self
 		deny: ( wikitextArgument hasSameNameThan: anotherWikitextArgument );
@@ -121,10 +121,10 @@ WikitextArgumentTest >> test09NamedWikitextArgumentIsNotEquivalentToAnotherWikit
 	commonName := 'civilization'.
 	wikitextArgument := WikitextArgument
 		named: commonName
-		content: ( WikitextBasicContent being: 'Water' ).
+		withContent: ( WikitextBasicContent being: 'Water' ).
 	anotherWikitextArgument := WikitextArgument
 		named: commonName
-		content: ( WikitextBasicContent being: 'Creature' ).
+		withContent: ( WikitextBasicContent being: 'Creature' ).
 
 	self
 		deny: ( wikitextArgument hasSameContentThan: anotherWikitextArgument );
@@ -138,7 +138,7 @@ WikitextArgumentTest >> test10UnnamedWikitextArgumentIsNotEquivalentToANamedWiki
 
 	content := WikitextBasicContent being: 'Fire'.
 	wikitextArgument := WikitextArgument unnamedWithContent: content.
-	anotherWikitextArgument := WikitextArgument named: 'civilization' content: content.
+	anotherWikitextArgument := WikitextArgument named: 'civilization' withContent: content.
 
 	self deny: ( wikitextArgument isEquivalentTo: anotherWikitextArgument )
 ]
@@ -164,7 +164,7 @@ WikitextArgumentTest >> test12NamedWikitextArgumentWithContentBeingAWikitextTemp
 
 	argumentName := 'engtext'.
 	wikitextTemplate := WikitextTemplate withoutArgumentsNamed: 'Tap Skill'.
-	wikitextArgument := WikitextArgument named: argumentName content: wikitextTemplate.
+	wikitextArgument := WikitextArgument named: argumentName withContent: wikitextTemplate.
 
 	self
 		assert: ( wikitextArgument isNamed: argumentName );
@@ -179,9 +179,9 @@ WikitextArgumentTest >> test13NamedWikitextArgumentWithContentBeingAWikitextTemp
 	argumentName := 'engtext'.
 	innerWikitextArgument := WikitextArgument
 		named: 'civilization'
-		content: ( WikitextBasicContent being: 'Water' ).
+		withContent: ( WikitextBasicContent being: 'Water' ).
 	wikitextTemplate := WikitextTemplate named: 'Tap Skill' withArgument: innerWikitextArgument.
-	wikitextArgument := WikitextArgument named: argumentName content: wikitextTemplate.
+	wikitextArgument := WikitextArgument named: argumentName withContent: wikitextTemplate.
 
 	self
 		assert: ( wikitextArgument isNamed: argumentName );

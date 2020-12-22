@@ -18,7 +18,7 @@ WikitextArgumentParserTest >> test01ParsingANamedWikitextArgumentWithBasicConten
 	parsedWikitextArgument := wikitextArgumentParser parse.
 	expectedWikitextArgument := WikitextArgument
 		named: 'arg_name'
-		content: ( WikitextBasicContent being: 'basic_content' ).
+		withContent: ( WikitextBasicContent being: 'basic_content' ).
 
 	self
 		assert: ( wikitextArgumentParser isA: NamedWikitextArgumentParser );

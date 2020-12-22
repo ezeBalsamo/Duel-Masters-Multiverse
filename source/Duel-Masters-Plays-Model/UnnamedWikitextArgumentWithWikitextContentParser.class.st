@@ -19,5 +19,5 @@ UnnamedWikitextArgumentWithWikitextContentParser >> initializeToParse: aWikitext
 { #category : #parsing }
 UnnamedWikitextArgumentWithWikitextContentParser >> parseContent [
 
-	^ WikitextParser new parse: wikitextToParse
+	^ WikitextParser parse: wikitextToParse
 ]

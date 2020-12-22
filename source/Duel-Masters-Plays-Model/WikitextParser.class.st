@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #parsing }
+WikitextParser class >> parse: aWikitextToParse [
+
+	^ self new parse: aWikitextToParse
+]
+
+{ #category : #parsing }
 WikitextParser >> parse: aWikitext [
 
 	| wikitextWithoutCurlyBraces |

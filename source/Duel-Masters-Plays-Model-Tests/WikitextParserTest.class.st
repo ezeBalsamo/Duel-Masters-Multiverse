@@ -15,7 +15,7 @@ WikitextParserTest >> test01ParsingAClosedWikitextWithOneTemplateWithoutArgument
 	wikitext := '{{Double Breaker}}'.
 	wikitextTemplate := WikitextTemplate withoutArgumentsNamed: 'Double Breaker'.
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
 
@@ -28,10 +28,10 @@ WikitextParserTest >> test02ParsingAClosedWikitextWithOneTemplateWithOneNamedArg
 
 	wikitextArgument := WikitextArgument
 		named: 'civilization'
-		content: ( WikitextBasicContent being: 'water' ).
+		withContent: ( WikitextBasicContent being: 'water' ).
 	wikitextTemplate := WikitextTemplate named: 'Cardtable' withArgument: wikitextArgument.
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
@@ -45,10 +45,10 @@ WikitextParserTest >> test03ParsingANotClosedWikitextWithOneTemplateWithOneNamed
 
 	wikitextArgument := WikitextArgument
 		named: 'civilization'
-		content: ( WikitextBasicContent being: 'water' ).
+		withContent: ( WikitextBasicContent being: 'water' ).
 	wikitextTemplate := WikitextTemplate named: 'Cardtable' withArgument: wikitextArgument.
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
@@ -64,7 +64,7 @@ WikitextParserTest >> test04ParsingAClosedWikitextWithOneTemplateWithOneUnnamedA
 		unnamedWithContent: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ).
 	wikitextTemplate := WikitextTemplate named: 'Tap Skill' withArgument: wikitextArgument.
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
@@ -80,7 +80,7 @@ WikitextParserTest >> test05ParsingANotClosedWikitextWithOneTemplateWithOneUnnam
 		unnamedWithContent: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ).
 	wikitextTemplate := WikitextTemplate named: 'Tap Skill' withArgument: wikitextArgument.
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
@@ -95,10 +95,10 @@ WikitextParserTest >> test06ParsingAClosedWikitextWithOneTemplateWithOneNamedArg
 	innerWikitextArgument := WikitextArgument
 		unnamedWithContent: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ).
 	innerWikitextTemplate := WikitextTemplate named: 'Tap Skill' withArgument: innerWikitextArgument.
-	wikitextArgument := WikitextArgument named: 'engtext' content: innerWikitextTemplate.
+	wikitextArgument := WikitextArgument named: 'engtext' withContent: innerWikitextTemplate.
 	wikitextTemplate := WikitextTemplate named: 'Cardtable' withArgument: wikitextArgument.
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
@@ -116,7 +116,7 @@ WikitextParserTest >> test07ParsingAClosedWikitextWithOneTemplateWithOneUnnamedA
 	wikitextArgument := WikitextArgument unnamedWithContent: innerWikitextTemplate.
 	wikitextTemplate := WikitextTemplate named: 'Cardtable' withArgument: wikitextArgument.
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
@@ -130,12 +130,12 @@ WikitextParserTest >> test08ParsingAClosedWikitextWithOneTemplateWithOneNamedArg
 
 	innerWikitextArgument := WikitextArgument
 		named: 'effect'
-		content: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ).
+		withContent: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ).
 	innerWikitextTemplate := WikitextTemplate named: 'Tap Skill' withArgument: innerWikitextArgument.
-	wikitextArgument := WikitextArgument named: 'engtext' content: innerWikitextTemplate.
+	wikitextArgument := WikitextArgument named: 'engtext' withContent: innerWikitextTemplate.
 	wikitextTemplate := WikitextTemplate named: 'Cardtable' withArgument: wikitextArgument.
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
@@ -149,12 +149,12 @@ WikitextParserTest >> test09ParsingAClosedWikitextWithOneTemplateWithOneUnnamedA
 
 	innerWikitextArgument := WikitextArgument
 		named: 'effect'
-		content: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ).
+		withContent: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ).
 	innerWikitextTemplate := WikitextTemplate named: 'Tap Skill' withArgument: innerWikitextArgument.
 	wikitextArgument := WikitextArgument unnamedWithContent: innerWikitextTemplate.
 	wikitextTemplate := WikitextTemplate named: 'Cardtable' withArgument: wikitextArgument.
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
@@ -168,10 +168,10 @@ WikitextParserTest >> test10ParsingAClosedWikitextWithOneTemplateWithManyArgumen
 
 	firstWikitextArgument := WikitextArgument
 		named: 'civilization'
-		content: ( WikitextBasicContent being: 'Water' ).
+		withContent: ( WikitextBasicContent being: 'Water' ).
 	secondWikitextArgument := WikitextArgument
 		named: 'engtext'
-		content:
+		withContent:
 			( WikitextTemplate
 				named: 'Tap Skill'
 				withArgument:
@@ -183,7 +183,7 @@ WikitextParserTest >> test10ParsingAClosedWikitextWithOneTemplateWithManyArgumen
 		unnamedWithContent: ( WikitextTemplate withoutArgumentsNamed: 'Double Breaker' ).
 	fifthWikitextArgument := WikitextArgument
 		named: 'type'
-		content: ( WikitextBasicContent being: 'Creature' ).
+		withContent: ( WikitextBasicContent being: 'Creature' ).
 
 	wikitextTemplate := WikitextTemplate
 		named: 'Cardtable'
@@ -195,7 +195,7 @@ WikitextParserTest >> test10ParsingAClosedWikitextWithOneTemplateWithManyArgumen
 				with: fourthWikitextArgument
 				with: fifthWikitextArgument ).
 
-	parsedWikitextTemplate := WikitextParser new parse: wikitext.
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]

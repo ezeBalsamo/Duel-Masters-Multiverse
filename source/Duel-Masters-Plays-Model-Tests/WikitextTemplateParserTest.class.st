@@ -34,7 +34,7 @@ WikitextTemplateParserTest >> test02ParsingAWikitextTemplateWithArguments [
 	parsedWikitextTemplate := wikitextTemplateParser parse.
 	expectedWikitextTemplate := WikitextTemplate
 		named: 'Cardtable'
-		withArgument: ( WikitextArgument named: 'Civilization' content: ( WikitextBasicContent being: 'Water' ) ).
+		withArgument: ( WikitextArgument named: 'Civilization' withContent: ( WikitextBasicContent being: 'Water' ) ).
 
 	self
 		assert: ( wikitextTemplateParser isA: WikitextTemplateWithArgumentsParser );
