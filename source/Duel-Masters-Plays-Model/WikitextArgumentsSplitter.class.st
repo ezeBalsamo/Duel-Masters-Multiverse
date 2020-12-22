@@ -25,20 +25,7 @@ WikitextArgumentsSplitter class >> splitting: aWikitextArgumentCollectionToSplit
 { #category : #'accessing - private' }
 WikitextArgumentsSplitter >> findCloseDoubleCurlyBracesStartingAt: anStartIndex [
 
-	| index nestLevel |
-
-	index := anStartIndex + 1.
-	nestLevel := 1.
-	index to: wikitextArgumentsToSplit size do: [ :currentIndex | 
-		( wikitextArgumentsToSplit at: currentIndex ) = ${
-			ifTrue: [ nestLevel := nestLevel + 1 ].
-		( wikitextArgumentsToSplit at: currentIndex ) = $}
-			ifTrue: [ nestLevel := nestLevel - 1 ].
-		nestLevel isZero
-			ifTrue: [ ^ currentIndex ]
-		].
-
-	ParsingFailed signal: 'The arguments includes ''{{'' but not ''}}'''
+	^ wikitextArgumentsToSplit find: $} closeTo: ${ startingAt: anStartIndex
 ]
 
 { #category : #'testing - private' }
