@@ -7,29 +7,42 @@ Class {
 { #category : #testing }
 NamedWikitextArgumentParser class >> canHandle: aWikitextArgumentToParse [
 
-	^ aWikitextArgumentToParse includesSubstring: '='
+	^ ( aWikitextArgumentToParse beginsWith: '{{' ) not
+		and: [ aWikitextArgumentToParse includesSubstring: '=' ]
 ]
 
 { #category : #initialization }
 NamedWikitextArgumentParser >> initializeToParse: aWikitextArgumentToParse [
 
-	wikitextArgumentToParse := aWikitextArgumentToParse
+	wikitextToParse := aWikitextArgumentToParse
 ]
 
 { #category : #parsing }
 NamedWikitextArgumentParser >> parse [
 
-	| argumentNameAndContentSplitted |
+	| argumentNameAndContentSplitted argumentName argumentContent |
 
 	argumentNameAndContentSplitted := self splitArgumentNameFromContent.
+	argumentName := self parseArgumentNameFrom: argumentNameAndContentSplitted.
+	argumentContent := self parseArgumentContentFrom: argumentNameAndContentSplitted.
 
-	^ WikitextArgument
-		named: argumentNameAndContentSplitted first
-		content: argumentNameAndContentSplitted second
+	^ WikitextArgument named: argumentName content: argumentContent
+]
+
+{ #category : #'parsing - private' }
+NamedWikitextArgumentParser >> parseArgumentContentFrom: anArgumentNameAndContentCollection [
+
+	^ ( WikitextArgumentContentParser toParse: anArgumentNameAndContentCollection second ) parse
+]
+
+{ #category : #'parsing - private' }
+NamedWikitextArgumentParser >> parseArgumentNameFrom: anArgumentNameAndContentCollection [
+
+	^ anArgumentNameAndContentCollection first
 ]
 
 { #category : #'parsing - private' }
 NamedWikitextArgumentParser >> splitArgumentNameFromContent [
 
-	^ wikitextArgumentToParse substrings: '='
+	^ wikitextToParse splitOnFirstOccurrenceOf: '='
 ]

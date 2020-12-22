@@ -29,8 +29,8 @@ WikitextTemplate class >> assertNoUnnamedArgumentsWithSameContentIn: aWikitextAr
 	unnamedWikitextArguments
 		ifEmpty: [ "do nothing. -ebalsamo" ]
 		ifNotEmpty: [ self
-				assertNoUnnamedWikitextArgumentIn: aWikitextArgumentCollection withoutFirst
-				withSameContentThan: aWikitextArgumentCollection first
+				assertNoUnnamedWikitextArgumentIn: unnamedWikitextArguments withoutFirst
+				withSameContentThan: unnamedWikitextArguments first
 			]
 ]
 
@@ -95,6 +95,12 @@ WikitextTemplate >> hasArguments [
 	^ wikitextArguments notEmpty
 ]
 
+{ #category : #testing }
+WikitextTemplate >> hasContent: aPotentialContent [
+
+	self shouldBeImplemented
+]
+
 { #category : #'testing - private' }
 WikitextTemplate >> hasEquivalentArgument: aPotentialWikitextArgument [
 
@@ -112,8 +118,8 @@ WikitextTemplate >> hasEquivalentArguments: aWikitextTemplate [
 { #category : #testing }
 WikitextTemplate >> hasUnnamedArgumentWithContent: aContent [
 
-	^ wikitextArguments
-		detect: [ :aWikitextArgument | aWikitextArgument isUnnamed and: [ aWikitextArgument hasContent: aContent ] ]
+	^ self unnamedWikitextArguments
+		detect: [ :aWikitextArgument | aWikitextArgument hasContent: aContent ]
 		ifFound: [ true ]
 		ifNone: [ false ]
 ]
@@ -138,4 +144,10 @@ WikitextTemplate >> isEquivalentTo: aWikitextTemplate [
 WikitextTemplate >> isNamed: aPotentialName [
 
 	^ name = aPotentialName
+]
+
+{ #category : #accessing }
+WikitextTemplate >> unnamedWikitextArguments [
+
+	^ wikitextArguments select: #isUnnamed
 ]

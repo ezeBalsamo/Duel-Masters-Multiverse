@@ -29,7 +29,9 @@ WikitextArgument class >> unnamedWithContent: aContent [
 { #category : #testing }
 WikitextArgument >> hasContent: aPotentialContent [
 
-	^ content = aPotentialContent
+	^ ( WikitextArgumentContentEquivalenceAnalyzer
+		analyzingEquivalenceBetween: content
+		and: aPotentialContent ) areEquivalents
 ]
 
 { #category : #'testing-private' }
@@ -96,7 +98,6 @@ WikitextArgument >> printOn: aStream [
 	aStream nextPutAll: 'Wikitext Argument '.
 	self printNameOptionalOn: aStream.
 
-	aStream
-		nextPutAll: ' with ';
-		nextPutAll: content
+	aStream nextPutAll: ' with '.
+	content printOn: aStream
 ]

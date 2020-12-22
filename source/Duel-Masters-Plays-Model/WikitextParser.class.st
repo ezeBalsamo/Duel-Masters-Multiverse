@@ -14,41 +14,9 @@ WikitextParser >> parse: aWikitext [
 ]
 
 { #category : #'parsing - private' }
-WikitextParser >> parseTemplateNameFrom: aTemplateNameAndArgumentsCollection [
-
-	^ aTemplateNameAndArgumentsCollection first
-]
-
-{ #category : #'parsing - private' }
-WikitextParser >> parseWikitextArgumentFrom: aWikitextArgumentToParse [
-
-	^ ( WikitextArgumentParser toParse: aWikitextArgumentToParse ) parse
-]
-
-{ #category : #'parsing - private' }
-WikitextParser >> parseWikitextArgumentsFrom: aTemplateNameAndArgumentsCollection [
-
-	^ aTemplateNameAndArgumentsCollection allButFirst
-		collect: [ :aWikitextArgumentToParse | self parseWikitextArgumentFrom: aWikitextArgumentToParse ]
-]
-
-{ #category : #'parsing - private' }
 WikitextParser >> parseWikitextTemplateFrom: aWikitextTemplateToParse [
 
-	| templateNameAndArgumentsSplitted templateName arguments |
-
-	templateNameAndArgumentsSplitted := self splitTemplateNameFromArgumentsIn: aWikitextTemplateToParse.
-
-	templateName := self parseTemplateNameFrom: templateNameAndArgumentsSplitted.
-	arguments := self parseWikitextArgumentsFrom: templateNameAndArgumentsSplitted.
-
-	^ WikitextTemplate named: templateName withArguments: arguments
-]
-
-{ #category : #'parsing - private' }
-WikitextParser >> splitTemplateNameFromArgumentsIn: aWikitextToParse [
-
-	^ aWikitextToParse splitOn: '|'
+	^ ( WikitextTemplateParser toParse: aWikitextTemplateToParse ) parse
 ]
 
 { #category : #'parsing - private' }

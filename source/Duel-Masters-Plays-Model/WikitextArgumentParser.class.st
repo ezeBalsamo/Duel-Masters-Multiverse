@@ -2,7 +2,7 @@ Class {
 	#name : #WikitextArgumentParser,
 	#superclass : #Object,
 	#instVars : [
-		'wikitextArgumentToParse'
+		'wikitextToParse'
 	],
 	#category : #'Duel-Masters-Plays-Model'
 }
@@ -16,8 +16,8 @@ WikitextArgumentParser class >> canHandle: aWikitextArgumentToParse [
 { #category : #'instance creation' }
 WikitextArgumentParser class >> toParse: aWikitextArgumentToParse [
 
-	^ ( SuitableClassFinder findDirectSubclassOf: self suitableFor: aWikitextArgumentToParse ) value
-		new initializeToParse: aWikitextArgumentToParse
+	^ ( SuitableClassFinder findSubclassOf: self suitableFor: aWikitextArgumentToParse ) value new
+		initializeToParse: aWikitextArgumentToParse
 ]
 
 { #category : #initialization }
