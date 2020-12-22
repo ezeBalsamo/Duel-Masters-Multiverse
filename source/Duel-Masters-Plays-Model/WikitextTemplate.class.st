@@ -95,12 +95,6 @@ WikitextTemplate >> hasArguments [
 	^ wikitextArguments notEmpty
 ]
 
-{ #category : #testing }
-WikitextTemplate >> hasContent: aPotentialContent [
-
-	self shouldBeImplemented
-]
-
 { #category : #'testing - private' }
 WikitextTemplate >> hasEquivalentArgument: aPotentialWikitextArgument [
 
