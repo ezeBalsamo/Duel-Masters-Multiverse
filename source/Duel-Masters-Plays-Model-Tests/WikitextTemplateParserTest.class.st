@@ -40,3 +40,23 @@ WikitextTemplateParserTest >> test02ParsingAWikitextTemplateWithArguments [
 		assert: ( wikitextTemplateParser isA: WikitextTemplateWithArgumentsParser );
 		assert: ( expectedWikitextTemplate isEquivalentTo: parsedWikitextTemplate )
 ]
+
+{ #category : #tests }
+WikitextTemplateParserTest >> test03ParsingTrimsWhiteSpaces [
+
+	| wikitextTemplateToParse wikitextTemplateParser parsedWikitextTemplate expectedWikitextTemplate |
+
+	wikitextTemplateToParse := 'Cardtable
+|  phonetic = Europika
+'.
+
+	wikitextTemplateParser := WikitextTemplateParser toParse: wikitextTemplateToParse.
+	parsedWikitextTemplate := wikitextTemplateParser parse.
+	expectedWikitextTemplate := WikitextTemplate
+		named: 'Cardtable'
+		withArgument: ( WikitextArgument named: 'phonetic' withContent: ( WikitextBasicContent being: 'Europika' ) ).
+
+	self
+		assert: ( wikitextTemplateParser isA: WikitextTemplateWithArgumentsParser );
+		assert: ( expectedWikitextTemplate isEquivalentTo: parsedWikitextTemplate )
+]

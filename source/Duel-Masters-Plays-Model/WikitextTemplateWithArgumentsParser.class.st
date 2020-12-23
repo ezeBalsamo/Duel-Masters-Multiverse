@@ -35,7 +35,7 @@ WikitextTemplateWithArgumentsParser >> parse [
 { #category : #'parsing - private' }
 WikitextTemplateWithArgumentsParser >> parseTemplateNameFrom: aTemplateNameAndArgumentsCollection [
 
-	^ aTemplateNameAndArgumentsCollection first
+	^ aTemplateNameAndArgumentsCollection first trimBoth
 ]
 
 { #category : #'parsing - private' }

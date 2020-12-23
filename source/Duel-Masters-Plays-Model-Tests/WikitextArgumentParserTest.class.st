@@ -58,3 +58,58 @@ WikitextArgumentParserTest >> test03ParsingAnUnnamedWikitextArgumentWithWikitext
 		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentWithWikitextContentParser );
 		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
 ]
+
+{ #category : #tests }
+WikitextArgumentParserTest >> test04ParsingTrimmingWhiteSpacesDetectsNamedWikitextArgument [
+
+	| wikitextArgumentToParse wikitextArgumentParser parsedWikitextArgument expectedWikitextArgument |
+
+	wikitextArgumentToParse := ' phonetic = Europika
+'.
+
+	wikitextArgumentParser := WikitextArgumentParser toParse: wikitextArgumentToParse.
+	parsedWikitextArgument := wikitextArgumentParser parse.
+	expectedWikitextArgument := WikitextArgument
+		named: 'phonetic'
+		withContent: ( WikitextBasicContent being: 'Europika' ).
+
+	self
+		assert: ( wikitextArgumentParser isA: NamedWikitextArgumentParser );
+		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
+]
+
+{ #category : #tests }
+WikitextArgumentParserTest >> test05ParsingTrimmingWhiteSpacesDetectsUnnamedWikitextArgumentWithBasicContent [
+
+	| wikitextArgumentToParse wikitextArgumentParser parsedWikitextArgument expectedWikitextArgument |
+
+	wikitextArgumentToParse := '  Europika
+'.
+
+	wikitextArgumentParser := WikitextArgumentParser toParse: wikitextArgumentToParse.
+	parsedWikitextArgument := wikitextArgumentParser parse.
+	expectedWikitextArgument := WikitextArgument
+		unnamedWithContent: ( WikitextBasicContent being: 'Europika' ).
+
+	self
+		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentWithBasicContentParser );
+		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
+]
+
+{ #category : #tests }
+WikitextArgumentParserTest >> test06ParsingTrimmingWhiteSpacesDetectsUnnamedWikitextArgumentWithWikitextContext [
+
+	| wikitextArgumentToParse wikitextArgumentParser parsedWikitextArgument expectedWikitextArgument |
+
+	wikitextArgumentToParse := '  {{Europika}}
+'.
+
+	wikitextArgumentParser := WikitextArgumentParser toParse: wikitextArgumentToParse.
+	parsedWikitextArgument := wikitextArgumentParser parse.
+	expectedWikitextArgument := WikitextArgument
+		unnamedWithContent: ( WikitextTemplate withoutArgumentsNamed: 'Europika' ).
+
+	self
+		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentWithWikitextContentParser );
+		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
+]

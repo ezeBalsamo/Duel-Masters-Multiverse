@@ -38,7 +38,7 @@ NamedWikitextArgumentParser >> parseArgumentContentFrom: anArgumentNameAndConten
 { #category : #'parsing - private' }
 NamedWikitextArgumentParser >> parseArgumentNameFrom: anArgumentNameAndContentCollection [
 
-	^ anArgumentNameAndContentCollection first
+	^ anArgumentNameAndContentCollection first trimBoth
 ]
 
 { #category : #'parsing - private' }

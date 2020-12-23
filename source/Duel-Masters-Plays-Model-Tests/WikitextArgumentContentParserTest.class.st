@@ -77,3 +77,37 @@ WikitextArgumentContentParserTest >> test04ParsingAWikitextContentWithOneUnnamed
 		assert: ( wikitextContentParser isA: WikitextArgumentWithWikitextContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
+
+{ #category : #tests }
+WikitextArgumentContentParserTest >> test05ParsingTrimmingWhiteSpacesDetectsBasicContent [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := ' Europika
+'.
+
+	wikitextContentParser := WikitextArgumentContentParser toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextBasicContent being: 'Europika'.
+
+	self
+		assert: ( wikitextContentParser isA: WikitextArgumentWithBasicContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]
+
+{ #category : #tests }
+WikitextArgumentContentParserTest >> test06ParsingTrimmingWhiteSpacesDetectsWikitextContent [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := ' {{Europika}}
+'.
+
+	wikitextContentParser := WikitextArgumentContentParser toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextTemplate withoutArgumentsNamed: 'Europika'.
+
+	self
+		assert: ( wikitextContentParser isA: WikitextArgumentWithWikitextContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]

@@ -16,8 +16,12 @@ WikitextArgumentParser class >> canHandle: aWikitextArgumentToParse [
 { #category : #'instance creation' }
 WikitextArgumentParser class >> toParse: aWikitextArgumentToParse [
 
-	^ ( SuitableClassFinder findSubclassOf: self suitableFor: aWikitextArgumentToParse ) value new
-		initializeToParse: aWikitextArgumentToParse
+	| trimmedWikitextArgumentToParse |
+
+	trimmedWikitextArgumentToParse := aWikitextArgumentToParse trimBoth.
+
+	^ ( SuitableClassFinder findSubclassOf: self suitableFor: trimmedWikitextArgumentToParse ) value
+		new initializeToParse: trimmedWikitextArgumentToParse
 ]
 
 { #category : #initialization }
