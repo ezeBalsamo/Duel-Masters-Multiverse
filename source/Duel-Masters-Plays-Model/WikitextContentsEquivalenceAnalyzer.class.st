@@ -15,7 +15,7 @@ WikitextContentsEquivalenceAnalyzer class >> analyzingEquivalenceBetween: aWikit
 		and: anotherWikitextContent
 ]
 
-{ #category : #'instance creation' }
+{ #category : #'private - testing' }
 WikitextContentsEquivalenceAnalyzer class >> canHandle: aWikitextContent with: anotherWikitextContent [
 
 	self subclassResponsibility

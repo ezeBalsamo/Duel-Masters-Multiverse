@@ -1,28 +1,19 @@
 Class {
 	#name : #BasicContentParser,
 	#superclass : #WikitextContentParser,
-	#instVars : [
-		'content'
-	],
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #testing }
-BasicContentParser class >> canHandle: aWikitextArgumentContentToParse [
+{ #category : #'private - testing' }
+BasicContentParser class >> canHandle: aWikitextContentToParse [
 
-	^ ( aWikitextArgumentContentToParse beginsWith: '{{' ) not
+	^ ( self isTemplateContent: aWikitextContentToParse ) not
 ]
 
 { #category : #'parsing - private' }
 BasicContentParser >> contentWithoutDoubleSquareBraces [
 
-	^ ( CollectionFormatter separatingWith: '' ) format: ( content findBetweenSubstrings: '[[]]' )
-]
-
-{ #category : #initialization }
-BasicContentParser >> initializeToParse: aWikitextArgumentContentToParse [
-
-	content := aWikitextArgumentContentToParse
+	^ ( CollectionFormatter separatingWith: '' ) format: ( wikitextContentToParse findBetweenSubstrings: '[[]]' )
 ]
 
 { #category : #initialization }

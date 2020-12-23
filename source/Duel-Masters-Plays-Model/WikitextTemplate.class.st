@@ -8,7 +8,7 @@ Class {
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #asserting }
+{ #category : #'private - asserting' }
 WikitextTemplate class >> assertNoRepeatedNameIn: aWikitextArgumentCollection [
 
 	aWikitextArgumentCollection
@@ -19,7 +19,7 @@ WikitextTemplate class >> assertNoRepeatedNameIn: aWikitextArgumentCollection [
 			]
 ]
 
-{ #category : #asserting }
+{ #category : #'private - asserting' }
 WikitextTemplate class >> assertNoUnnamedArgumentsWithSameContentIn: aWikitextArgumentCollection [
 
 	| unnamedWikitextArguments |
@@ -34,7 +34,7 @@ WikitextTemplate class >> assertNoUnnamedArgumentsWithSameContentIn: aWikitextAr
 			]
 ]
 
-{ #category : #asserting }
+{ #category : #'private - asserting' }
 WikitextTemplate class >> assertNoUnnamedWikitextArgumentIn: aWikitextArgumentCollection
 	withSameContentThan: aWikitextArgumentToCompare [
 
@@ -47,7 +47,7 @@ WikitextTemplate class >> assertNoUnnamedWikitextArgumentIn: aWikitextArgumentCo
 		ifNone: [ self assertNoUnnamedArgumentsWithSameContentIn: aWikitextArgumentCollection ]
 ]
 
-{ #category : #asserting }
+{ #category : #'private - asserting' }
 WikitextTemplate class >> assertNoWikitextArgumentIn: aWikitextArgumentCollection namedSameThan: aWikitextArgumentToCompare [
 
 	aWikitextArgumentCollection

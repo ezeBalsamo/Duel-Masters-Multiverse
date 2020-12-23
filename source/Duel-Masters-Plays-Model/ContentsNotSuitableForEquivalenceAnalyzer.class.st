@@ -4,7 +4,7 @@ Class {
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #'instance creation' }
+{ #category : #'private - testing' }
 ContentsNotSuitableForEquivalenceAnalyzer class >> canHandle: aWikitextContent with: anotherWikitextContent [
 
 	^ aWikitextContent class ~= anotherWikitextContent class

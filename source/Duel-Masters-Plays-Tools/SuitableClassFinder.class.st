@@ -10,19 +10,19 @@ Class {
 	#category : #'Duel-Masters-Plays-Tools'
 }
 
-{ #category : #'accessing - private' }
+{ #category : #'private - accessing' }
 SuitableClassFinder class >> createCanHandleMessageFor: anObject [
 
 	^ Message selector: #canHandle: argument: anObject
 ]
 
-{ #category : #'accessing - private' }
+{ #category : #'private - accessing' }
 SuitableClassFinder class >> createCanHandleMessageFor: anObject with: anotherObject [
 
 	^ Message selector: #canHandle:with: arguments: ( Array with: anObject with: anotherObject )
 ]
 
-{ #category : #'accessing - private' }
+{ #category : #'private - accessing' }
 SuitableClassFinder class >> defaultIfMultipleBlock [
 
 	^ [ :potentialClasses :suitableClassFinder | 
@@ -34,7 +34,7 @@ SuitableClassFinder class >> defaultIfMultipleBlock [
 	]
 ]
 
-{ #category : #'accessing - private' }
+{ #category : #'private - accessing' }
 SuitableClassFinder class >> defaultIfNoneBlock [
 
 	^ [ :suitableClassFinder | 
@@ -247,7 +247,7 @@ SuitableClassFinder class >> findSubclassOf: anAbstractClass suitableFor: anObje
 		ifNone: anIfNoneDoBlock
 ]
 
-{ #category : #'accessing - private' }
+{ #category : #'private - accessing' }
 SuitableClassFinder class >> format: aCollection [
 
 	^ ( CollectionFormatter separatingWith: ', ' andLastWith: ' and ' ) format: aCollection

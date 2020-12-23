@@ -1,36 +1,55 @@
 Class {
 	#name : #WikitextContentParser,
 	#superclass : #Object,
+	#instVars : [
+		'wikitextContentToParse'
+	],
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #testing }
-WikitextContentParser class >> canHandle: aWikitextArgumentContentToParse [
+{ #category : #'private - testing' }
+WikitextContentParser class >> canHandle: aWikitextContentToParse [
 
 	self subclassResponsibility
+]
+
+{ #category : #'private - testing' }
+WikitextContentParser class >> isMultipleTemplateContent: aWikitextContentToParse [
+
+	^ ( aWikitextContentToParse splitOn: '}}' ) withoutFirst
+		anySatisfy: [ :splittedContentToParse | splittedContentToParse includesSubstring: '{{' ]
+]
+
+{ #category : #'private - testing' }
+WikitextContentParser class >> isTemplateContent: aWikitextContentToParse [
+
+	^ aWikitextContentToParse beginsWith: '{{'
 ]
 
 { #category : #'instance creation' }
-WikitextContentParser class >> toParse: aWikitextArgumentContentToParse [
+WikitextContentParser class >> toParse: aWikitextContentToParse [
 
-	| trimmedWikitextArgumentContentToParse |
+	| trimmedWikitextContentToParse |
 
-	trimmedWikitextArgumentContentToParse := aWikitextArgumentContentToParse trimBoth.
+	trimmedWikitextContentToParse := aWikitextContentToParse trimBoth.
 
-	^ ( SuitableClassFinder
-		findDirectSubclassOf: self
-		suitableFor: trimmedWikitextArgumentContentToParse ) value new
-		initializeToParse: trimmedWikitextArgumentContentToParse
+	^ ( SuitableClassFinder findDirectSubclassOf: self suitableFor: trimmedWikitextContentToParse )
+		value new initializeToParse: trimmedWikitextContentToParse
 ]
 
 { #category : #initialization }
-WikitextContentParser >> initializeToParse: aWikitextArgumentContentToParse [
+WikitextContentParser >> initializeToParse: aWikitextContentToParse [
 
-	self subclassResponsibility
+	wikitextContentToParse := aWikitextContentToParse
 ]
 
 { #category : #initialization }
 WikitextContentParser >> parse [
 
-	self subclassResponsibility
+	| wikitextTemplates |
+
+	wikitextTemplates := self
+		wikitextTemplatesToParseCollect: [ :wikitextTemplateToParse | WikitextParser parse: wikitextTemplateToParse ].
+
+	^ MultipleWikitextTemplate conformedByAll: wikitextTemplates
 ]

@@ -2,15 +2,27 @@ Class {
 	#name : #WikitextArgumentParser,
 	#superclass : #Object,
 	#instVars : [
-		'wikitextToParse'
+		'wikitextArgumentToParse'
 	],
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #testing }
+{ #category : #'private - testing' }
 WikitextArgumentParser class >> canHandle: aWikitextArgumentToParse [
 
 	self subclassResponsibility
+]
+
+{ #category : #'private - testing' }
+WikitextArgumentParser class >> isNamed: aWikitextArgumentToParse [
+
+	^ aWikitextArgumentToParse includesSubstring: '='
+]
+
+{ #category : #'private - testing' }
+WikitextArgumentParser class >> isUnnamedArgumentWithTemplateContent: aWikitextArgumentToParse [
+
+	^ aWikitextArgumentToParse beginsWith: '{{'
 ]
 
 { #category : #'instance creation' }
@@ -27,7 +39,7 @@ WikitextArgumentParser class >> toParse: aWikitextArgumentToParse [
 { #category : #initialization }
 WikitextArgumentParser >> initializeToParse: aWikitextArgumentToParse [
 
-	self subclassResponsibility
+	wikitextArgumentToParse := aWikitextArgumentToParse
 ]
 
 { #category : #parsing }

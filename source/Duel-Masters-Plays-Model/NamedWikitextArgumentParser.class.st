@@ -4,17 +4,11 @@ Class {
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #testing }
+{ #category : #'private - testing' }
 NamedWikitextArgumentParser class >> canHandle: aWikitextArgumentToParse [
 
-	^ ( aWikitextArgumentToParse beginsWith: '{{' ) not
-		and: [ aWikitextArgumentToParse includesSubstring: '=' ]
-]
-
-{ #category : #initialization }
-NamedWikitextArgumentParser >> initializeToParse: aWikitextArgumentToParse [
-
-	wikitextToParse := aWikitextArgumentToParse
+	^ ( self isUnnamedArgumentWithTemplateContent: aWikitextArgumentToParse ) not
+		and: [ self isNamed: aWikitextArgumentToParse ]
 ]
 
 { #category : #parsing }
@@ -44,5 +38,5 @@ NamedWikitextArgumentParser >> parseArgumentNameFrom: anArgumentNameAndContentCo
 { #category : #'parsing - private' }
 NamedWikitextArgumentParser >> splitArgumentNameFromContent [
 
-	^ wikitextToParse splitOnFirstOccurrenceOf: '='
+	^ wikitextArgumentToParse splitOnFirstOccurrenceOf: '='
 ]

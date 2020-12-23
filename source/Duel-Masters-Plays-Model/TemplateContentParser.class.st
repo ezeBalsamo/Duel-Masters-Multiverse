@@ -1,26 +1,18 @@
 Class {
 	#name : #TemplateContentParser,
 	#superclass : #WikitextContentParser,
-	#instVars : [
-		'wikitextArgumentContentToParse'
-	],
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #testing }
-TemplateContentParser class >> canHandle: aWikitextArgumentContentToParse [
+{ #category : #'private - testing' }
+TemplateContentParser class >> canHandle: aWikitextContentToParse [
 
-	^ aWikitextArgumentContentToParse beginsWith: '{{'
-]
-
-{ #category : #initialization }
-TemplateContentParser >> initializeToParse: aWikitextArgumentContentToParse [
-
-	wikitextArgumentContentToParse := aWikitextArgumentContentToParse
+	^ ( self isTemplateContent: aWikitextContentToParse )
+		and: [ ( self isMultipleTemplateContent: aWikitextContentToParse ) not ]
 ]
 
 { #category : #initialization }
 TemplateContentParser >> parse [
 
-	^ WikitextParser parse: wikitextArgumentContentToParse
+	^ WikitextParser parse: wikitextContentToParse
 ]

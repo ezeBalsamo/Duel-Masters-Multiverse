@@ -113,3 +113,31 @@ WikitextArgumentParserTest >> test06ParsingTrimmingWhiteSpacesDetectsUnnamedWiki
 		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentParser );
 		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
 ]
+
+{ #category : #tests }
+WikitextArgumentParserTest >> test07ParsingANamedArgumentWithDoubleWikitextContext [
+
+	| wikitextArgumentToParse wikitextArgumentParser parsedWikitextArgument expectedWikitextArgument |
+
+	wikitextArgumentToParse := 'engtext={{Tap Skill|Return one of your opponent''s creatures to their hand.}}{{Double Breaker}}'.
+
+	wikitextArgumentParser := WikitextArgumentParser toParse: wikitextArgumentToParse.
+	parsedWikitextArgument := wikitextArgumentParser parse.
+	expectedWikitextArgument := WikitextArgument
+		named: 'engtext'
+		withContent:
+			( MultipleWikitextTemplate
+				conformedByAll:
+					( Array
+						with:
+							( WikitextTemplate
+								named: 'Tap Skill'
+								withArgument:
+									( WikitextArgument
+										unnamedWithContent: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ) ) )
+						with: ( WikitextTemplate withoutArgumentsNamed: 'Double Breaker' ) ) ).
+
+	self
+		assert: ( wikitextArgumentParser isA: NamedWikitextArgumentParser );
+		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
+]

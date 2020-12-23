@@ -128,3 +128,28 @@ WikitextContentParserTest >> test07ParsingABasicContentDeletesLinksReferences [
 		assert: ( wikitextContentParser isA: BasicContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
+
+{ #category : #tests }
+WikitextContentParserTest >> test08ParsingAMultipleTemplateContent [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '{{Tap Skill|Return one of your opponent''s creatures to their hand.}}{{Double Breaker}}'.
+
+	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := MultipleWikitextTemplate
+		conformedByAll:
+			( Array
+				with:
+					( WikitextTemplate
+						named: 'Tap Skill'
+						withArgument:
+							( WikitextArgument
+								unnamedWithContent: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ) ) )
+				with: ( WikitextTemplate withoutArgumentsNamed: 'Double Breaker' ) ).
+
+	self
+		assert: ( wikitextContentParser isA: MultipleTemplateContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]

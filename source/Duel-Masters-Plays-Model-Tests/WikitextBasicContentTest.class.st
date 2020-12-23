@@ -31,7 +31,7 @@ WikitextBasicContentTest >> test02WikitextBasicContentIsNotEquivalentToAnotherWi
 ]
 
 { #category : #tests }
-WikitextBasicContentTest >> test03PritingWikitextBasicContent [
+WikitextBasicContentTest >> test03PrintingWikitextBasicContent [
 
 	| wikitextBasicContent expectedPrintString |
 

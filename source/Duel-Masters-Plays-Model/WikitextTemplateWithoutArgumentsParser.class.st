@@ -1,26 +1,17 @@
 Class {
 	#name : #WikitextTemplateWithoutArgumentsParser,
 	#superclass : #WikitextTemplateParser,
-	#instVars : [
-		'templateName'
-	],
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #testing }
+{ #category : #'private - testing' }
 WikitextTemplateWithoutArgumentsParser class >> canHandle: aWikitextTemplateToParse [
 
-	^ ( aWikitextTemplateToParse includesSubstring: '|' ) not
-]
-
-{ #category : #initialization }
-WikitextTemplateWithoutArgumentsParser >> initializeToParse: aWikitextTemplateToParse [
-
-	templateName := aWikitextTemplateToParse
+	^ ( self hasArguments: aWikitextTemplateToParse ) not
 ]
 
 { #category : #parsing }
 WikitextTemplateWithoutArgumentsParser >> parse [
 
-	^ WikitextTemplate withoutArgumentsNamed: templateName
+	^ WikitextTemplate withoutArgumentsNamed: wikitextTemplateToParse
 ]
