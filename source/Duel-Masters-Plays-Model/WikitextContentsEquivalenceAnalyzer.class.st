@@ -1,11 +1,11 @@
 Class {
-	#name : #WikitextArgumentContentEquivalenceAnalyzer,
+	#name : #WikitextContentsEquivalenceAnalyzer,
 	#superclass : #Object,
 	#category : #'Duel-Masters-Plays-Model'
 }
 
 { #category : #'instance creation' }
-WikitextArgumentContentEquivalenceAnalyzer class >> analyzingEquivalenceBetween: aWikitextContent and: anotherWikitextContent [
+WikitextContentsEquivalenceAnalyzer class >> analyzingEquivalenceBetween: aWikitextContent and: anotherWikitextContent [
 
 	^ ( SuitableClassFinder
 		findDirectSubclassOf: self
@@ -16,13 +16,13 @@ WikitextArgumentContentEquivalenceAnalyzer class >> analyzingEquivalenceBetween:
 ]
 
 { #category : #'instance creation' }
-WikitextArgumentContentEquivalenceAnalyzer class >> canHandle: aWikitextContent with: anotherWikitextContent [
+WikitextContentsEquivalenceAnalyzer class >> canHandle: aWikitextContent with: anotherWikitextContent [
 
 	self subclassResponsibility
 ]
 
 { #category : #testing }
-WikitextArgumentContentEquivalenceAnalyzer >> areEquivalents [
+WikitextContentsEquivalenceAnalyzer >> areEquivalents [
 
 	self subclassResponsibility
 ]

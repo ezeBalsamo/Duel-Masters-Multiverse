@@ -1,6 +1,6 @@
 Class {
 	#name : #ContentsSuitableForEquivalenceAnalyzer,
-	#superclass : #WikitextArgumentContentEquivalenceAnalyzer,
+	#superclass : #WikitextContentsEquivalenceAnalyzer,
 	#instVars : [
 		'wikitextContent',
 		'theOtherWikitextContent'

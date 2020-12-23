@@ -1,6 +1,6 @@
 Class {
-	#name : #WikitextArgumentWithWikitextContentParser,
-	#superclass : #WikitextArgumentContentParser,
+	#name : #TemplateContentParser,
+	#superclass : #WikitextContentParser,
 	#instVars : [
 		'wikitextArgumentContentToParse'
 	],
@@ -8,19 +8,19 @@ Class {
 }
 
 { #category : #testing }
-WikitextArgumentWithWikitextContentParser class >> canHandle: aWikitextArgumentContentToParse [
+TemplateContentParser class >> canHandle: aWikitextArgumentContentToParse [
 
 	^ aWikitextArgumentContentToParse beginsWith: '{{'
 ]
 
 { #category : #initialization }
-WikitextArgumentWithWikitextContentParser >> initializeToParse: aWikitextArgumentContentToParse [
+TemplateContentParser >> initializeToParse: aWikitextArgumentContentToParse [
 
 	wikitextArgumentContentToParse := aWikitextArgumentContentToParse
 ]
 
 { #category : #initialization }
-WikitextArgumentWithWikitextContentParser >> parse [
+TemplateContentParser >> parse [
 
 	^ WikitextParser parse: wikitextArgumentContentToParse
 ]

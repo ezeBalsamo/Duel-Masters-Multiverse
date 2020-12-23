@@ -2,20 +2,20 @@
 A WikitextArgumentContentEquivalenceAnalyzerTest is a test class for testing the behavior of WikitextArgumentContentEquivalenceAnalyzer
 "
 Class {
-	#name : #WikitextArgumentContentEquivalenceAnalyzerTest,
+	#name : #WikitextContentsEquivalenceAnalyzerTest,
 	#superclass : #TestCase,
 	#category : #'Duel-Masters-Plays-Model-Tests'
 }
 
 { #category : #tests }
-WikitextArgumentContentEquivalenceAnalyzerTest >> test01WikitextTemplateAsContentCantBeComparedWithWikitextBasicContent [
+WikitextContentsEquivalenceAnalyzerTest >> test01WikitextTemplateAsContentCantBeComparedWithWikitextBasicContent [
 
 	| wikitextTemplate wikitextBasicContent analyzer |
 
 	wikitextTemplate := WikitextTemplate withoutArgumentsNamed: 'Tap Skill'.
 	wikitextBasicContent := WikitextBasicContent being: 'Rare'.
 
-	analyzer := WikitextArgumentContentEquivalenceAnalyzer
+	analyzer := WikitextContentsEquivalenceAnalyzer
 		analyzingEquivalenceBetween: wikitextTemplate
 		and: wikitextBasicContent.
 
@@ -25,7 +25,7 @@ WikitextArgumentContentEquivalenceAnalyzerTest >> test01WikitextTemplateAsConten
 ]
 
 { #category : #tests }
-WikitextArgumentContentEquivalenceAnalyzerTest >> test02WikitextBasicContentCanBeComparedWithWikitextBasicContent [
+WikitextContentsEquivalenceAnalyzerTest >> test02WikitextBasicContentCanBeComparedWithWikitextBasicContent [
 
 	| wikitextBasicContent anotherWikitextBasicContent equivalentWikitextBasicContent analyzer |
 
@@ -33,7 +33,7 @@ WikitextArgumentContentEquivalenceAnalyzerTest >> test02WikitextBasicContentCanB
 	anotherWikitextBasicContent := WikitextBasicContent being: 'not equivalent content'.
 	equivalentWikitextBasicContent := WikitextBasicContent being: 'equivalent content'.
 
-	analyzer := WikitextArgumentContentEquivalenceAnalyzer
+	analyzer := WikitextContentsEquivalenceAnalyzer
 		analyzingEquivalenceBetween: wikitextBasicContent
 		and: anotherWikitextBasicContent.
 
@@ -41,7 +41,7 @@ WikitextArgumentContentEquivalenceAnalyzerTest >> test02WikitextBasicContentCanB
 		assert: ( analyzer isA: ContentsSuitableForEquivalenceAnalyzer );
 		deny: analyzer areEquivalents.
 
-	analyzer := WikitextArgumentContentEquivalenceAnalyzer
+	analyzer := WikitextContentsEquivalenceAnalyzer
 		analyzingEquivalenceBetween: wikitextBasicContent
 		and: equivalentWikitextBasicContent.
 
@@ -51,7 +51,7 @@ WikitextArgumentContentEquivalenceAnalyzerTest >> test02WikitextBasicContentCanB
 ]
 
 { #category : #tests }
-WikitextArgumentContentEquivalenceAnalyzerTest >> test03WikitextTemplateCanBeComparedWithWikitextTemplate [
+WikitextContentsEquivalenceAnalyzerTest >> test03WikitextTemplateCanBeComparedWithWikitextTemplate [
 
 	| wikitextTemplate anotherWikitextTemplate equivalentWikitextTemplate analyzer |
 
@@ -59,7 +59,7 @@ WikitextArgumentContentEquivalenceAnalyzerTest >> test03WikitextTemplateCanBeCom
 	anotherWikitextTemplate := WikitextTemplate withoutArgumentsNamed: 'not equivalent template'.
 	equivalentWikitextTemplate := WikitextTemplate withoutArgumentsNamed: 'equivalent template'.
 
-	analyzer := WikitextArgumentContentEquivalenceAnalyzer
+	analyzer := WikitextContentsEquivalenceAnalyzer
 		analyzingEquivalenceBetween: wikitextTemplate
 		and: anotherWikitextTemplate.
 
@@ -67,7 +67,7 @@ WikitextArgumentContentEquivalenceAnalyzerTest >> test03WikitextTemplateCanBeCom
 		assert: ( analyzer isA: ContentsSuitableForEquivalenceAnalyzer );
 		deny: analyzer areEquivalents.
 
-	analyzer := WikitextArgumentContentEquivalenceAnalyzer
+	analyzer := WikitextContentsEquivalenceAnalyzer
 		analyzingEquivalenceBetween: wikitextTemplate
 		and: equivalentWikitextTemplate.
 

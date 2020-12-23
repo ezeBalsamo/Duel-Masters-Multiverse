@@ -38,7 +38,7 @@ WikitextArgumentParserTest >> test02ParsingAnUnamedWikitextArgumentWithBasicCont
 		unnamedWithContent: ( WikitextBasicContent being: 'basic_content' ).
 
 	self
-		assert: ( wikitextArgumentParser isAn: UnnamedWikitextArgumentWithBasicContentParser );
+		assert: ( wikitextArgumentParser isAn: UnnamedWikitextArgumentParser );
 		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
 ]
 
@@ -55,7 +55,7 @@ WikitextArgumentParserTest >> test03ParsingAnUnnamedWikitextArgumentWithWikitext
 		unnamedWithContent: ( WikitextTemplate withoutArgumentsNamed: 'inner_temp_name' ).
 
 	self
-		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentWithWikitextContentParser );
+		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentParser );
 		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
 ]
 
@@ -92,7 +92,7 @@ WikitextArgumentParserTest >> test05ParsingTrimmingWhiteSpacesDetectsUnnamedWiki
 		unnamedWithContent: ( WikitextBasicContent being: 'Europika' ).
 
 	self
-		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentWithBasicContentParser );
+		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentParser );
 		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
 ]
 
@@ -110,6 +110,6 @@ WikitextArgumentParserTest >> test06ParsingTrimmingWhiteSpacesDetectsUnnamedWiki
 		unnamedWithContent: ( WikitextTemplate withoutArgumentsNamed: 'Europika' ).
 
 	self
-		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentWithWikitextContentParser );
+		assert: ( wikitextArgumentParser isA: UnnamedWikitextArgumentParser );
 		assert: ( expectedWikitextArgument isEquivalentTo: parsedWikitextArgument )
 ]

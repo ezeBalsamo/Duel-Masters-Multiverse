@@ -1,17 +1,17 @@
 Class {
-	#name : #WikitextArgumentContentParser,
+	#name : #WikitextContentParser,
 	#superclass : #Object,
 	#category : #'Duel-Masters-Plays-Model'
 }
 
 { #category : #testing }
-WikitextArgumentContentParser class >> canHandle: aWikitextArgumentContentToParse [
+WikitextContentParser class >> canHandle: aWikitextArgumentContentToParse [
 
 	self subclassResponsibility
 ]
 
 { #category : #'instance creation' }
-WikitextArgumentContentParser class >> toParse: aWikitextArgumentContentToParse [
+WikitextContentParser class >> toParse: aWikitextArgumentContentToParse [
 
 	| trimmedWikitextArgumentContentToParse |
 
@@ -24,13 +24,13 @@ WikitextArgumentContentParser class >> toParse: aWikitextArgumentContentToParse 
 ]
 
 { #category : #initialization }
-WikitextArgumentContentParser >> initializeToParse: aWikitextArgumentContentToParse [
+WikitextContentParser >> initializeToParse: aWikitextArgumentContentToParse [
 
 	self subclassResponsibility
 ]
 
 { #category : #initialization }
-WikitextArgumentContentParser >> parse [
+WikitextContentParser >> parse [
 
 	self subclassResponsibility
 ]

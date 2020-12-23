@@ -32,7 +32,7 @@ NamedWikitextArgumentParser >> parse [
 { #category : #'parsing - private' }
 NamedWikitextArgumentParser >> parseArgumentContentFrom: anArgumentNameAndContentCollection [
 
-	^ ( WikitextArgumentContentParser toParse: anArgumentNameAndContentCollection second ) parse
+	^ ( WikitextContentParser toParse: anArgumentNameAndContentCollection second ) parse
 ]
 
 { #category : #'parsing - private' }

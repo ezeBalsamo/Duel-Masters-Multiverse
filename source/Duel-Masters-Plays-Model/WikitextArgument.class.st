@@ -29,7 +29,7 @@ WikitextArgument class >> unnamedWithContent: aContent [
 { #category : #testing }
 WikitextArgument >> hasContent: aPotentialContent [
 
-	^ ( WikitextArgumentContentEquivalenceAnalyzer
+	^ ( WikitextContentsEquivalenceAnalyzer
 		analyzingEquivalenceBetween: content
 		and: aPotentialContent ) areEquivalents
 ]

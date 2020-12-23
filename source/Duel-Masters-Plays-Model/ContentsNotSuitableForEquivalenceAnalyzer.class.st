@@ -1,6 +1,6 @@
 Class {
 	#name : #ContentsNotSuitableForEquivalenceAnalyzer,
-	#superclass : #WikitextArgumentContentEquivalenceAnalyzer,
+	#superclass : #WikitextContentsEquivalenceAnalyzer,
 	#category : #'Duel-Masters-Plays-Model'
 }
 
