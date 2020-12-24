@@ -169,11 +169,55 @@ WikitextTemplateTest >> test09WikitextTemplateIsNotEquivalentToAnotherWhenTheyHa
 
 	templateName := 'Cardtable'.
 	anotherTemplateName := 'Another cardtable'.
-	wikitextArgument := WikitextArgument named: 'civilization' withContent: 'Water'.
+	wikitextArgument := WikitextArgument
+		named: 'civilization'
+		withContent: ( WikitextBasicContent being: 'Water' ).
 	wikitextTemplate := WikitextTemplate named: templateName withArgument: wikitextArgument.
 	anotherWikitextTemplate := WikitextTemplate
 		named: anotherTemplateName
 		withArgument: wikitextArgument.
+
+	self deny: ( wikitextTemplate isEquivalentTo: anotherWikitextTemplate )
+]
+
+{ #category : #tests }
+WikitextTemplateTest >> test10WikitextTemplateUnnamedWithOneUnnamedArgument [
+
+	| argumentContent wikitextArgument wikitextTemplate |
+
+	argumentContent := WikitextBasicContent being: 'Water'.
+	wikitextArgument := WikitextArgument unnamedWithContent: argumentContent.
+	wikitextTemplate := WikitextTemplate unnamedWithArgument: wikitextArgument.
+
+	self
+		assert: wikitextTemplate isUnnamed;
+		assert: ( wikitextTemplate hasUnnamedArgumentWithContent: argumentContent )
+]
+
+{ #category : #tests }
+WikitextTemplateTest >> test11WikitextTemplateIsEquivalentToAnotherWhenTheyAreUnnamedAndHaveTheSameArguments [
+
+	| wikitextArgument wikitextTemplate anotherWikitextTemplate |
+
+	wikitextArgument := WikitextArgument
+		named: 'civilization'
+		withContent: ( WikitextBasicContent being: 'Water' ).
+	wikitextTemplate := WikitextTemplate unnamedWithArgument: wikitextArgument.
+	anotherWikitextTemplate := WikitextTemplate unnamedWithArgument: wikitextArgument.
+
+	self assert: ( wikitextTemplate isEquivalentTo: anotherWikitextTemplate )
+]
+
+{ #category : #tests }
+WikitextTemplateTest >> test12WikitextTemplateIsNotEquivalentToAnotherWhenOneIsNamedAndTheOtherNot [
+
+	| wikitextArgument wikitextTemplate anotherWikitextTemplate |
+
+	wikitextArgument := WikitextArgument
+		named: 'civilization'
+		withContent: ( WikitextBasicContent being: 'Water' ).
+	wikitextTemplate := WikitextTemplate named: 'Cardtable' withArgument: wikitextArgument.
+	anotherWikitextTemplate := WikitextTemplate unnamedWithArgument: wikitextArgument.
 
 	self deny: ( wikitextTemplate isEquivalentTo: anotherWikitextTemplate )
 ]

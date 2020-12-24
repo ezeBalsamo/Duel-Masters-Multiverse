@@ -19,6 +19,18 @@ WikitextTemplateParser class >> hasArguments: aWikitextTemplateToParse [
 	^ aWikitextTemplateToParse includesSubstring: '|'
 ]
 
+{ #category : #'private - testing' }
+WikitextTemplateParser class >> isNamed: aWikitextTemplateToParse [
+
+	^ ( self isUnnamed: aWikitextTemplateToParse ) not
+]
+
+{ #category : #'private - testing' }
+WikitextTemplateParser class >> isUnnamed: aWikitextTemplateToParse [
+
+	^ aWikitextTemplateToParse beginsWith: Character blackSquare asString
+]
+
 { #category : #'instance creation' }
 WikitextTemplateParser class >> toParse: aWikitextTemplateToParse [
 

@@ -10,18 +10,21 @@ MultipleTemplateContentParser class >> canHandle: aWikitextContentToParse [
 	^ self isMultipleTemplateContent: aWikitextContentToParse
 ]
 
-{ #category : #'private - parsing' }
-MultipleTemplateContentParser >> trimBrTagsAndWhiteSpacesIn: aNotClosedWikitextTemplateToParse [
+{ #category : #initialization }
+MultipleTemplateContentParser >> parse [
 
-	^ ( aNotClosedWikitextTemplateToParse trimBoth withoutPrefix: '<br>' ) trimLeft
+	| wikitextTemplates |
+
+	wikitextTemplates := self
+		wikitextTemplatesToParseCollect: [ :wikitextTemplateToParse | WikitextParser parse: wikitextTemplateToParse ].
+
+	^ MultipleWikitextTemplate conformedByAll: wikitextTemplates
 ]
 
 { #category : #'private - accessing' }
 MultipleTemplateContentParser >> wikitextTemplatesToParse [
 
-	^ ( wikitextContentToParse substrings: '}}' )
-		collect:
-			[ :notClosedWikitextTemplateToParse | '<1s>}}' expandMacrosWith: ( self trimBrTagsAndWhiteSpacesIn: notClosedWikitextTemplateToParse ) ]
+	^ ( MultipleTemplateContentSplitter splitting: wikitextContentToParse ) split
 ]
 
 { #category : #'private - accessing' }

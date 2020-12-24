@@ -17,7 +17,10 @@ WikitextContentParser class >> canHandle: aWikitextContentToParse [
 WikitextContentParser class >> isMultipleTemplateContent: aWikitextContentToParse [
 
 	^ ( aWikitextContentToParse splitOn: '}}' ) withoutFirst
-		anySatisfy: [ :splittedContentToParse | splittedContentToParse includesSubstring: '{{' ]
+		anySatisfy: [ :splittedContentToParse | 
+			( splittedContentToParse includesSubstring: '{{' )
+				or: [ splittedContentToParse includesSubstring: Character blackSquare asString ]
+			]
 ]
 
 { #category : #'private - testing' }
@@ -46,10 +49,5 @@ WikitextContentParser >> initializeToParse: aWikitextContentToParse [
 { #category : #initialization }
 WikitextContentParser >> parse [
 
-	| wikitextTemplates |
-
-	wikitextTemplates := self
-		wikitextTemplatesToParseCollect: [ :wikitextTemplateToParse | WikitextParser parse: wikitextTemplateToParse ].
-
-	^ MultipleWikitextTemplate conformedByAll: wikitextTemplates
+	self subclassResponsibility
 ]

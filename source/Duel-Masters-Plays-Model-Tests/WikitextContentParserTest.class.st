@@ -181,3 +181,32 @@ WikitextContentParserTest >> test09ParsingTrimsBrTagsAndWhiteSpacesInAMultipleTe
 		assert: ( wikitextContentParser isA: MultipleTemplateContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
+
+{ #category : #tests }
+WikitextContentParserTest >> test10ParsingAMultipleTemplateContentWithOneUnnamedTemplateWithBasicContentDueToBlackSquareItemNumeratorPresence [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '{{Blocker}}
+
+■ When this enters the [[battle zone]], you may return one of your opponent''s [[creature]]s to their [[hand]].
+'.
+
+	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := MultipleWikitextTemplate
+		conformedByAll:
+			( Array
+				with: ( WikitextTemplate withoutArgumentsNamed: 'Blocker' )
+				with:
+					( WikitextTemplate
+						unnamedWithArgument:
+							( WikitextArgument
+								unnamedWithContent:
+									( WikitextBasicContent
+										being: 'When this enters the battle zone, you may return one of your opponent''s creatures to their hand.' ) ) ) ).
+
+	self
+		assert: ( wikitextContentParser isA: MultipleTemplateContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]

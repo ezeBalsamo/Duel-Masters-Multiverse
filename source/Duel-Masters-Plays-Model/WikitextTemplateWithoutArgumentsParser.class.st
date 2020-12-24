@@ -7,7 +7,8 @@ Class {
 { #category : #'private - testing' }
 WikitextTemplateWithoutArgumentsParser class >> canHandle: aWikitextTemplateToParse [
 
-	^ ( self hasArguments: aWikitextTemplateToParse ) not
+	^ ( self isNamed: aWikitextTemplateToParse )
+		and: [ ( self hasArguments: aWikitextTemplateToParse ) not ]
 ]
 
 { #category : #parsing }

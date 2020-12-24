@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'wikitextArguments',
-		'name'
+		'nameOptional'
 	],
 	#category : #'Duel-Masters-Plays-Model'
 }
@@ -67,11 +67,27 @@ WikitextTemplate class >> named: aTemplateName withArgument: aWikitextArgument [
 { #category : #'instance creation' }
 WikitextTemplate class >> named: aTemplateName withArguments: aWikitextArgumentCollection [
 
+	^ self
+		namedOptional: ( Optional containing: aTemplateName )
+		withArguments: aWikitextArgumentCollection
+]
+
+{ #category : #'private - instance creation' }
+WikitextTemplate class >> namedOptional: aNameOptional withArguments: aWikitextArgumentCollection [
+
 	self
 		assertNoRepeatedNameIn: aWikitextArgumentCollection;
 		assertNoUnnamedArgumentsWithSameContentIn: aWikitextArgumentCollection.
 
-	^ self new initializeNamed: aTemplateName withArguments: aWikitextArgumentCollection
+	^ self new initializeNamedOptional: aNameOptional withArguments: aWikitextArgumentCollection
+]
+
+{ #category : #'instance creation' }
+WikitextTemplate class >> unnamedWithArgument: aWikitextArgument [
+
+	^ self
+		namedOptional: ( Optional unusedBecause: #'Name was not provided.' )
+		withArguments: {aWikitextArgument}
 ]
 
 { #category : #'instance creation' }
@@ -109,6 +125,14 @@ WikitextTemplate >> hasEquivalentArguments: aWikitextTemplate [
 		allSatisfy: [ :aWikitextArgument | aWikitextTemplate hasEquivalentArgument: aWikitextArgument ]
 ]
 
+{ #category : #'testing - private' }
+WikitextTemplate >> hasEquivalentNamingThan: aWikitextTemplate [
+
+	^ nameOptional
+		withContentDo: [ :name | aWikitextTemplate isNamed: name ]
+		ifUnused: [ aWikitextTemplate isUnnamed ]
+]
+
 { #category : #testing }
 WikitextTemplate >> hasUnnamedArgumentWithContent: aContent [
 
@@ -119,16 +143,16 @@ WikitextTemplate >> hasUnnamedArgumentWithContent: aContent [
 ]
 
 { #category : #initialization }
-WikitextTemplate >> initializeNamed: aTemplateName withArguments: aWikitextArgumentCollection [
+WikitextTemplate >> initializeNamedOptional: aNameOptional withArguments: aWikitextArgumentCollection [
 
-	name := aTemplateName.
+	nameOptional := aNameOptional.
 	wikitextArguments := aWikitextArgumentCollection
 ]
 
 { #category : #testing }
 WikitextTemplate >> isEquivalentTo: aWikitextTemplate [
 
-	^ ( aWikitextTemplate isNamed: name )
+	^ ( self hasEquivalentNamingThan: aWikitextTemplate )
 		and: [ ( self hasEquivalentArguments: aWikitextTemplate )
 				and: [ aWikitextTemplate hasEquivalentArguments: self ]
 			]
@@ -137,7 +161,13 @@ WikitextTemplate >> isEquivalentTo: aWikitextTemplate [
 { #category : #testing }
 WikitextTemplate >> isNamed: aPotentialName [
 
-	^ name = aPotentialName
+	^ nameOptional withContentDo: [ :name | name = aPotentialName ] ifUnused: [ false ]
+]
+
+{ #category : #testing }
+WikitextTemplate >> isUnnamed [
+
+	^ nameOptional withContentDo: [ :name | false ] ifUnused: [ true ]
 ]
 
 { #category : #accessing }

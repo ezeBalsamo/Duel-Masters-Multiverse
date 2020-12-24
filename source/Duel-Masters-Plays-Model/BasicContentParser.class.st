@@ -10,6 +10,12 @@ BasicContentParser class >> canHandle: aWikitextContentToParse [
 	^ ( self isTemplateContent: aWikitextContentToParse ) not
 ]
 
+{ #category : #parsing }
+BasicContentParser class >> parse: aWikitextContentToParse [
+
+	^ ( self new initializeToParse: aWikitextContentToParse ) parse
+]
+
 { #category : #'parsing - private' }
 BasicContentParser >> contentWithoutDoubleSquareBraces [
 
