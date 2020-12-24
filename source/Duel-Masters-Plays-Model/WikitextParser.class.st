@@ -10,12 +10,24 @@ WikitextParser class >> parse: aWikitextToParse [
 	^ self new parse: aWikitextToParse
 ]
 
+{ #category : #'private - parsing' }
+WikitextParser >> cutAfterClosed: aWikitextToParse [
+
+	^ aWikitextToParse
+		detect: $}
+		closeTo: ${
+		startingAt: 1
+		ifFound: [ :lastIndex | aWikitextToParse first: lastIndex ]
+		ifNone: [ aWikitextToParse ]
+]
+
 { #category : #parsing }
-WikitextParser >> parse: aWikitext [
+WikitextParser >> parse: aWikitextToParse [
 
-	| wikitextWithoutCurlyBraces |
+	| wikitextWithoutLinksAfterClosed wikitextWithoutCurlyBraces |
 
-	wikitextWithoutCurlyBraces := self withoutCurlyBraces: aWikitext.
+	wikitextWithoutLinksAfterClosed := self cutAfterClosed: aWikitextToParse.
+	wikitextWithoutCurlyBraces := self withoutCurlyBraces: wikitextWithoutLinksAfterClosed.
 	^ self parseWikitextTemplateFrom: wikitextWithoutCurlyBraces
 ]
 
@@ -26,7 +38,7 @@ WikitextParser >> parseWikitextTemplateFrom: aWikitextTemplateToParse [
 ]
 
 { #category : #'parsing - private' }
-WikitextParser >> withoutCurlyBraces: aWikitext [
+WikitextParser >> withoutCurlyBraces: aWikitextToParse [
 
-	^ ( aWikitext withoutPrefix: '{{' ) withoutSuffix: '}}'
+	^ ( aWikitextToParse withoutPrefix: '{{' ) withoutSuffix: '}}'
 ]

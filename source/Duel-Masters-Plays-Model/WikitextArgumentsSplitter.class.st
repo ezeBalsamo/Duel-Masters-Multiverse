@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'wikitextArgumentsToSplit',
-		'splittedArguments'
+		'splittedArguments',
+		'notFullyClosedSplittedArguments'
 	],
 	#category : #'Duel-Masters-Plays-Model'
 }
@@ -22,61 +23,106 @@ WikitextArgumentsSplitter class >> splitting: aWikitextArgumentCollectionToSplit
 	^ self new initializeSplitting: aWikitextArgumentCollectionToSplit
 ]
 
-{ #category : #'accessing - private' }
-WikitextArgumentsSplitter >> findCloseDoubleCurlyBracesStartingAt: anStartIndex [
+{ #category : #'private - accessing' }
+WikitextArgumentsSplitter >> addAsNotFullyClosed: aSplittedArgumentToBeMerged [
 
-	^ wikitextArgumentsToSplit find: $} closeTo: ${ startingAt: anStartIndex
+	notFullyClosedSplittedArguments add: aSplittedArgumentToBeMerged.
+	self tryToMergeSplittedArguments
 ]
 
-{ #category : #'testing - private' }
-WikitextArgumentsSplitter >> hasWikitextContentOpenedDelimitor: aPotentialWikitextArgument [
+{ #category : #'private - accessing' }
+WikitextArgumentsSplitter >> addAsSplitted: aWikitextArgumentToParse [
 
-	^ aPotentialWikitextArgument includesSubstring: '{{'
+	splittedArguments add: aWikitextArgumentToParse
+]
+
+{ #category : #'private - asserting' }
+WikitextArgumentsSplitter >> assertThereIsNoRemainingNotFullyClosedSplittedArgument [
+
+	notFullyClosedSplittedArguments
+		ifNotEmpty: [ ParsingFailed signal: #'The arguments were not splitted and merged correctly.' ]
+]
+
+{ #category : #'private - accessing' }
+WikitextArgumentsSplitter >> closeCurlyBracesOccurrencesQuantityOf: aSplittedArgumentToBeMerged [
+
+	^ aSplittedArgumentToBeMerged ocurrencesQuantityOf: '}}'
 ]
 
 { #category : #initialization }
 WikitextArgumentsSplitter >> initializeSplitting: aWikitextArgumentCollectionToSplit [
 
 	wikitextArgumentsToSplit := aWikitextArgumentCollectionToSplit.
-	splittedArguments := OrderedCollection new
+	splittedArguments := OrderedCollection new.
+	notFullyClosedSplittedArguments := OrderedCollection new
 ]
 
-{ #category : #splitting }
-WikitextArgumentsSplitter >> removeSplittedArgumentSize: aSplittedArgumentSize [
+{ #category : #'private - testing' }
+WikitextArgumentsSplitter >> isNotFullyClosed: aPotentialSplittedArgument [
 
-	wikitextArgumentsToSplit := wikitextArgumentsToSplit withoutFirst: aSplittedArgumentSize + 1
+	^ ( self openCurlyBracesOccurrencesQuantityOf: aPotentialSplittedArgument )
+		~= ( self closeCurlyBracesOccurrencesQuantityOf: aPotentialSplittedArgument )
+]
+
+{ #category : #'private - testing' }
+WikitextArgumentsSplitter >> isSuitableForMerging [
+
+	| firstArgumentToMerge lastArgumentToMerge extraOpenCurlyBraces extraCloseCurlyBraces |
+
+	^ notFullyClosedSplittedArguments size > 1
+		then: [ firstArgumentToMerge := notFullyClosedSplittedArguments first.
+			lastArgumentToMerge := notFullyClosedSplittedArguments last trimmed.
+
+			extraOpenCurlyBraces := ( self openCurlyBracesOccurrencesQuantityOf: firstArgumentToMerge )
+				- ( self closeCurlyBracesOccurrencesQuantityOf: firstArgumentToMerge ).
+			extraCloseCurlyBraces := ( self closeCurlyBracesOccurrencesQuantityOf: lastArgumentToMerge )
+				- ( self openCurlyBracesOccurrencesQuantityOf: lastArgumentToMerge ).
+
+			extraOpenCurlyBraces = extraCloseCurlyBraces
+			]
+		otherwise: [ false ]
+]
+
+{ #category : #'private - merging' }
+WikitextArgumentsSplitter >> mergeSplittedArguments [
+
+	| mergedArguments |
+
+	mergedArguments := ( CollectionFormatter separatingWith: '|' )
+		format: notFullyClosedSplittedArguments.
+	self addAsSplitted: mergedArguments.
+	notFullyClosedSplittedArguments removeAll
+]
+
+{ #category : #'private - accessing' }
+WikitextArgumentsSplitter >> openCurlyBracesOccurrencesQuantityOf: aSplittedArgumentToBeMerged [
+
+	^ aSplittedArgumentToBeMerged ocurrencesQuantityOf: '{{'
+]
+
+{ #category : #'private - testing' }
+WikitextArgumentsSplitter >> shouldAddAsNotFullyClosed: aPotentialSplittedArgument [
+
+	^ notFullyClosedSplittedArguments notEmpty
+		or: [ self isNotFullyClosed: aPotentialSplittedArgument ]
 ]
 
 { #category : #splitting }
 WikitextArgumentsSplitter >> split [
 
-	[ wikitextArgumentsToSplit notEmpty ] whileTrue: [ self splitNextArgument ].
+	( wikitextArgumentsToSplit splitOn: '|' )
+		do: [ :potentialSplittedArgument | 
+			( self shouldAddAsNotFullyClosed: potentialSplittedArgument )
+				then: [ self addAsNotFullyClosed: potentialSplittedArgument ]
+				otherwise: [ self addAsSplitted: potentialSplittedArgument ]
+			].
+	self assertThereIsNoRemainingNotFullyClosedSplittedArgument.
 	^ splittedArguments
 ]
 
-{ #category : #splitting }
-WikitextArgumentsSplitter >> splitNextArgument [
+{ #category : #'private - merging' }
+WikitextArgumentsSplitter >> tryToMergeSplittedArguments [
 
-	| potentialFirstArgument |
-
-	potentialFirstArgument := ( wikitextArgumentsToSplit splitOn: '|' ) first.
-	^ ( self hasWikitextContentOpenedDelimitor: potentialFirstArgument )
-		then: [ self splitWhenWikitextContentIsPresent ]
-		otherwise: [ splittedArguments add: potentialFirstArgument.
-			self removeSplittedArgumentSize: potentialFirstArgument size
-			]
-]
-
-{ #category : #splitting }
-WikitextArgumentsSplitter >> splitWhenWikitextContentIsPresent [
-
-	| doubleCurlyBracesStartIndex doubleCurlyBracesFinishIndex |
-
-	doubleCurlyBracesStartIndex := wikitextArgumentsToSplit findString: '{{'.
-	doubleCurlyBracesFinishIndex := self
-		findCloseDoubleCurlyBracesStartingAt: doubleCurlyBracesStartIndex.
-
-	splittedArguments add: ( wikitextArgumentsToSplit copyFirst: doubleCurlyBracesFinishIndex ).
-
-	self removeSplittedArgumentSize: doubleCurlyBracesFinishIndex
+	self isSuitableForMerging
+		ifTrue: [ self mergeSplittedArguments ]
 ]

@@ -153,3 +153,31 @@ WikitextContentParserTest >> test08ParsingAMultipleTemplateContent [
 		assert: ( wikitextContentParser isA: MultipleTemplateContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
+
+{ #category : #tests }
+WikitextContentParserTest >> test09ParsingTrimsBrTagsAndWhiteSpacesInAMultipleTemplateContent [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '{{Tap Skill|Return one of your opponent''s creatures to their hand.}} <br> 
+
+{{Double Breaker}}
+'.
+
+	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := MultipleWikitextTemplate
+		conformedByAll:
+			( Array
+				with:
+					( WikitextTemplate
+						named: 'Tap Skill'
+						withArgument:
+							( WikitextArgument
+								unnamedWithContent: ( WikitextBasicContent being: 'Return one of your opponent''s creatures to their hand.' ) ) )
+				with: ( WikitextTemplate withoutArgumentsNamed: 'Double Breaker' ) ).
+
+	self
+		assert: ( wikitextContentParser isA: MultipleTemplateContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]

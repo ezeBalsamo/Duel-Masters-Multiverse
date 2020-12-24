@@ -8,7 +8,16 @@ Class {
 }
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test01SplittingTwoNamedWikitextArgumentsWithBasicContent [
+WikitextArgumentsSplitterTest >> test01SplittingAnEmptyWikitextArgumentShouldRaiseParsingFailed [
+
+	self
+		should: [ WikitextArgumentsSplitter splitting: '' ]
+		raise: ParsingFailed
+		withMessageText: #'A collection of wikitext arguments to split was expected'
+]
+
+{ #category : #tests }
+WikitextArgumentsSplitterTest >> test02SplittingTwoNamedWikitextArgumentsWithBasicContent [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -23,7 +32,7 @@ WikitextArgumentsSplitterTest >> test01SplittingTwoNamedWikitextArgumentsWithBas
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test02SplittingNamedWikitextArgumentWithBasicContentFromNamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContent [
+WikitextArgumentsSplitterTest >> test03SplittingNamedWikitextArgumentWithBasicContentFromNamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContent [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -39,7 +48,7 @@ WikitextArgumentsSplitterTest >> test02SplittingNamedWikitextArgumentWithBasicCo
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test03SplittingNamedWikitextArgumentWithWikitextContentWithoutArgumentsFromNamedWikitextArgumentWithBasicContent [
+WikitextArgumentsSplitterTest >> test04SplittingNamedWikitextArgumentWithWikitextContentWithoutArgumentsFromNamedWikitextArgumentWithBasicContent [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -54,7 +63,7 @@ WikitextArgumentsSplitterTest >> test03SplittingNamedWikitextArgumentWithWikitex
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test04NamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContentFromSplittingNamedWikitextArgumentWithBasicContent [
+WikitextArgumentsSplitterTest >> test05SplittingNamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContentFromNamedWikitextArgumentWithBasicContent [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -70,10 +79,84 @@ WikitextArgumentsSplitterTest >> test04NamedWikitextArgumentWithWikitextContentW
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test05SplittingAnEmptyWikitextArgumentShouldRaiseParsingFailed [
+WikitextArgumentsSplitterTest >> test06SplittingNamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContentFromSplittingMultipleTemplateContent [
+
+	| wikitextArgumentToSplit wikitextArgumentsSplitted |
+
+	wikitextArgumentToSplit := 'arg_name_1={{inner_temp_name|inner_arg_name_2=basic_content_2}}|{{inner_temp_name_2|inner_arg_name_3}}{{inner_temp_name_3}}'.
+
+	wikitextArgumentsSplitted := ( WikitextArgumentsSplitter splitting: wikitextArgumentToSplit ) split.
 
 	self
-		should: [ WikitextArgumentsSplitter splitting: '' ]
+		assert: wikitextArgumentsSplitted size equals: 2;
+		assert: wikitextArgumentsSplitted first
+			equals: 'arg_name_1={{inner_temp_name|inner_arg_name_2=basic_content_2}}';
+		assert: wikitextArgumentsSplitted second
+			equals: '{{inner_temp_name_2|inner_arg_name_3}}{{inner_temp_name_3}}'
+]
+
+{ #category : #tests }
+WikitextArgumentsSplitterTest >> test07SplittingANonFullyClosedWikitextArgumentsShouldRaiseParsingFailedError [
+
+	self
+		should: [ ( WikitextArgumentsSplitter splitting: '{{Double Breaker' ) split ]
 		raise: ParsingFailed
-		withMessageText: #'A collection of wikitext arguments to split was expected'
+		withMessageText: #'The arguments were not splitted and merged correctly.'
+]
+
+{ #category : #tests }
+WikitextArgumentsSplitterTest >> test08SplittingNamedWikitextArgumentWithMultipleTemplateContentTrimsWhiteSpaces [
+
+	| wikitextArgumentToSplit wikitextArgumentsSplitted |
+
+	wikitextArgumentToSplit := 'engtext = {{Tap Skill|Return one of your opponent''s creatures to their hand.}}{{Double Breaker}}
+'.
+
+	wikitextArgumentsSplitted := ( WikitextArgumentsSplitter splitting: wikitextArgumentToSplit ) split.
+
+	self
+		withTheOnlyOneIn: wikitextArgumentsSplitted
+		do: [ :wikitextArgumentSplitted | 
+			self
+				assert: wikitextArgumentSplitted
+				equals: 'engtext = {{Tap Skill|Return one of your opponent''s creatures to their hand.}}{{Double Breaker}}
+'
+			]
+]
+
+{ #category : #tests }
+WikitextArgumentsSplitterTest >> test09SplittingNamedWikitextArgumentWithMultipleTemplateContentWithOneTemplateHavingArguments [
+
+	| wikitextArgumentToSplit wikitextArgumentsSplitted |
+
+	wikitextArgumentToSplit := 'engtext = {{Tap Skill|Return one of your opponent''s creatures to their hand.}}{{Double Breaker}}'.
+
+	wikitextArgumentsSplitted := ( WikitextArgumentsSplitter splitting: wikitextArgumentToSplit ) split.
+
+	self
+		withTheOnlyOneIn: wikitextArgumentsSplitted
+		do: [ :wikitextArgumentSplitted | 
+			self
+				assert: wikitextArgumentSplitted
+				equals: 'engtext = {{Tap Skill|Return one of your opponent''s creatures to their hand.}}{{Double Breaker}}'
+			]
+]
+
+{ #category : #tests }
+WikitextArgumentsSplitterTest >> test10SplittingNamedWikitextArgumentWithMultipleTemplateContentWithBothTemplatesHavingArguments [
+
+	| wikitextArgumentToSplit wikitextArgumentsSplitted |
+
+	wikitextArgumentToSplit := 'engtext = {{Tap Skill|Return one of your opponent''s creatures to their hand.|jp}}{{Double Breaker|jp}}'.
+
+	wikitextArgumentsSplitted := ( WikitextArgumentsSplitter splitting: wikitextArgumentToSplit ) split.
+
+	self
+		withTheOnlyOneIn: wikitextArgumentsSplitted
+		do: [ :wikitextArgumentSplitted | 
+			self
+				assert: wikitextArgumentSplitted
+				equals:
+					'engtext = {{Tap Skill|Return one of your opponent''s creatures to their hand.|jp}}{{Double Breaker|jp}}'
+			]
 ]

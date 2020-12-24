@@ -199,3 +199,26 @@ WikitextParserTest >> test10ParsingAClosedWikitextWithOneTemplateWithManyArgumen
 
 	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
 ]
+
+{ #category : #tests }
+WikitextParserTest >> test11ParsingIgnoresEverythingAfterLastClosedDoubleCurlyBraces [
+
+	| wikitext wikitextTemplate parsedWikitextTemplate |
+
+	wikitext := '{{temp_name|arg_name={{inner_temp_name|inner_basic_content}}|basic_content_2}}[[to_ignore]]'.
+	wikitextTemplate := WikitextTemplate
+		named: 'temp_name'
+		withArguments:
+			( Array
+				with:
+					( WikitextArgument
+						named: 'arg_name'
+						withContent:
+							( WikitextTemplate
+								named: 'inner_temp_name'
+								withArgument: ( WikitextArgument unnamedWithContent: ( WikitextBasicContent being: 'inner_basic_content' ) ) ) )
+				with: ( WikitextArgument unnamedWithContent: ( WikitextBasicContent being: 'basic_content_2' ) ) ).
+
+	parsedWikitextTemplate := WikitextParser parse: wikitext.
+	self assert: ( parsedWikitextTemplate isEquivalentTo: wikitextTemplate )
+]
