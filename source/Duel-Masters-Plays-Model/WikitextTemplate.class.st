@@ -8,7 +8,7 @@ Class {
 	#category : #'Duel-Masters-Plays-Model'
 }
 
-{ #category : #asserting }
+{ #category : #'private - asserting' }
 WikitextTemplate class >> assertNoRepeatedNameIn: aWikitextArgumentCollection [
 
 	aWikitextArgumentCollection
@@ -19,7 +19,7 @@ WikitextTemplate class >> assertNoRepeatedNameIn: aWikitextArgumentCollection [
 			]
 ]
 
-{ #category : #asserting }
+{ #category : #'private - asserting' }
 WikitextTemplate class >> assertNoUnnamedArgumentsWithSameContentIn: aWikitextArgumentCollection [
 
 	| unnamedWikitextArguments |
@@ -29,12 +29,12 @@ WikitextTemplate class >> assertNoUnnamedArgumentsWithSameContentIn: aWikitextAr
 	unnamedWikitextArguments
 		ifEmpty: [ "do nothing. -ebalsamo" ]
 		ifNotEmpty: [ self
-				assertNoUnnamedWikitextArgumentIn: aWikitextArgumentCollection withoutFirst
-				withSameContentThan: aWikitextArgumentCollection first
+				assertNoUnnamedWikitextArgumentIn: unnamedWikitextArguments withoutFirst
+				withSameContentThan: unnamedWikitextArguments first
 			]
 ]
 
-{ #category : #asserting }
+{ #category : #'private - asserting' }
 WikitextTemplate class >> assertNoUnnamedWikitextArgumentIn: aWikitextArgumentCollection
 	withSameContentThan: aWikitextArgumentToCompare [
 
@@ -47,7 +47,7 @@ WikitextTemplate class >> assertNoUnnamedWikitextArgumentIn: aWikitextArgumentCo
 		ifNone: [ self assertNoUnnamedArgumentsWithSameContentIn: aWikitextArgumentCollection ]
 ]
 
-{ #category : #asserting }
+{ #category : #'private - asserting' }
 WikitextTemplate class >> assertNoWikitextArgumentIn: aWikitextArgumentCollection namedSameThan: aWikitextArgumentToCompare [
 
 	aWikitextArgumentCollection
@@ -72,6 +72,12 @@ WikitextTemplate class >> named: aTemplateName withArguments: aWikitextArgumentC
 		assertNoUnnamedArgumentsWithSameContentIn: aWikitextArgumentCollection.
 
 	^ self new initializeNamed: aTemplateName withArguments: aWikitextArgumentCollection
+]
+
+{ #category : #'instance creation' }
+WikitextTemplate class >> withoutArgumentsNamed: aTemplateName [
+
+	^ self named: aTemplateName withArguments: #()
 ]
 
 { #category : #testing }
@@ -106,8 +112,8 @@ WikitextTemplate >> hasEquivalentArguments: aWikitextTemplate [
 { #category : #testing }
 WikitextTemplate >> hasUnnamedArgumentWithContent: aContent [
 
-	^ wikitextArguments
-		detect: [ :aWikitextArgument | aWikitextArgument isUnnamed and: [ aWikitextArgument hasContent: aContent ] ]
+	^ self unnamedWikitextArguments
+		detect: [ :aWikitextArgument | aWikitextArgument hasContent: aContent ]
 		ifFound: [ true ]
 		ifNone: [ false ]
 ]
@@ -132,4 +138,10 @@ WikitextTemplate >> isEquivalentTo: aWikitextTemplate [
 WikitextTemplate >> isNamed: aPotentialName [
 
 	^ name = aPotentialName
+]
+
+{ #category : #accessing }
+WikitextTemplate >> unnamedWikitextArguments [
+
+	^ wikitextArguments select: #isUnnamed
 ]

@@ -5,49 +5,40 @@ Class {
 }
 
 { #category : #parsing }
-WikitextParser >> parse: aWikitext [
+WikitextParser class >> parse: aWikitextToParse [
 
-	| wikitextWithoutCurlyBraces templateNameAndArgumentsSplitted templateName arguments |
+	^ self new parse: aWikitextToParse
+]
 
-	wikitextWithoutCurlyBraces := self withoutCurlyBraces: aWikitext.
-	templateNameAndArgumentsSplitted := self
-		splitTemplateNameFromArgumentsIn: wikitextWithoutCurlyBraces.
+{ #category : #'private - parsing' }
+WikitextParser >> cutAfterClosed: aWikitextToParse [
 
-	templateName := self parseTemplateNameFrom: templateNameAndArgumentsSplitted.
-	arguments := self parseArgumentsFrom: templateNameAndArgumentsSplitted.
+	^ aWikitextToParse
+		detect: $}
+		closeTo: ${
+		startingAt: 1
+		ifFound: [ :lastIndex | aWikitextToParse first: lastIndex ]
+		ifNone: [ aWikitextToParse ]
+]
 
-	^ WikitextTemplate named: templateName withArguments: arguments
+{ #category : #parsing }
+WikitextParser >> parse: aWikitextToParse [
+
+	| wikitextWithoutLinksAfterClosed wikitextWithoutCurlyBraces |
+
+	wikitextWithoutLinksAfterClosed := self cutAfterClosed: aWikitextToParse.
+	wikitextWithoutCurlyBraces := self withoutCurlyBraces: wikitextWithoutLinksAfterClosed.
+	^ self parseWikitextTemplateFrom: wikitextWithoutCurlyBraces
 ]
 
 { #category : #'parsing - private' }
-WikitextParser >> parseArgumentsFrom: aTemplateNameAndArgumentsCollection [
+WikitextParser >> parseWikitextTemplateFrom: aWikitextTemplateToParse [
 
-	| argumentNameAndContent argumentNameAndContentSplitted |
-
-	argumentNameAndContent := aTemplateNameAndArgumentsCollection second.
-	argumentNameAndContentSplitted := argumentNameAndContent splitOn: '='.
-
-	^ Array
-		with:
-			( WikitextArgument
-				named: argumentNameAndContentSplitted first
-				content: argumentNameAndContentSplitted second )
+	^ ( WikitextTemplateParser toParse: aWikitextTemplateToParse ) parse
 ]
 
 { #category : #'parsing - private' }
-WikitextParser >> parseTemplateNameFrom: aTemplateNameAndArgumentsCollection [
+WikitextParser >> withoutCurlyBraces: aWikitextToParse [
 
-	^ aTemplateNameAndArgumentsCollection first
-]
-
-{ #category : #'parsing - private' }
-WikitextParser >> splitTemplateNameFromArgumentsIn: aWikitext [
-
-	^ aWikitext splitOn: '|'
-]
-
-{ #category : #'parsing - private' }
-WikitextParser >> withoutCurlyBraces: aWikitext [
-
-	^ ( aWikitext withoutPrefix: '{{' ) withoutSuffix: '}}'
+	^ ( aWikitextToParse withoutPrefix: '{{' ) withoutSuffix: '}}'
 ]

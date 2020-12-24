@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-WikitextArgument class >> named: aName content: aContent [
+WikitextArgument class >> named: aName withContent: aContent [
 
 	^ self namedOptional: ( Optional containing: aName ) withContent: aContent
 ]
@@ -29,7 +29,9 @@ WikitextArgument class >> unnamedWithContent: aContent [
 { #category : #testing }
 WikitextArgument >> hasContent: aPotentialContent [
 
-	^ content = aPotentialContent
+	^ ( WikitextContentsEquivalenceAnalyzer
+		analyzingEquivalenceBetween: content
+		and: aPotentialContent ) areEquivalents
 ]
 
 { #category : #'testing-private' }
@@ -96,7 +98,6 @@ WikitextArgument >> printOn: aStream [
 	aStream nextPutAll: 'Wikitext Argument '.
 	self printNameOptionalOn: aStream.
 
-	aStream
-		nextPutAll: ' with ';
-		nextPutAll: content
+	aStream nextPutAll: ' with '.
+	content printOn: aStream
 ]

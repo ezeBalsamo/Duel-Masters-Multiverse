@@ -13,7 +13,7 @@ WikitextTemplateTest >> test01WikitextTemplateWithZeroArguments [
 	| templateName wikitextTemplate |
 
 	templateName := 'Cardtable'.
-	wikitextTemplate := WikitextTemplate named: templateName withArguments: #().
+	wikitextTemplate := WikitextTemplate withoutArgumentsNamed: templateName.
 
 	self
 		assert: ( wikitextTemplate isNamed: templateName );
@@ -27,8 +27,8 @@ WikitextTemplateTest >> test02WikitextTemplateWithOneNamedArgument [
 
 	templateName := 'Cardtable'.
 	argumentName := 'civilization'.
-	argumentContent := 'Water'.
-	wikitextArgument := WikitextArgument named: argumentName content: argumentContent.
+	argumentContent := WikitextBasicContent being: 'Water'.
+	wikitextArgument := WikitextArgument named: argumentName withContent: argumentContent.
 	wikitextTemplate := WikitextTemplate named: templateName withArgument: wikitextArgument.
 
 	self
@@ -42,7 +42,7 @@ WikitextTemplateTest >> test03WikitextTemplateWithOneUnnamedArgument [
 	| templateName argumentContent wikitextArgument wikitextTemplate |
 
 	templateName := 'Cardtable'.
-	argumentContent := 'Water'.
+	argumentContent := WikitextBasicContent being: 'Water'.
 	wikitextArgument := WikitextArgument unnamedWithContent: argumentContent.
 	wikitextTemplate := WikitextTemplate named: templateName withArgument: wikitextArgument.
 
@@ -59,12 +59,12 @@ WikitextTemplateTest >> test04WikitextTemplateWithManyArguments [
 	templateName := 'Cardtable'.
 
 	firstArgumentName := 'civilization'.
-	firstArgumentContent := 'Water'.
-	firstWikitextArgument := WikitextArgument named: firstArgumentName content: firstArgumentContent.
+	firstArgumentContent := WikitextBasicContent being: 'Water'.
+	firstWikitextArgument := WikitextArgument named: firstArgumentName withContent: firstArgumentContent.
 
 	secondArgumentName := 'type'.
-	secondArgumentContent := 'Creature'.
-	secondWikitextArgument := WikitextArgument named: secondArgumentName content: secondArgumentContent.
+	secondArgumentContent := WikitextBasicContent being: 'Creature'.
+	secondWikitextArgument := WikitextArgument named: secondArgumentName withContent: secondArgumentContent.
 
 	wikitextTemplate := WikitextTemplate
 		named: templateName
@@ -84,8 +84,9 @@ WikitextTemplateTest >> test05WikitextTemplateCantHaveMoreThanOneUnnamedArgument
 	| templateName commonContent firstWikitextArgument secondWikitextArgument thirdWikitextArgument |
 
 	templateName := 'Cardtable'.
-	commonContent := 'commonContent'.
-	firstWikitextArgument := WikitextArgument unnamedWithContent: 'Water'.
+	commonContent := WikitextBasicContent being: 'commonContent'.
+	firstWikitextArgument := WikitextArgument
+		unnamedWithContent: ( WikitextBasicContent being: 'Water' ).
 	secondWikitextArgument := WikitextArgument unnamedWithContent: commonContent.
 	thirdWikitextArgument := WikitextArgument unnamedWithContent: commonContent.
 
@@ -106,9 +107,15 @@ WikitextTemplateTest >> test06WikitextTemplateCantHaveArgumentsWithSameNameAndDi
 	templateName := 'Cardtable'.
 
 	commonArgumentName := 'commonArgumentName'.
-	firstWikitextArgument := WikitextArgument named: 'civilization' content: 'Water'.
-	secondWikitextArgument := WikitextArgument named: commonArgumentName content: 'Creature'.
-	thirdWikitextArgument := WikitextArgument named: commonArgumentName content: 'Rare'.
+	firstWikitextArgument := WikitextArgument
+		named: 'civilization'
+		withContent: ( WikitextBasicContent being: 'Water' ).
+	secondWikitextArgument := WikitextArgument
+		named: commonArgumentName
+		withContent: ( WikitextBasicContent being: 'Creature' ).
+	thirdWikitextArgument := WikitextArgument
+		named: commonArgumentName
+		withContent: ( WikitextBasicContent being: 'Rare' ).
 
 	self
 		should: [ WikitextTemplate
@@ -125,7 +132,9 @@ WikitextTemplateTest >> test07WikitextTemplateIsEquivalentToAnotherWhenTheyHaveT
 	| templateName wikitextArgument wikitextTemplate anotherWikitextTemplate |
 
 	templateName := 'Cardtable'.
-	wikitextArgument := WikitextArgument named: 'civilization' content: 'Water'.
+	wikitextArgument := WikitextArgument
+		named: 'civilization'
+		withContent: ( WikitextBasicContent being: 'Water' ).
 	wikitextTemplate := WikitextTemplate named: templateName withArgument: wikitextArgument.
 	anotherWikitextTemplate := WikitextTemplate named: templateName withArgument: wikitextArgument.
 
@@ -138,8 +147,12 @@ WikitextTemplateTest >> test08WikitextTemplateIsNotEquivalentToAnotherWhenTheArg
 	| templateName firstWikitextArgument secondWikitextArgument wikitextTemplate anotherWikitextTemplate |
 
 	templateName := 'Cardtable'.
-	firstWikitextArgument := WikitextArgument named: 'civilization' content: 'Water'.
-	secondWikitextArgument := WikitextArgument named: 'type' content: 'Creature'.
+	firstWikitextArgument := WikitextArgument
+		named: 'civilization'
+		withContent: ( WikitextBasicContent being: 'Water' ).
+	secondWikitextArgument := WikitextArgument
+		named: 'type'
+		withContent: ( WikitextBasicContent being: 'Creature' ).
 
 	wikitextTemplate := WikitextTemplate named: templateName withArgument: firstWikitextArgument.
 	anotherWikitextTemplate := WikitextTemplate
@@ -156,7 +169,7 @@ WikitextTemplateTest >> test09WikitextTemplateIsNotEquivalentToAnotherWhenTheyHa
 
 	templateName := 'Cardtable'.
 	anotherTemplateName := 'Another cardtable'.
-	wikitextArgument := WikitextArgument named: 'civilization' content: 'Water'.
+	wikitextArgument := WikitextArgument named: 'civilization' withContent: 'Water'.
 	wikitextTemplate := WikitextTemplate named: templateName withArgument: wikitextArgument.
 	anotherWikitextTemplate := WikitextTemplate
 		named: anotherTemplateName
