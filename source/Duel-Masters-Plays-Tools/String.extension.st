@@ -41,3 +41,18 @@ String >> ocurrencesQuantityOf: aDelimitor [
 
 	^ ( self splitOn: aDelimitor ) size - 1
 ]
+
+{ #category : #'*Duel-Masters-Plays-Tools' }
+String >> splitOnFirstOccurrenceOf: aStringOrCharacterDelimitor [
+
+	| delimitorIndex |
+
+	delimitorIndex := aStringOrCharacterDelimitor isCharacter
+		ifTrue: [ self indexOf: aStringOrCharacterDelimitor ]
+		ifFalse: [ aStringOrCharacterDelimitor isString
+				ifTrue: [ self findString: aStringOrCharacterDelimitor ]
+				ifFalse: [ Error signal: 'string or character as delimitor expected' ]
+			].
+
+	^ Array with: ( self first: delimitorIndex - 1 ) with: ( self allButFirst: delimitorIndex )
+]
