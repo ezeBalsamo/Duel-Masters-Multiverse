@@ -11,12 +11,6 @@ WikitextBasicContentParser class >> canHandle: aWikitextContentToParse [
 		or: [ self isListedBasicContent: aWikitextContentToParse ]
 ]
 
-{ #category : #parsing }
-WikitextBasicContentParser class >> parse: aWikitextContentToParse [
-
-	^ ( self new initializeToParse: aWikitextContentToParse ) parse
-]
-
 { #category : #'parsing - private' }
 WikitextBasicContentParser >> contentWithoutBlackSquare [
 

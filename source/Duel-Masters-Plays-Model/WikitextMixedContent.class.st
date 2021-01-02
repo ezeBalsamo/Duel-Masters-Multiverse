@@ -20,7 +20,7 @@ WikitextMixedContent >> hasEquivalentContentsThan: aWikitextMixedContent [
 		allSatisfy: [ :wikitextContent | aWikitextMixedContent hasWikitextContent: wikitextContent ]
 ]
 
-{ #category : #testing }
+{ #category : #'private - testing' }
 WikitextMixedContent >> hasWikitextContent: aPotentialWikitextContent [
 
 	^ wikitextContents
@@ -33,7 +33,7 @@ WikitextMixedContent >> initializeConformedByAll: aWikitextContentCollection [
 	wikitextContents := aWikitextContentCollection
 ]
 
-{ #category : #testing }
+{ #category : #'private - testing' }
 WikitextMixedContent >> is: aWikitextContent equivalentTo: aPotentialWikitextContent [
 
 	^ ( WikitextContentsEquivalenceAnalyzer
