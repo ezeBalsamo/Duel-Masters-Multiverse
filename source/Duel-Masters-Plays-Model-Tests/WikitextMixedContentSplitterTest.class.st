@@ -2,28 +2,28 @@
 A MultipleTemplateContentSplitterTest is a test class for testing the behavior of MultipleTemplateContentSplitter
 "
 Class {
-	#name : #MultipleTemplateContentSplitterTest,
+	#name : #WikitextMixedContentSplitterTest,
 	#superclass : #TestCase,
 	#category : #'Duel-Masters-Plays-Model-Tests'
 }
 
 { #category : #tests }
-MultipleTemplateContentSplitterTest >> test01SplittingAnEmptyMultipleWikitextTemplateShouldRaiseParsingFailed [
+WikitextMixedContentSplitterTest >> test01SplittingAnEmptyWikitextMixedContentShouldRaiseParsingFailed [
 
 	self
-		should: [ MultipleTemplateContentSplitter splitting: '' ]
+		should: [ WikitextMixedContentSplitter splitting: '' ]
 		raise: ParsingFailed
 		withMessageText: #'A collection of wikitext templates to split was expected'
 ]
 
 { #category : #tests }
-MultipleTemplateContentSplitterTest >> test02SplittingTwoANamedWithoutArgumentsTemplateFromAnUnamedTemplateWithBasicContent [
+WikitextMixedContentSplitterTest >> test02SplittingWikitextTemplateFromAListedBasicContent [
 
 	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
 
 	wikitextTemplatesToSplit := '{{Blocker}}■ When this enters the [[battle zone]], you may return one of your opponent''s [[creature]]s to their [[hand]].'.
 
-	wikitextTemplatesSplitted := ( MultipleTemplateContentSplitter splitting: wikitextTemplatesToSplit )
+	wikitextTemplatesSplitted := ( WikitextMixedContentSplitter splitting: wikitextTemplatesToSplit )
 		split.
 
 	self

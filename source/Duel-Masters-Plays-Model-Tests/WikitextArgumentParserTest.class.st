@@ -126,7 +126,7 @@ WikitextArgumentParserTest >> test07ParsingANamedArgumentWithDoubleWikitextConte
 	expectedWikitextArgument := WikitextArgument
 		named: 'engtext'
 		withContent:
-			( MultipleWikitextTemplate
+			( WikitextMixedContent
 				conformedByAll:
 					( Array
 						with:

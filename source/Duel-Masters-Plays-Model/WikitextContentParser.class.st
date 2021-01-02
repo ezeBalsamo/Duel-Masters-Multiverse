@@ -14,7 +14,13 @@ WikitextContentParser class >> canHandle: aWikitextContentToParse [
 ]
 
 { #category : #'private - testing' }
-WikitextContentParser class >> isMultipleTemplateContent: aWikitextContentToParse [
+WikitextContentParser class >> isListedBasicContent: aWikitextContentToParse [
+
+	^ aWikitextContentToParse beginsWith: Character blackSquare asString
+]
+
+{ #category : #'private - testing' }
+WikitextContentParser class >> isMixedContent: aWikitextContentToParse [
 
 	^ ( aWikitextContentToParse splitOn: '}}' ) withoutFirst
 		anySatisfy: [ :splittedContentToParse | 

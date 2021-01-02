@@ -1,5 +1,5 @@
 Class {
-	#name : #MultipleTemplateContentSplitter,
+	#name : #WikitextMixedContentSplitter,
 	#superclass : #Object,
 	#instVars : [
 		'multipleTemplateContentToSplit'
@@ -8,33 +8,33 @@ Class {
 }
 
 { #category : #'private - preconditions' }
-MultipleTemplateContentSplitter class >> assertNotEmpty: aMultipleTemplateContentToSplit [
+WikitextMixedContentSplitter class >> assertNotEmpty: aMultipleTemplateContentToSplit [
 
 	aMultipleTemplateContentToSplit
 		ifEmpty: [ ParsingFailed signal: #'A collection of wikitext templates to split was expected' ]
 ]
 
 { #category : #'instance creation' }
-MultipleTemplateContentSplitter class >> splitting: aMultipleTemplateContentToSplit [
+WikitextMixedContentSplitter class >> splitting: aMultipleTemplateContentToSplit [
 
 	self assertNotEmpty: aMultipleTemplateContentToSplit.
 	^ self new initializeSplitting: aMultipleTemplateContentToSplit
 ]
 
 { #category : #'private - parsing' }
-MultipleTemplateContentSplitter >> close: aWikitextTemplateToParse [
+WikitextMixedContentSplitter >> close: aWikitextTemplateToParse [
 
 	^ '<1s>}}' expandMacrosWith: aWikitextTemplateToParse
 ]
 
 { #category : #initialization }
-MultipleTemplateContentSplitter >> initializeSplitting: aMultipleTemplateContentToSplit [
+WikitextMixedContentSplitter >> initializeSplitting: aMultipleTemplateContentToSplit [
 
 	multipleTemplateContentToSplit := aMultipleTemplateContentToSplit
 ]
 
 { #category : #splitting }
-MultipleTemplateContentSplitter >> split [
+WikitextMixedContentSplitter >> split [
 
 	| trimmedTemplateToParse |
 
@@ -48,7 +48,7 @@ MultipleTemplateContentSplitter >> split [
 ]
 
 { #category : #'private - parsing' }
-MultipleTemplateContentSplitter >> trimBrTagsAndWhiteSpacesIn: aNotClosedWikitextTemplateToParse [
+WikitextMixedContentSplitter >> trimBrTagsAndWhiteSpacesIn: aNotClosedWikitextTemplateToParse [
 
 	^ ( aNotClosedWikitextTemplateToParse trimBoth withoutPrefix: '<br>' ) trimLeft
 ]

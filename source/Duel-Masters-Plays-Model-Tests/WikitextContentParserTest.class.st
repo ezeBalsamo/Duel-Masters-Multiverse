@@ -19,7 +19,7 @@ WikitextContentParserTest >> test01ParsingABasicContent [
 	expectedWikitextContent := WikitextBasicContent being: 'basic_content'.
 
 	self
-		assert: ( wikitextContentParser isA: BasicContentParser );
+		assert: ( wikitextContentParser isA: WikitextBasicContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
@@ -35,7 +35,7 @@ WikitextContentParserTest >> test02ParsingAWikitextContentWithoutArguments [
 	expectedWikitextContent := WikitextTemplate withoutArgumentsNamed: 'inner_temp_name'.
 
 	self
-		assert: ( wikitextContentParser isA: TemplateContentParser );
+		assert: ( wikitextContentParser isA: WikitextTemplateAsContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
@@ -56,7 +56,7 @@ WikitextContentParserTest >> test03ParsingAWikitextContentWithOneNamedArgumentWi
 				withContent: ( WikitextBasicContent being: 'basic_content_2' ) ).
 
 	self
-		assert: ( wikitextContentParser isA: TemplateContentParser );
+		assert: ( wikitextContentParser isA: WikitextTemplateAsContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
@@ -74,7 +74,7 @@ WikitextContentParserTest >> test04ParsingAWikitextContentWithOneUnnamedArgument
 		withArgument: ( WikitextArgument unnamedWithContent: ( WikitextBasicContent being: 'basic_content_2' ) ).
 
 	self
-		assert: ( wikitextContentParser isA: TemplateContentParser );
+		assert: ( wikitextContentParser isA: WikitextTemplateAsContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
@@ -91,7 +91,7 @@ WikitextContentParserTest >> test05ParsingTrimmingWhiteSpacesDetectsBasicContent
 	expectedWikitextContent := WikitextBasicContent being: 'Europika'.
 
 	self
-		assert: ( wikitextContentParser isA: BasicContentParser );
+		assert: ( wikitextContentParser isA: WikitextBasicContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
@@ -108,7 +108,7 @@ WikitextContentParserTest >> test06ParsingTrimmingWhiteSpacesDetectsWikitextCont
 	expectedWikitextContent := WikitextTemplate withoutArgumentsNamed: 'Europika'.
 
 	self
-		assert: ( wikitextContentParser isA: TemplateContentParser );
+		assert: ( wikitextContentParser isA: WikitextTemplateAsContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
@@ -125,12 +125,12 @@ WikitextContentParserTest >> test07ParsingABasicContentDeletesLinksReferences [
 		being: 'Return one of your opponent''s creatures to their hand.'.
 
 	self
-		assert: ( wikitextContentParser isA: BasicContentParser );
+		assert: ( wikitextContentParser isA: WikitextBasicContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test08ParsingAMultipleTemplateContent [
+WikitextContentParserTest >> test08ParsingAWikitextMixedContentConformedByTwoWikitextTemplates [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -138,7 +138,7 @@ WikitextContentParserTest >> test08ParsingAMultipleTemplateContent [
 
 	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
 	parsedWikitextContent := wikitextContentParser parse.
-	expectedWikitextContent := MultipleWikitextTemplate
+	expectedWikitextContent := WikitextMixedContent
 		conformedByAll:
 			( Array
 				with:
@@ -150,12 +150,12 @@ WikitextContentParserTest >> test08ParsingAMultipleTemplateContent [
 				with: ( WikitextTemplate withoutArgumentsNamed: 'Double Breaker' ) ).
 
 	self
-		assert: ( wikitextContentParser isA: MultipleTemplateContentParser );
+		assert: ( wikitextContentParser isA: WikitextMixedContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test09ParsingTrimsBrTagsAndWhiteSpacesInAMultipleTemplateContent [
+WikitextContentParserTest >> test09ParsingTrimsBrTagsAndWhiteSpacesInAWikitextMixedContent [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -166,7 +166,7 @@ WikitextContentParserTest >> test09ParsingTrimsBrTagsAndWhiteSpacesInAMultipleTe
 
 	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
 	parsedWikitextContent := wikitextContentParser parse.
-	expectedWikitextContent := MultipleWikitextTemplate
+	expectedWikitextContent := WikitextMixedContent
 		conformedByAll:
 			( Array
 				with:
@@ -178,12 +178,29 @@ WikitextContentParserTest >> test09ParsingTrimsBrTagsAndWhiteSpacesInAMultipleTe
 				with: ( WikitextTemplate withoutArgumentsNamed: 'Double Breaker' ) ).
 
 	self
-		assert: ( wikitextContentParser isA: MultipleTemplateContentParser );
+		assert: ( wikitextContentParser isA: WikitextMixedContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test10ParsingAMultipleTemplateContentWithOneUnnamedTemplateWithBasicContentDueToBlackSquareItemNumeratorPresence [
+WikitextContentParserTest >> test10ParsingAWikitextBasicContentFromAListedBasicContent [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '■ When this enters the [[battle zone]], you may return one of your opponent''s [[creature]]s to their [[hand]].'.
+
+	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextBasicContent
+		being: 'When this enters the battle zone, you may return one of your opponent''s creatures to their hand.'.
+
+	self
+		assert: ( wikitextContentParser isA: WikitextBasicContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]
+
+{ #category : #tests }
+WikitextContentParserTest >> test11ParsingAWikitextMixedContentConformedByATemplateAndAListedBasicContent [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -194,19 +211,15 @@ WikitextContentParserTest >> test10ParsingAMultipleTemplateContentWithOneUnnamed
 
 	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
 	parsedWikitextContent := wikitextContentParser parse.
-	expectedWikitextContent := MultipleWikitextTemplate
+	expectedWikitextContent := WikitextMixedContent
 		conformedByAll:
 			( Array
 				with: ( WikitextTemplate withoutArgumentsNamed: 'Blocker' )
 				with:
-					( WikitextTemplate
-						unnamedWithArgument:
-							( WikitextArgument
-								unnamedWithContent:
-									( WikitextBasicContent
-										being: 'When this enters the battle zone, you may return one of your opponent''s creatures to their hand.' ) ) ) ).
+					( WikitextBasicContent
+						being: 'When this enters the battle zone, you may return one of your opponent''s creatures to their hand.' ) ).
 
 	self
-		assert: ( wikitextContentParser isA: MultipleTemplateContentParser );
+		assert: ( wikitextContentParser isA: WikitextMixedContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]

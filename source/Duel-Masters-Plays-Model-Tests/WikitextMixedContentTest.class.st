@@ -2,33 +2,33 @@
 A MultipleWikitextTemplateTest is a test class for testing the behavior of MultipleWikitextTemplate
 "
 Class {
-	#name : #MultipleWikitextTemplateTest,
+	#name : #WikitextMixedContentTest,
 	#superclass : #TestCase,
 	#category : #'Duel-Masters-Plays-Model-Tests'
 }
 
 { #category : #tests }
-MultipleWikitextTemplateTest >> test01MutipleWikitextTemplateIsEquivalentToAnotherMultipleWikitextTemplate [
+WikitextMixedContentTest >> test01WikitextMixedContentIsEquivalentToAnotherWikitextMixedContent [
 
 	| templateName multipleWikitextTemplate anotherMultipleWikitextTemplate |
 
 	templateName := 'Double Breaker'.
-	multipleWikitextTemplate := MultipleWikitextTemplate
+	multipleWikitextTemplate := WikitextMixedContent
 		conformedByAll: ( Array with: ( WikitextTemplate withoutArgumentsNamed: templateName ) ).
-	anotherMultipleWikitextTemplate := MultipleWikitextTemplate
+	anotherMultipleWikitextTemplate := WikitextMixedContent
 		conformedByAll: ( Array with: ( WikitextTemplate withoutArgumentsNamed: templateName ) ).
 
 	self assert: ( multipleWikitextTemplate isEquivalentTo: anotherMultipleWikitextTemplate )
 ]
 
 { #category : #tests }
-MultipleWikitextTemplateTest >> test02MutipleWikitextTemplateIsNotEquivalentToAnotherMultipleWikitextTemplate [
+WikitextMixedContentTest >> test02WikitextMixedContentIsNotEquivalentToAnotherWikitextMixedContent [
 
 	| multipleWikitextTemplate anotherMultipleWikitextTemplate |
 
-	multipleWikitextTemplate := MultipleWikitextTemplate
+	multipleWikitextTemplate := WikitextMixedContent
 		conformedByAll: ( Array with: ( WikitextTemplate withoutArgumentsNamed: 'Double Breaker' ) ).
-	anotherMultipleWikitextTemplate := MultipleWikitextTemplate
+	anotherMultipleWikitextTemplate := WikitextMixedContent
 		conformedByAll: ( Array with: ( WikitextTemplate withoutArgumentsNamed: 'Triple Breaker' ) ).
 
 	self deny: ( multipleWikitextTemplate isEquivalentTo: anotherMultipleWikitextTemplate )
