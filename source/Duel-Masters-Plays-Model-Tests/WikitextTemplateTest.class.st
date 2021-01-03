@@ -169,7 +169,9 @@ WikitextTemplateTest >> test09WikitextTemplateIsNotEquivalentToAnotherWhenTheyHa
 
 	templateName := 'Cardtable'.
 	anotherTemplateName := 'Another cardtable'.
-	wikitextArgument := WikitextArgument named: 'civilization' withContent: 'Water'.
+	wikitextArgument := WikitextArgument
+		named: 'civilization'
+		withContent: ( WikitextBasicContent being: 'Water' ).
 	wikitextTemplate := WikitextTemplate named: templateName withArgument: wikitextArgument.
 	anotherWikitextTemplate := WikitextTemplate
 		named: anotherTemplateName

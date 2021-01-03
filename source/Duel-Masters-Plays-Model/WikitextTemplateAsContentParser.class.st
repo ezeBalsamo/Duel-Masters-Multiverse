@@ -1,18 +1,18 @@
 Class {
-	#name : #TemplateContentParser,
+	#name : #WikitextTemplateAsContentParser,
 	#superclass : #WikitextContentParser,
 	#category : #'Duel-Masters-Plays-Model'
 }
 
 { #category : #'private - testing' }
-TemplateContentParser class >> canHandle: aWikitextContentToParse [
+WikitextTemplateAsContentParser class >> canHandle: aWikitextContentToParse [
 
 	^ ( self isTemplateContent: aWikitextContentToParse )
-		and: [ ( self isMultipleTemplateContent: aWikitextContentToParse ) not ]
+		and: [ ( self isMixedContent: aWikitextContentToParse ) not ]
 ]
 
 { #category : #initialization }
-TemplateContentParser >> parse [
+WikitextTemplateAsContentParser >> parse [
 
 	^ WikitextParser parse: wikitextContentToParse
 ]

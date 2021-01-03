@@ -14,10 +14,19 @@ WikitextContentParser class >> canHandle: aWikitextContentToParse [
 ]
 
 { #category : #'private - testing' }
-WikitextContentParser class >> isMultipleTemplateContent: aWikitextContentToParse [
+WikitextContentParser class >> isListedBasicContent: aWikitextContentToParse [
+
+	^ aWikitextContentToParse beginsWith: Character blackSquare asString
+]
+
+{ #category : #'private - testing' }
+WikitextContentParser class >> isMixedContent: aWikitextContentToParse [
 
 	^ ( aWikitextContentToParse splitOn: '}}' ) withoutFirst
-		anySatisfy: [ :splittedContentToParse | splittedContentToParse includesSubstring: '{{' ]
+		anySatisfy: [ :splittedContentToParse | 
+			( splittedContentToParse includesSubstring: '{{' )
+				or: [ splittedContentToParse includesSubstring: Character blackSquare asString ]
+			]
 ]
 
 { #category : #'private - testing' }
@@ -46,10 +55,5 @@ WikitextContentParser >> initializeToParse: aWikitextContentToParse [
 { #category : #initialization }
 WikitextContentParser >> parse [
 
-	| wikitextTemplates |
-
-	wikitextTemplates := self
-		wikitextTemplatesToParseCollect: [ :wikitextTemplateToParse | WikitextParser parse: wikitextTemplateToParse ].
-
-	^ MultipleWikitextTemplate conformedByAll: wikitextTemplates
+	self subclassResponsibility
 ]

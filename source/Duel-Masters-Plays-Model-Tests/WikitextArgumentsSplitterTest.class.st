@@ -79,7 +79,7 @@ WikitextArgumentsSplitterTest >> test05SplittingNamedWikitextArgumentWithWikitex
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test06SplittingNamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContentFromSplittingMultipleTemplateContent [
+WikitextArgumentsSplitterTest >> test06SplittingNamedWikitextArgumentWithWikitextContentWithNamedWikitextArgumentWithBasicContentFromSplittingMixedContent [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -105,7 +105,7 @@ WikitextArgumentsSplitterTest >> test07SplittingANonFullyClosedWikitextArguments
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test08SplittingNamedWikitextArgumentWithMultipleTemplateContentTrimsWhiteSpaces [
+WikitextArgumentsSplitterTest >> test08SplittingNamedWikitextArgumentWithMixedContentTrimsWhiteSpaces [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -125,7 +125,7 @@ WikitextArgumentsSplitterTest >> test08SplittingNamedWikitextArgumentWithMultipl
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test09SplittingNamedWikitextArgumentWithMultipleTemplateContentWithOneTemplateHavingArguments [
+WikitextArgumentsSplitterTest >> test09SplittingNamedWikitextArgumentWithMixedContentConformedByTwoTemplatesAndOneHavingArguments [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 
@@ -143,7 +143,7 @@ WikitextArgumentsSplitterTest >> test09SplittingNamedWikitextArgumentWithMultipl
 ]
 
 { #category : #tests }
-WikitextArgumentsSplitterTest >> test10SplittingNamedWikitextArgumentWithMultipleTemplateContentWithBothTemplatesHavingArguments [
+WikitextArgumentsSplitterTest >> test10SplittingNamedWikitextArgumentWithMixedContentConformedByTwoTemplatesBothHavingArguments [
 
 	| wikitextArgumentToSplit wikitextArgumentsSplitted |
 

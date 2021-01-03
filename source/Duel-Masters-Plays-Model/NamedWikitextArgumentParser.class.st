@@ -38,5 +38,7 @@ NamedWikitextArgumentParser >> parseArgumentNameFrom: anArgumentNameAndContentCo
 { #category : #'parsing - private' }
 NamedWikitextArgumentParser >> splitArgumentNameFromContent [
 
-	^ wikitextArgumentToParse splitOnFirstOccurrenceOf: '='
+	^ wikitextArgumentToParse
+		splitOnFirstOccurrenceOf: '='
+		ifNone: [ "do nothing.- ebalsamo" ]
 ]

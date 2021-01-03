@@ -45,7 +45,9 @@ WikitextTemplateWithArgumentsParser >> parseWikitextArgumentsFrom: aTemplateName
 { #category : #'parsing - private' }
 WikitextTemplateWithArgumentsParser >> splitTemplateNameFromArguments [
 
-	^ wikitextTemplateToParse splitOnFirstOccurrenceOf: '|'
+	^ wikitextTemplateToParse
+		splitOnFirstOccurrenceOf: '|'
+		ifNone: [ "do nothing.- ebalsamo" ]
 ]
 
 { #category : #parsing }
