@@ -57,9 +57,13 @@ WikitextContentParser class >> isMultipleTemplateContent: aWikitextContentToPars
 
 	^ ( self isTemplateContent: aWikitextContentToParse )
 		and: [ ( aWikitextContentToParse substrings: '}}' ) withoutFirst
-				allSatisfy: [ :splittedContents | 
-					self
-						isTemplateContent: ( self trimBrTagsAndWhiteSpacesIn: splittedContents )
+				ifEmpty: [ false ]
+				ifNotEmpty: [ :splittedContents | 
+					splittedContents
+						allSatisfy: [ :splittedContent | 
+							self
+								isTemplateContent: ( self trimBrTagsAndWhiteSpacesIn: splittedContent )
+							]
 					]
 			]
 ]
@@ -74,7 +78,7 @@ WikitextContentParser class >> isTemplateContent: aWikitextContentToParse [
 WikitextContentParser class >> isTemplateContentWithListedContent: aWikitextContentToParse [
 
 	^ ( aWikitextContentToParse beginsWith: '{{' )
-		and: [ ( aWikitextContentToParse splitOn: '}}' ) withoutFirst
+		and: [ ( aWikitextContentToParse substrings: '}}' ) withoutFirst
 				anySatisfy: [ :splittedContents | 
 					self
 						isListedBasicContent: ( WikitextWhiteSpacesCleaner new clean: splittedContents )
@@ -86,7 +90,7 @@ WikitextContentParser class >> isTemplateContentWithListedContent: aWikitextCont
 WikitextContentParser class >> isTemplateVariableContent: aWikitextContentToParse [
 
 	^ ( self isTemplateContent: aWikitextContentToParse )
-		and: [ ( aWikitextContentToParse substrings: '}}' )
+		and: [ ( aWikitextContentToParse substrings: '}}' ) withoutFirst
 				anySatisfy: [ :splittedContent | 
 					| trimmedSplittedContent |
 
