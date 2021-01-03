@@ -24,7 +24,7 @@ UnnamedWikitextArgumentParser >> parse [
 	^ WikitextArgument unnamedWithContent: self parseContent
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 UnnamedWikitextArgumentParser >> parseContent [
 
 	^ ( WikitextContentParser toParse: wikitextArgumentToParse ) parse

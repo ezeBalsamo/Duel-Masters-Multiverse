@@ -63,5 +63,8 @@ WikitextMixedContentSplitter >> splitWikitextContents [
 { #category : #'private - parsing' }
 WikitextMixedContentSplitter >> trimBrTagsAndWhiteSpacesIn: aNotClosedWikitextTemplateToParse [
 
-	^ ( aNotClosedWikitextTemplateToParse trimBoth withoutPrefix: '<br>' ) trimLeft
+	^ WikitextConfigurableCleaner new
+		configureBrTagsCleaner;
+		configureWhiteSpacesCleaner;
+		clean: aNotClosedWikitextTemplateToParse
 ]

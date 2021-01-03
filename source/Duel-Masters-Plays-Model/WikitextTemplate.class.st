@@ -95,14 +95,14 @@ WikitextTemplate >> hasArguments [
 	^ wikitextArguments notEmpty
 ]
 
-{ #category : #'testing - private' }
+{ #category : #'private - testing' }
 WikitextTemplate >> hasEquivalentArgument: aPotentialWikitextArgument [
 
 	^ wikitextArguments
 		anySatisfy: [ :aWikitextArgument | aWikitextArgument isEquivalentTo: aPotentialWikitextArgument ]
 ]
 
-{ #category : #'testing - private' }
+{ #category : #'private - testing' }
 WikitextTemplate >> hasEquivalentArguments: aWikitextTemplate [
 
 	^ wikitextArguments

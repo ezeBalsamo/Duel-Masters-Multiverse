@@ -34,7 +34,7 @@ WikitextArgument >> hasContent: aPotentialContent [
 		and: aPotentialContent ) areEquivalents
 ]
 
-{ #category : #'testing-private' }
+{ #category : #'private - testing' }
 WikitextArgument >> hasEquivalentNamingThan: aPotentialWikitextArgument [
 
 	^ nameOptional

@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #tests }
-WikitextContentParserTest >> test01ParsingABasicContent [
+WikitextContentParserTest >> test01ParsingAWikitextBasicContent [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -24,7 +24,7 @@ WikitextContentParserTest >> test01ParsingABasicContent [
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test02ParsingAWikitextContentWithoutArguments [
+WikitextContentParserTest >> test02ParsingAWikitextTemplateAsContentWithoutArguments [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -40,7 +40,7 @@ WikitextContentParserTest >> test02ParsingAWikitextContentWithoutArguments [
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test03ParsingAWikitextContentWithOneNamedArgumentWithBasicContent [
+WikitextContentParserTest >> test03ParsingAWikitextTemplateAsContentWithOneNamedArgumentWithBasicContent [
 
 	| wikitextContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -61,7 +61,7 @@ WikitextContentParserTest >> test03ParsingAWikitextContentWithOneNamedArgumentWi
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test04ParsingAWikitextContentWithOneUnnamedArgumentWithBasicContent [
+WikitextContentParserTest >> test04ParsingAWikitextTemplateAsContentWithOneUnnamedArgumentWithBasicContent [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -96,7 +96,7 @@ WikitextContentParserTest >> test05ParsingTrimmingWhiteSpacesDetectsBasicContent
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test06ParsingTrimmingWhiteSpacesDetectsWikitextContent [
+WikitextContentParserTest >> test06ParsingTrimmingWhiteSpacesDetectsWikitextTemplateAsContent [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -189,13 +189,15 @@ WikitextContentParserTest >> test10ParsingAWikitextBasicContentFromAListedBasicC
 
 	wikitexContentToParse := '■ When this enters the [[battle zone]], you may return one of your opponent''s [[creature]]s to their [[hand]].'.
 
-	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
+	wikitextContentParser := WikitextContentParser
+		toParse: wikitexContentToParse.
 	parsedWikitextContent := wikitextContentParser parse.
 	expectedWikitextContent := WikitextBasicContent
-		being: 'When this enters the battle zone, you may return one of your opponent''s creatures to their hand.'.
+		being:
+			'When this enters the battle zone, you may return one of your opponent''s creatures to their hand.'.
 
 	self
-		assert: ( wikitextContentParser isA: WikitextBasicContentParser );
+		assert: ( wikitextContentParser isA: WikitextListedBasicContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
@@ -221,5 +223,43 @@ WikitextContentParserTest >> test11ParsingAWikitextMixedContentConformedByATempl
 
 	self
 		assert: ( wikitextContentParser isA: WikitextMixedContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]
+
+{ #category : #tests }
+WikitextContentParserTest >> test12ParsingAWikitextMixedContentConformedByAListedBasicContentAndATemplate [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '■ Listed content.{{Blocker}}'.
+
+	wikitextContentParser := WikitextContentParser
+		toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextMixedContent
+		conformedByAll:
+			( Array
+				with: ( WikitextBasicContent being: 'Listed content.' )
+				with: ( WikitextTemplate withoutArgumentsNamed: 'Blocker' ) ).
+
+	self
+		assert: ( wikitextContentParser isA: WikitextMixedContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]
+
+{ #category : #tests }
+WikitextContentParserTest >> test13ParsingAWikitextBasicContentFromAVariableTemplateAsContent [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '{{Ruby|聖核|せいかく}}の{{Ruby|精霊|せいれい}}ウルセリオス'.
+
+	wikitextContentParser := WikitextContentParser
+		toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextBasicContent being: '聖核の精霊ウルセリオス'.
+
+	self
+		assert: ( wikitextContentParser isA: WikitextVariableTemplateAsContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]

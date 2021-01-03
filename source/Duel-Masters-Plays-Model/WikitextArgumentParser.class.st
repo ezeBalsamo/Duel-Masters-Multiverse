@@ -30,10 +30,13 @@ WikitextArgumentParser class >> toParse: aWikitextArgumentToParse [
 
 	| trimmedWikitextArgumentToParse |
 
-	trimmedWikitextArgumentToParse := aWikitextArgumentToParse trimBoth.
+	trimmedWikitextArgumentToParse := WikitextWhiteSpacesCleaner new
+		clean: aWikitextArgumentToParse.
 
-	^ ( SuitableClassFinder findSubclassOf: self suitableFor: trimmedWikitextArgumentToParse ) value
-		new initializeToParse: trimmedWikitextArgumentToParse
+	^ ( SuitableClassFinder
+		findSubclassOf: self
+		suitableFor: trimmedWikitextArgumentToParse ) value new
+		initializeToParse: trimmedWikitextArgumentToParse
 ]
 
 { #category : #initialization }
