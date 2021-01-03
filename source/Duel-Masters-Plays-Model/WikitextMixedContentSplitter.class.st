@@ -2,49 +2,62 @@ Class {
 	#name : #WikitextMixedContentSplitter,
 	#superclass : #Object,
 	#instVars : [
-		'multipleTemplateContentToSplit'
+		'wikitextMixedContentsToSplit',
+		'splittedWikitextContents'
 	],
 	#category : #'Duel-Masters-Plays-Model'
 }
 
 { #category : #'private - preconditions' }
-WikitextMixedContentSplitter class >> assertNotEmpty: aMultipleTemplateContentToSplit [
+WikitextMixedContentSplitter class >> assertNotEmpty: aWikitextMixedContentsToSplit [
 
-	aMultipleTemplateContentToSplit
-		ifEmpty: [ ParsingFailed signal: #'A collection of wikitext templates to split was expected' ]
+	aWikitextMixedContentsToSplit
+		ifEmpty: [ ParsingFailed
+				signal: #'A collection of wikitext contents to split was expected.'
+			]
 ]
 
 { #category : #'instance creation' }
-WikitextMixedContentSplitter class >> splitting: aMultipleTemplateContentToSplit [
+WikitextMixedContentSplitter class >> splitting: aWikitextMixedContentsToSplit [
 
-	self assertNotEmpty: aMultipleTemplateContentToSplit.
-	^ self new initializeSplitting: aMultipleTemplateContentToSplit
+	self assertNotEmpty: aWikitextMixedContentsToSplit.
+	^ self new initializeSplitting: aWikitextMixedContentsToSplit
 ]
 
-{ #category : #'private - parsing' }
-WikitextMixedContentSplitter >> close: aWikitextTemplateToParse [
+{ #category : #'private - accessing' }
+WikitextMixedContentSplitter >> addAsSplitted: aWikitextContentToParse [
 
-	^ '<1s>}}' expandMacrosWith: aWikitextTemplateToParse
+	splittedWikitextContents add: aWikitextContentToParse.
+	wikitextMixedContentsToSplit := self
+		trimBrTagsAndWhiteSpacesIn:
+			( wikitextMixedContentsToSplit
+				withoutFirst: aWikitextContentToParse size )
 ]
 
 { #category : #initialization }
-WikitextMixedContentSplitter >> initializeSplitting: aMultipleTemplateContentToSplit [
+WikitextMixedContentSplitter >> initializeSplitting: aWikitextMixedContentsToSplit [
 
-	multipleTemplateContentToSplit := aMultipleTemplateContentToSplit
+	wikitextMixedContentsToSplit := aWikitextMixedContentsToSplit.
+	splittedWikitextContents := OrderedCollection new
 ]
 
 { #category : #splitting }
 WikitextMixedContentSplitter >> split [
 
-	| trimmedTemplateToParse |
+	[ wikitextMixedContentsToSplit notEmpty ]
+		whileTrue: [ self splitWikitextContents ].
 
-	^ ( multipleTemplateContentToSplit substrings: '}}' )
-		collect: [ :splittedTemplateToParse | 
-			trimmedTemplateToParse := self trimBrTagsAndWhiteSpacesIn: splittedTemplateToParse.
-			( trimmedTemplateToParse beginsWith: '{{' )
-				then: [ self close: trimmedTemplateToParse ]
-				otherwise: [ trimmedTemplateToParse ]
-			]
+	^ splittedWikitextContents
+]
+
+{ #category : #'private - splitting' }
+WikitextMixedContentSplitter >> splitWikitextContents [
+
+	| splittedWikitextContent |
+
+	splittedWikitextContent := ( WikitextContentSplitter
+		splittingFrom: wikitextMixedContentsToSplit ) split.
+	self addAsSplitted: splittedWikitextContent
 ]
 
 { #category : #'private - parsing' }

@@ -43,7 +43,7 @@ String >> ocurrencesQuantityOf: aDelimitor [
 ]
 
 { #category : #'*Duel-Masters-Plays-Tools' }
-String >> splitOnFirstOccurrenceOf: aStringOrCharacterDelimitor [
+String >> splitOnFirstOccurrenceOf: aStringOrCharacterDelimitor ifNone: aNoneBlock [
 
 	| delimitorIndex |
 
@@ -54,5 +54,10 @@ String >> splitOnFirstOccurrenceOf: aStringOrCharacterDelimitor [
 				ifFalse: [ Error signal: 'string or character as delimitor expected' ]
 			].
 
-	^ Array with: ( self first: delimitorIndex - 1 ) with: ( self allButFirst: delimitorIndex )
+	^ delimitorIndex isZero
+		ifTrue: aNoneBlock
+		ifFalse: [ Array
+				with: ( self first: delimitorIndex - 1 )
+				with: ( self allButFirst: delimitorIndex )
+			]
 ]
