@@ -56,8 +56,8 @@ WikitextContentParser class >> isMultipleListedBasicContent: aWikitextContentToP
 WikitextContentParser class >> isMultipleTemplateContent: aWikitextContentToParse [
 
 	^ ( self isTemplateContent: aWikitextContentToParse )
-		and: [ ( aWikitextContentToParse splitOn: '}}' ) withoutFirst
-				anySatisfy: [ :splittedContents | 
+		and: [ ( aWikitextContentToParse substrings: '}}' ) withoutFirst
+				allSatisfy: [ :splittedContents | 
 					self
 						isTemplateContent: ( self trimBrTagsAndWhiteSpacesIn: splittedContents )
 					]
