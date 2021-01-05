@@ -183,7 +183,7 @@ WikitextContentParserTest >> test09ParsingTrimsBrTagsAndWhiteSpacesInAWikitextMi
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test10ParsingAWikitextBasicContentFromAListedBasicContent [
+WikitextContentParserTest >> test10ParsingAWikitextBasicContentFromAListedContent [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -202,7 +202,7 @@ WikitextContentParserTest >> test10ParsingAWikitextBasicContentFromAListedBasicC
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test11ParsingAWikitextMixedContentConformedByATemplateAndAListedBasicContent [
+WikitextContentParserTest >> test11ParsingAWikitextMixedContentConformedByATemplateAndAListedContent [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -227,7 +227,7 @@ WikitextContentParserTest >> test11ParsingAWikitextMixedContentConformedByATempl
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test12ParsingAWikitextMixedContentConformedByAListedBasicContentAndATemplate [
+WikitextContentParserTest >> test12ParsingAWikitextMixedContentConformedByAListedContentAndATemplate [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 

@@ -36,11 +36,11 @@ WikitextMixedContentSplitterTest >> test02SplittingTwoWikitextTemplatesClearsBrT
 ]
 
 { #category : #tests }
-WikitextMixedContentSplitterTest >> test03SplittingTwoListedBasicContents [
+WikitextMixedContentSplitterTest >> test03SplittingTwoListedContents [
 
 	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
 
-	wikitextTemplatesToSplit := '■ First listed basic content.■ Second listed basic content.'.
+	wikitextTemplatesToSplit := '■ First listed content.■ Second listed content.'.
 
 	wikitextTemplatesSplitted := ( WikitextMixedContentSplitter
 		splitting: wikitextTemplatesToSplit ) split.
@@ -48,13 +48,13 @@ WikitextMixedContentSplitterTest >> test03SplittingTwoListedBasicContents [
 	self
 		assert: wikitextTemplatesSplitted size equals: 2;
 		assert: wikitextTemplatesSplitted first
-			equals: '■ First listed basic content.';
+			equals: '■ First listed content.';
 		assert: wikitextTemplatesSplitted second
-			equals: '■ Second listed basic content.'
+			equals: '■ Second listed content.'
 ]
 
 { #category : #tests }
-WikitextMixedContentSplitterTest >> test04SplittingWikitextTemplateFromAListedBasicContent [
+WikitextMixedContentSplitterTest >> test04SplittingWikitextTemplateFromAListedContent [
 
 	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
 
@@ -72,11 +72,11 @@ WikitextMixedContentSplitterTest >> test04SplittingWikitextTemplateFromAListedBa
 ]
 
 { #category : #tests }
-WikitextMixedContentSplitterTest >> test05SplittingListedBasicContentFromAWikitextTemplate [
+WikitextMixedContentSplitterTest >> test05SplittingListedContentFromAWikitextTemplate [
 
 	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
 
-	wikitextTemplatesToSplit := '■ Listed basic content.{{Double Breaker}}'.
+	wikitextTemplatesToSplit := '■ Listed content.{{Double Breaker}}'.
 
 	wikitextTemplatesSplitted := ( WikitextMixedContentSplitter
 		splitting: wikitextTemplatesToSplit ) split.
@@ -84,17 +84,17 @@ WikitextMixedContentSplitterTest >> test05SplittingListedBasicContentFromAWikite
 	self
 		assert: wikitextTemplatesSplitted size equals: 2;
 		assert: wikitextTemplatesSplitted first
-			equals: '■ Listed basic content.';
+			equals: '■ Listed content.';
 		assert: wikitextTemplatesSplitted second
 			equals: '{{Double Breaker}}'
 ]
 
 { #category : #tests }
-WikitextMixedContentSplitterTest >> test06SplittingAWikitextTemplateFromAListedBasicContentFromAWikitextTemplate [
+WikitextMixedContentSplitterTest >> test06SplittingAWikitextTemplateFromAListedContentFromAWikitextTemplate [
 
 	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
 
-	wikitextTemplatesToSplit := '{{Blocker}}■ Listed basic content.{{Double Breaker}}'.
+	wikitextTemplatesToSplit := '{{Blocker}}■ Listed content.{{Double Breaker}}'.
 
 	wikitextTemplatesSplitted := ( WikitextMixedContentSplitter
 		splitting: wikitextTemplatesToSplit ) split.
@@ -103,57 +103,55 @@ WikitextMixedContentSplitterTest >> test06SplittingAWikitextTemplateFromAListedB
 		assert: wikitextTemplatesSplitted size equals: 3;
 		assert: wikitextTemplatesSplitted first equals: '{{Blocker}}';
 		assert: wikitextTemplatesSplitted second
-			equals: '■ Listed basic content.';
+			equals: '■ Listed content.';
 		assert: wikitextTemplatesSplitted third
 			equals: '{{Double Breaker}}'
 ]
 
 { #category : #tests }
-WikitextMixedContentSplitterTest >> test07SplittingAListedBasicContentFromAWikitextTemplateFromAListedBasicContent [
+WikitextMixedContentSplitterTest >> test07SplittingAListedContentFromAWikitextTemplateFromAListedContent [
 
 	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
 
-	wikitextTemplatesToSplit := '■ Listed basic content.{{Double Breaker}}■ Another Listed basic content.'.
+	wikitextTemplatesToSplit := '■ Listed content.{{Double Breaker}}■ Another Listed content.'.
 
 	wikitextTemplatesSplitted := ( WikitextMixedContentSplitter
 		splitting: wikitextTemplatesToSplit ) split.
 
 	self
 		assert: wikitextTemplatesSplitted size equals: 3;
-		assert: wikitextTemplatesSplitted first
-			equals: '■ Listed basic content.';
+		assert: wikitextTemplatesSplitted first equals: '■ Listed content.';
 		assert: wikitextTemplatesSplitted second
 			equals: '{{Double Breaker}}';
 		assert: wikitextTemplatesSplitted third
-			equals: '■ Another Listed basic content.'
+			equals: '■ Another Listed content.'
 ]
 
 { #category : #tests }
-WikitextMixedContentSplitterTest >> test08SplittingAListedBasicContentFromAnotherListedBasicContentFromAWikitextTemplate [
+WikitextMixedContentSplitterTest >> test08SplittingAListedContentFromAnotherListedContentFromAWikitextTemplate [
 
 	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
 
-	wikitextTemplatesToSplit := '■ Listed basic content.■ Another Listed basic content.{{Double Breaker}}'.
+	wikitextTemplatesToSplit := '■ Listed content.■ Another Listed content.{{Double Breaker}}'.
 
 	wikitextTemplatesSplitted := ( WikitextMixedContentSplitter
 		splitting: wikitextTemplatesToSplit ) split.
 
 	self
 		assert: wikitextTemplatesSplitted size equals: 3;
-		assert: wikitextTemplatesSplitted first
-			equals: '■ Listed basic content.';
+		assert: wikitextTemplatesSplitted first equals: '■ Listed content.';
 		assert: wikitextTemplatesSplitted second
-			equals: '■ Another Listed basic content.';
+			equals: '■ Another Listed content.';
 		assert: wikitextTemplatesSplitted third
 			equals: '{{Double Breaker}}'
 ]
 
 { #category : #tests }
-WikitextMixedContentSplitterTest >> test09SplittingAWikitextTemplateFromAnotherWikitextTemplateFromAListedBasicContent [
+WikitextMixedContentSplitterTest >> test09SplittingAWikitextTemplateFromAnotherWikitextTemplateFromAListedContent [
 
 	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
 
-	wikitextTemplatesToSplit := '{{Blocker}}{{Double Breaker}}■ Listed basic content.'.
+	wikitextTemplatesToSplit := '{{Blocker}}{{Double Breaker}}■ Listed content.'.
 
 	wikitextTemplatesSplitted := ( WikitextMixedContentSplitter
 		splitting: wikitextTemplatesToSplit ) split.
@@ -163,6 +161,5 @@ WikitextMixedContentSplitterTest >> test09SplittingAWikitextTemplateFromAnotherW
 		assert: wikitextTemplatesSplitted first equals: '{{Blocker}}';
 		assert: wikitextTemplatesSplitted second
 			equals: '{{Double Breaker}}';
-		assert: wikitextTemplatesSplitted third
-			equals: '■ Listed basic content.'
+		assert: wikitextTemplatesSplitted third equals: '■ Listed content.'
 ]
