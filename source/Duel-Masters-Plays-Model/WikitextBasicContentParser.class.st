@@ -8,7 +8,7 @@ Class {
 WikitextBasicContentParser class >> canHandle: aWikitextContentToParse [
 
 	^ ( self isTemplateContent: aWikitextContentToParse ) not
-		and: [ ( self isListedBasicContent: aWikitextContentToParse ) not
+		and: [ ( self isListedContent: aWikitextContentToParse ) not
 				and: [ ( self isMixedContent: aWikitextContentToParse ) not ]
 			]
 ]

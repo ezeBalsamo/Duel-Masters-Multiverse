@@ -20,36 +20,34 @@ WikitextContentParser class >> includesTemplateContent: aWikitextContentToParse 
 ]
 
 { #category : #'private - testing' }
-WikitextContentParser class >> isListedBasicContent: aWikitextContentToParse [
+WikitextContentParser class >> isListedContent: aWikitextContentToParse [
 
-	^ aWikitextContentToParse beginsWith: Character blackSquare asString
+	^ aWikitextContentToParse beginsWith: String blackSquare
 ]
 
 { #category : #'private - testing' }
-WikitextContentParser class >> isListedBasicContentWithTemplate: aWikitextContentToParse [
+WikitextContentParser class >> isListedContentWithTemplate: aWikitextContentToParse [
 
-	^ ( self isListedBasicContent: aWikitextContentToParse )
+	^ ( self isListedContent: aWikitextContentToParse )
 		and: [ self includesTemplateContent: aWikitextContentToParse ]
 ]
 
 { #category : #'private - testing' }
 WikitextContentParser class >> isMixedContent: aWikitextContentToParse [
 
-	^ ( self isListedBasicContentWithTemplate: aWikitextContentToParse )
+	^ ( self isListedContentWithTemplate: aWikitextContentToParse )
 		or: [ ( self isTemplateContentWithListedContent: aWikitextContentToParse )
-				or: [ ( self isMultipleListedBasicContent: aWikitextContentToParse )
+				or: [ ( self isMultipleListedContent: aWikitextContentToParse )
 						or: [ self isMultipleTemplateContent: aWikitextContentToParse ]
 					]
 			]
 ]
 
 { #category : #'private - testing' }
-WikitextContentParser class >> isMultipleListedBasicContent: aWikitextContentToParse [
+WikitextContentParser class >> isMultipleListedContent: aWikitextContentToParse [
 
-	^ ( self isListedBasicContent: aWikitextContentToParse )
-		and: [ aWikitextContentToParse withoutFirst
-				includes: Character blackSquare asString
-			]
+	^ ( self isListedContent: aWikitextContentToParse )
+		and: [ aWikitextContentToParse withoutFirst includes: String blackSquare ]
 ]
 
 { #category : #'private - testing' }
@@ -81,7 +79,7 @@ WikitextContentParser class >> isTemplateContentWithListedContent: aWikitextCont
 		and: [ ( aWikitextContentToParse substrings: '}}' ) withoutFirst
 				anySatisfy: [ :splittedContents | 
 					self
-						isListedBasicContent: ( WikitextWhiteSpacesCleaner new clean: splittedContents )
+						isListedContent: ( WikitextWhiteSpacesCleaner new clean: splittedContents )
 					]
 			]
 ]
@@ -97,7 +95,7 @@ WikitextContentParser class >> isTemplateVariableContent: aWikitextContentToPars
 					trimmedSplittedContent := self
 						trimBrTagsAndWhiteSpacesIn: splittedContent.
 					( self isTemplateContent: trimmedSplittedContent ) not
-						and: [ ( self isListedBasicContent: trimmedSplittedContent ) not ]
+						and: [ ( self isListedContent: trimmedSplittedContent ) not ]
 					]
 			]
 ]

@@ -1,18 +1,18 @@
 Class {
-	#name : #WikitextListedBasicContentParser,
+	#name : #WikitextListedContentParser,
 	#superclass : #WikitextContentParser,
 	#category : #'Duel-Masters-Plays-Model'
 }
 
 { #category : #'private - testing' }
-WikitextListedBasicContentParser class >> canHandle: aWikitextContentToParse [
+WikitextListedContentParser class >> canHandle: aWikitextContentToParse [
 
-	^ ( self isListedBasicContent: aWikitextContentToParse )
+	^ ( self isListedContent: aWikitextContentToParse )
 		and: [ ( self isMixedContent: aWikitextContentToParse ) not ]
 ]
 
 { #category : #'private - parsing' }
-WikitextListedBasicContentParser >> cleanedContent [
+WikitextListedContentParser >> cleanedContent [
 
 	^ WikitextConfigurableCleaner new
 		configureBlackSquareCleaner;
@@ -22,7 +22,7 @@ WikitextListedBasicContentParser >> cleanedContent [
 ]
 
 { #category : #initialization }
-WikitextListedBasicContentParser >> parse [
+WikitextListedContentParser >> parse [
 
 	^ WikitextBasicContent being: self cleanedContent
 ]

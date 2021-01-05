@@ -109,7 +109,7 @@ WikitextMixedContentSplitterTest >> test06SplittingAWikitextTemplateFromAListedB
 ]
 
 { #category : #tests }
-WikitextMixedContentSplitterTest >> test07SplittingAListedBasicContentFromAWikitextTemplateAListedBasicContent [
+WikitextMixedContentSplitterTest >> test07SplittingAListedBasicContentFromAWikitextTemplateFromAListedBasicContent [
 
 	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
 
@@ -126,4 +126,43 @@ WikitextMixedContentSplitterTest >> test07SplittingAListedBasicContentFromAWikit
 			equals: '{{Double Breaker}}';
 		assert: wikitextTemplatesSplitted third
 			equals: '■ Another Listed basic content.'
+]
+
+{ #category : #tests }
+WikitextMixedContentSplitterTest >> test08SplittingAListedBasicContentFromAnotherListedBasicContentFromAWikitextTemplate [
+
+	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
+
+	wikitextTemplatesToSplit := '■ Listed basic content.■ Another Listed basic content.{{Double Breaker}}'.
+
+	wikitextTemplatesSplitted := ( WikitextMixedContentSplitter
+		splitting: wikitextTemplatesToSplit ) split.
+
+	self
+		assert: wikitextTemplatesSplitted size equals: 3;
+		assert: wikitextTemplatesSplitted first
+			equals: '■ Listed basic content.';
+		assert: wikitextTemplatesSplitted second
+			equals: '■ Another Listed basic content.';
+		assert: wikitextTemplatesSplitted third
+			equals: '{{Double Breaker}}'
+]
+
+{ #category : #tests }
+WikitextMixedContentSplitterTest >> test09SplittingAWikitextTemplateFromAnotherWikitextTemplateFromAListedBasicContent [
+
+	| wikitextTemplatesToSplit wikitextTemplatesSplitted |
+
+	wikitextTemplatesToSplit := '{{Blocker}}{{Double Breaker}}■ Listed basic content.'.
+
+	wikitextTemplatesSplitted := ( WikitextMixedContentSplitter
+		splitting: wikitextTemplatesToSplit ) split.
+
+	self
+		assert: wikitextTemplatesSplitted size equals: 3;
+		assert: wikitextTemplatesSplitted first equals: '{{Blocker}}';
+		assert: wikitextTemplatesSplitted second
+			equals: '{{Double Breaker}}';
+		assert: wikitextTemplatesSplitted third
+			equals: '■ Listed basic content.'
 ]

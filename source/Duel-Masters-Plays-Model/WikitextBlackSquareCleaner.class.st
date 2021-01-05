@@ -7,5 +7,5 @@ Class {
 { #category : #cleaning }
 WikitextBlackSquareCleaner >> clean: aWikitextToClean [
 
-	^ aWikitextToClean withoutPrefix: Character blackSquare asString
+	^ aWikitextToClean withoutPrefix: String blackSquare
 ]

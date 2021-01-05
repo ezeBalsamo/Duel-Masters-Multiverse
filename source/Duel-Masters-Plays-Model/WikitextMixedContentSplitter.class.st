@@ -2,8 +2,7 @@ Class {
 	#name : #WikitextMixedContentSplitter,
 	#superclass : #Object,
 	#instVars : [
-		'wikitextMixedContentsToSplit',
-		'splittedWikitextContents'
+		'wikitextMixedContentsToSplit'
 	],
 	#category : #'Duel-Masters-Plays-Model'
 }
@@ -24,47 +23,41 @@ WikitextMixedContentSplitter class >> splitting: aWikitextMixedContentsToSplit [
 	^ self new initializeSplitting: aWikitextMixedContentsToSplit
 ]
 
-{ #category : #'private - accessing' }
-WikitextMixedContentSplitter >> addAsSplitted: aWikitextContentToParse [
+{ #category : #'private - parsing' }
+WikitextMixedContentSplitter >> clean: aSplittedWikitextContentToParse [
 
-	splittedWikitextContents add: aWikitextContentToParse.
-	wikitextMixedContentsToSplit := self
-		trimBrTagsAndWhiteSpacesIn:
-			( wikitextMixedContentsToSplit
-				withoutFirst: aWikitextContentToParse size )
+	^ WikitextConfigurableCleaner new
+		configureBrTagsCleaner;
+		configureWhiteSpacesCleaner;
+		clean: aSplittedWikitextContentToParse
+]
+
+{ #category : #'private - merging' }
+WikitextMixedContentSplitter >> complete: aSplittedButIncompleteContent [
+
+	^ ( aSplittedButIncompleteContent includesSubstring: '}}' )
+		then: [ '{{<1s>' expandMacrosWith: aSplittedButIncompleteContent ]
+		otherwise: [ '<1s><2s>'
+				expandMacrosWith: String blackSquare
+				with: aSplittedButIncompleteContent
+			]
 ]
 
 { #category : #initialization }
 WikitextMixedContentSplitter >> initializeSplitting: aWikitextMixedContentsToSplit [
 
-	wikitextMixedContentsToSplit := aWikitextMixedContentsToSplit.
-	splittedWikitextContents := OrderedCollection new
+	wikitextMixedContentsToSplit := aWikitextMixedContentsToSplit
 ]
 
 { #category : #splitting }
 WikitextMixedContentSplitter >> split [
 
-	[ wikitextMixedContentsToSplit notEmpty ]
-		whileTrue: [ self splitWikitextContents ].
+	| splittedButIncompleteContents |
 
-	^ splittedWikitextContents
-]
+	splittedButIncompleteContents := wikitextMixedContentsToSplit
+		findBetweenSubstrings: ( Array with: '{{' with: String blackSquare ).
 
-{ #category : #'private - splitting' }
-WikitextMixedContentSplitter >> splitWikitextContents [
-
-	| splittedWikitextContent |
-
-	splittedWikitextContent := ( WikitextContentSplitter
-		splittingFrom: wikitextMixedContentsToSplit ) split.
-	self addAsSplitted: splittedWikitextContent
-]
-
-{ #category : #'private - parsing' }
-WikitextMixedContentSplitter >> trimBrTagsAndWhiteSpacesIn: aNotClosedWikitextTemplateToParse [
-
-	^ WikitextConfigurableCleaner new
-		configureBrTagsCleaner;
-		configureWhiteSpacesCleaner;
-		clean: aNotClosedWikitextTemplateToParse
+	^ ( splittedButIncompleteContents
+		collect: [ :incompleteContent | self complete: incompleteContent ] )
+		collect: [ :splittedContent | self clean: splittedContent ]
 ]

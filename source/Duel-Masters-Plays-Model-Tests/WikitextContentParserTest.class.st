@@ -197,7 +197,7 @@ WikitextContentParserTest >> test10ParsingAWikitextBasicContentFromAListedBasicC
 			'When this enters the battle zone, you may return one of your opponent''s creatures to their hand.'.
 
 	self
-		assert: ( wikitextContentParser isA: WikitextListedBasicContentParser );
+		assert: ( wikitextContentParser isA: WikitextListedContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
 
