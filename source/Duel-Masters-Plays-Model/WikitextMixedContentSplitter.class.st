@@ -36,11 +36,23 @@ WikitextMixedContentSplitter >> clean: aSplittedWikitextContentToParse [
 WikitextMixedContentSplitter >> complete: aSplittedButIncompleteContent [
 
 	^ ( aSplittedButIncompleteContent includesSubstring: '}}' )
-		then: [ '{{<1s>' expandMacrosWith: aSplittedButIncompleteContent ]
-		otherwise: [ '<1s><2s>'
-				expandMacrosWith: String blackSquare
-				with: aSplittedButIncompleteContent
-			]
+		then: [ self completeAsTemplateContent: aSplittedButIncompleteContent ]
+		otherwise:
+			[ self completeAsListedContent: aSplittedButIncompleteContent ]
+]
+
+{ #category : #'private - merging' }
+WikitextMixedContentSplitter >> completeAsListedContent: aSplittedButIncompleteContent [
+
+	^ '<1s><2s>'
+		expandMacrosWith: String blackSquare
+		with: aSplittedButIncompleteContent
+]
+
+{ #category : #'private - merging' }
+WikitextMixedContentSplitter >> completeAsTemplateContent: aSplittedButIncompleteContent [
+
+	^ '{{<1s>' expandMacrosWith: aSplittedButIncompleteContent
 ]
 
 { #category : #initialization }

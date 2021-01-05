@@ -46,8 +46,8 @@ WikitextContentParser class >> isMixedContent: aWikitextContentToParse [
 { #category : #'private - testing' }
 WikitextContentParser class >> isMultipleListedContent: aWikitextContentToParse [
 
-	^ ( self isListedContent: aWikitextContentToParse )
-		and: [ aWikitextContentToParse withoutFirst includes: String blackSquare ]
+	^ ( aWikitextContentToParse occurrencesQuantityOf: String blackSquare )
+		> 1
 ]
 
 { #category : #'private - testing' }
@@ -75,7 +75,7 @@ WikitextContentParser class >> isTemplateContent: aWikitextContentToParse [
 { #category : #'private - testing' }
 WikitextContentParser class >> isTemplateContentWithListedContent: aWikitextContentToParse [
 
-	^ ( aWikitextContentToParse beginsWith: '{{' )
+	^ ( self isTemplateContent: aWikitextContentToParse )
 		and: [ ( aWikitextContentToParse substrings: '}}' ) withoutFirst
 				anySatisfy: [ :splittedContents | 
 					self
