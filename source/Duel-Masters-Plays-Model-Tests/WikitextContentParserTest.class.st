@@ -248,7 +248,7 @@ WikitextContentParserTest >> test12ParsingAWikitextMixedContentConformedByAListe
 ]
 
 { #category : #tests }
-WikitextContentParserTest >> test13ParsingAWikitextBasicContentFromAVariableTemplateAsContent [
+WikitextContentParserTest >> test13ParsingAWikitextBasicContentFromAVariableTemplateAsContentWithThePrefixVariable [
 
 	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
 
@@ -258,6 +258,23 @@ WikitextContentParserTest >> test13ParsingAWikitextBasicContentFromAVariableTemp
 		toParse: wikitexContentToParse.
 	parsedWikitextContent := wikitextContentParser parse.
 	expectedWikitextContent := WikitextBasicContent being: '聖核の精霊ウルセリオス'.
+
+	self
+		assert: ( wikitextContentParser isA: WikitextVariableTemplateAsContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]
+
+{ #category : #tests }
+WikitextContentParserTest >> test14ParsingAWikitextBasicContentFromAVariableTemplateAsContentWithTheSuffixVariable [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := 'いけにえの{{Ruby|鎖|くさり}}'.
+
+	wikitextContentParser := WikitextContentParser
+		toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextBasicContent being: 'いけにえの鎖'.
 
 	self
 		assert: ( wikitextContentParser isA: WikitextVariableTemplateAsContentParser );

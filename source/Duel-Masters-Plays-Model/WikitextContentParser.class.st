@@ -87,17 +87,8 @@ WikitextContentParser class >> isTemplateContentWithListedContent: aWikitextCont
 { #category : #'private - testing' }
 WikitextContentParser class >> isTemplateVariableContent: aWikitextContentToParse [
 
-	^ ( self isTemplateContent: aWikitextContentToParse )
-		and: [ ( aWikitextContentToParse substrings: '}}' ) withoutFirst
-				anySatisfy: [ :splittedContent | 
-					| trimmedSplittedContent |
-
-					trimmedSplittedContent := self
-						trimBrTagsAndWhiteSpacesIn: splittedContent.
-					( self isTemplateContent: trimmedSplittedContent ) not
-						and: [ ( self isListedContent: trimmedSplittedContent ) not ]
-					]
-			]
+	^ ( aWikitextContentToParse findBetweenSubstrings: '{{}}' )
+		anySatisfy: [ :token | token includesSubstring: 'Ruby|' ]
 ]
 
 { #category : #'instance creation' }

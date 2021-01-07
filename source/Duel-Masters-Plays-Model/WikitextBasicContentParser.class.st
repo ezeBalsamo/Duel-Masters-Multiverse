@@ -7,10 +7,12 @@ Class {
 { #category : #'private - testing' }
 WikitextBasicContentParser class >> canHandle: aWikitextContentToParse [
 
-	^ ( self isTemplateContent: aWikitextContentToParse ) not
-		and: [ ( self isListedContent: aWikitextContentToParse ) not
-				and: [ ( self isMixedContent: aWikitextContentToParse ) not ]
-			]
+	^ ( Array
+		with: ( self isTemplateContent: aWikitextContentToParse )
+		with: ( self isListedContent: aWikitextContentToParse )
+		with: ( self isMixedContent: aWikitextContentToParse )
+		with: ( self isTemplateVariableContent: aWikitextContentToParse ) )
+		allSatisfy: [ :condition | condition = false ]
 ]
 
 { #category : #'private - parsing' }
