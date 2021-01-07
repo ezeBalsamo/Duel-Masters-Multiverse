@@ -46,7 +46,7 @@ WikitextArgumentsSplitter >> assertThereIsNoRemainingNotFullyClosedSplittedArgum
 { #category : #'private - accessing' }
 WikitextArgumentsSplitter >> closeCurlyBracesOccurrencesQuantityOf: aSplittedArgumentToBeMerged [
 
-	^ aSplittedArgumentToBeMerged ocurrencesQuantityOf: '}}'
+	^ aSplittedArgumentToBeMerged occurrencesQuantityOf: '}}'
 ]
 
 { #category : #initialization }
@@ -97,7 +97,7 @@ WikitextArgumentsSplitter >> mergeSplittedArguments [
 { #category : #'private - accessing' }
 WikitextArgumentsSplitter >> openCurlyBracesOccurrencesQuantityOf: aSplittedArgumentToBeMerged [
 
-	^ aSplittedArgumentToBeMerged ocurrencesQuantityOf: '{{'
+	^ aSplittedArgumentToBeMerged occurrencesQuantityOf: '{{'
 ]
 
 { #category : #'private - testing' }

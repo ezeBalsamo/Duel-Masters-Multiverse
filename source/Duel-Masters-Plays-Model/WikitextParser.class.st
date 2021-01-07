@@ -31,13 +31,13 @@ WikitextParser >> parse: aWikitextToParse [
 	^ self parseWikitextTemplateFrom: wikitextWithoutCurlyBraces
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 WikitextParser >> parseWikitextTemplateFrom: aWikitextTemplateToParse [
 
 	^ ( WikitextTemplateParser toParse: aWikitextTemplateToParse ) parse
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 WikitextParser >> withoutCurlyBraces: aWikitextToParse [
 
 	^ ( aWikitextToParse withoutPrefix: '{{' ) withoutSuffix: '}}'

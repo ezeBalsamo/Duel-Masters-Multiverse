@@ -23,26 +23,27 @@ WikitextTemplateWithArgumentsParser >> parse [
 	^ WikitextTemplate named: templateName withArguments: arguments
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 WikitextTemplateWithArgumentsParser >> parseTemplateNameFrom: aTemplateNameAndArgumentsCollection [
 
-	^ aTemplateNameAndArgumentsCollection first trimBoth
+	^ WikitextWhiteSpacesCleaner new
+		clean: aTemplateNameAndArgumentsCollection first
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 WikitextTemplateWithArgumentsParser >> parseWikitextArgumentFrom: aWikitextArgumentToParse [
 
 	^ ( WikitextArgumentParser toParse: aWikitextArgumentToParse ) parse
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 WikitextTemplateWithArgumentsParser >> parseWikitextArgumentsFrom: aTemplateNameAndArgumentsCollection [
 
 	^ ( self splittedWikitextArgumentsIn: aTemplateNameAndArgumentsCollection second )
 		collect: [ :aWikitextArgumentToParse | self parseWikitextArgumentFrom: aWikitextArgumentToParse ]
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 WikitextTemplateWithArgumentsParser >> splitTemplateNameFromArguments [
 
 	^ wikitextTemplateToParse

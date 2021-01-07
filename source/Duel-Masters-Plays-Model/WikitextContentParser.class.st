@@ -14,18 +14,55 @@ WikitextContentParser class >> canHandle: aWikitextContentToParse [
 ]
 
 { #category : #'private - testing' }
-WikitextContentParser class >> isListedBasicContent: aWikitextContentToParse [
+WikitextContentParser class >> includesTemplateContent: aWikitextContentToParse [
 
-	^ aWikitextContentToParse beginsWith: Character blackSquare asString
+	^ aWikitextContentToParse includesSubstring: '{{'
+]
+
+{ #category : #'private - testing' }
+WikitextContentParser class >> isListedContent: aWikitextContentToParse [
+
+	^ aWikitextContentToParse beginsWith: String blackSquare
+]
+
+{ #category : #'private - testing' }
+WikitextContentParser class >> isListedContentWithTemplate: aWikitextContentToParse [
+
+	^ ( self isListedContent: aWikitextContentToParse )
+		and: [ self includesTemplateContent: aWikitextContentToParse ]
 ]
 
 { #category : #'private - testing' }
 WikitextContentParser class >> isMixedContent: aWikitextContentToParse [
 
-	^ ( aWikitextContentToParse splitOn: '}}' ) withoutFirst
-		anySatisfy: [ :splittedContentToParse | 
-			( splittedContentToParse includesSubstring: '{{' )
-				or: [ splittedContentToParse includesSubstring: Character blackSquare asString ]
+	^ ( self isListedContentWithTemplate: aWikitextContentToParse )
+		or: [ ( self isTemplateContentWithListedContent: aWikitextContentToParse )
+				or: [ ( self isMultipleListedContent: aWikitextContentToParse )
+						or: [ self isMultipleTemplateContent: aWikitextContentToParse ]
+					]
+			]
+]
+
+{ #category : #'private - testing' }
+WikitextContentParser class >> isMultipleListedContent: aWikitextContentToParse [
+
+	^ ( aWikitextContentToParse occurrencesQuantityOf: String blackSquare )
+		> 1
+]
+
+{ #category : #'private - testing' }
+WikitextContentParser class >> isMultipleTemplateContent: aWikitextContentToParse [
+
+	^ ( self isTemplateContent: aWikitextContentToParse )
+		and: [ ( aWikitextContentToParse substrings: '}}' ) withoutFirst
+				ifEmpty: [ false ]
+				ifNotEmpty: [ :splittedContents | 
+					splittedContents
+						allSatisfy: [ :splittedContent | 
+							self
+								isTemplateContent: ( self trimBrTagsAndWhiteSpacesIn: splittedContent )
+							]
+					]
 			]
 ]
 
@@ -35,15 +72,46 @@ WikitextContentParser class >> isTemplateContent: aWikitextContentToParse [
 	^ aWikitextContentToParse beginsWith: '{{'
 ]
 
+{ #category : #'private - testing' }
+WikitextContentParser class >> isTemplateContentWithListedContent: aWikitextContentToParse [
+
+	^ ( self isTemplateContent: aWikitextContentToParse )
+		and: [ ( aWikitextContentToParse substrings: '}}' ) withoutFirst
+				anySatisfy: [ :splittedContents | 
+					self
+						isListedContent: ( WikitextWhiteSpacesCleaner new clean: splittedContents )
+					]
+			]
+]
+
+{ #category : #'private - testing' }
+WikitextContentParser class >> isTemplateVariableContent: aWikitextContentToParse [
+
+	^ ( aWikitextContentToParse findBetweenSubstrings: '{{}}' )
+		anySatisfy: [ :token | token includesSubstring: 'Ruby|' ]
+]
+
 { #category : #'instance creation' }
 WikitextContentParser class >> toParse: aWikitextContentToParse [
 
 	| trimmedWikitextContentToParse |
 
-	trimmedWikitextContentToParse := aWikitextContentToParse trimBoth.
+	trimmedWikitextContentToParse := WikitextWhiteSpacesCleaner new
+		clean: aWikitextContentToParse.
 
-	^ ( SuitableClassFinder findDirectSubclassOf: self suitableFor: trimmedWikitextContentToParse )
-		value new initializeToParse: trimmedWikitextContentToParse
+	^ ( SuitableClassFinder
+		findDirectSubclassOf: self
+		suitableFor: trimmedWikitextContentToParse ) value new
+		initializeToParse: trimmedWikitextContentToParse
+]
+
+{ #category : #'private - parsing' }
+WikitextContentParser class >> trimBrTagsAndWhiteSpacesIn: aNotClosedWikitextTemplateToParse [
+
+	^ WikitextConfigurableCleaner new
+		configureBrTagsCleaner;
+		configureWhiteSpacesCleaner;
+		clean: aNotClosedWikitextTemplateToParse
 ]
 
 { #category : #initialization }

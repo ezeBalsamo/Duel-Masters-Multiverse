@@ -16,7 +16,7 @@ ContentsNotSuitableForEquivalenceAnalyzer >> areEquivalents [
 	^ false
 ]
 
-{ #category : #'instance creation' }
+{ #category : #initialization }
 ContentsNotSuitableForEquivalenceAnalyzer >> initializeAnalyzingEquivalenceBetween: aWikitextContent and: anotherWikitextContent [
 
 	

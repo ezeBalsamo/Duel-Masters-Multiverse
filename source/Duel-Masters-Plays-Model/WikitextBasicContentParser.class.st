@@ -7,25 +7,22 @@ Class {
 { #category : #'private - testing' }
 WikitextBasicContentParser class >> canHandle: aWikitextContentToParse [
 
-	^ ( self isTemplateContent: aWikitextContentToParse ) not
-		or: [ self isListedBasicContent: aWikitextContentToParse ]
+	^ ( Array
+		with: ( self isTemplateContent: aWikitextContentToParse )
+		with: ( self isListedContent: aWikitextContentToParse )
+		with: ( self isMixedContent: aWikitextContentToParse )
+		with: ( self isTemplateVariableContent: aWikitextContentToParse ) )
+		allSatisfy: [ :condition | condition = false ]
 ]
 
-{ #category : #'parsing - private' }
-WikitextBasicContentParser >> contentWithoutBlackSquare [
+{ #category : #'private - parsing' }
+WikitextBasicContentParser >> cleanedContent [
 
-	^ wikitextContentToParse withoutPrefix: Character blackSquare asString
-]
-
-{ #category : #'parsing - private' }
-WikitextBasicContentParser >> contentWithoutBlackSquareAndDoubleSquareBraces [
-
-	^ ( CollectionFormatter separatingWith: '' )
-		format: ( self contentWithoutBlackSquare trimLeft findBetweenSubstrings: '[[]]' )
+	^ WikitextDoubleSquareBracesCleaner new clean: wikitextContentToParse
 ]
 
 { #category : #initialization }
 WikitextBasicContentParser >> parse [
 
-	^ WikitextBasicContent being: self contentWithoutBlackSquareAndDoubleSquareBraces
+	^ WikitextBasicContent being: self cleanedContent
 ]

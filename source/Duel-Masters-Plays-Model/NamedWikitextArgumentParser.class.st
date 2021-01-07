@@ -23,19 +23,20 @@ NamedWikitextArgumentParser >> parse [
 	^ WikitextArgument named: argumentName withContent: argumentContent
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 NamedWikitextArgumentParser >> parseArgumentContentFrom: anArgumentNameAndContentCollection [
 
 	^ ( WikitextContentParser toParse: anArgumentNameAndContentCollection second ) parse
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 NamedWikitextArgumentParser >> parseArgumentNameFrom: anArgumentNameAndContentCollection [
 
-	^ anArgumentNameAndContentCollection first trimBoth
+	^ WikitextWhiteSpacesCleaner new
+		clean: anArgumentNameAndContentCollection first
 ]
 
-{ #category : #'parsing - private' }
+{ #category : #'private - parsing' }
 NamedWikitextArgumentParser >> splitArgumentNameFromContent [
 
 	^ wikitextArgumentToParse

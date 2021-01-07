@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #tests }
-WikitextMixedContentTest >> test01WikitextMixedContentIsEquivalentToAnotherWikitextMixedContent [
+WikitextMixedContentTest >> test01WikitextMixedContentIsEquivalentToAnotherWikitextMixedContentWhenTheyShareTheSameContentTypeAndTheSameContent [
 
 	| templateName multipleWikitextTemplate anotherMultipleWikitextTemplate |
 
@@ -22,7 +22,25 @@ WikitextMixedContentTest >> test01WikitextMixedContentIsEquivalentToAnotherWikit
 ]
 
 { #category : #tests }
-WikitextMixedContentTest >> test02WikitextMixedContentIsNotEquivalentToAnotherWikitextMixedContent [
+WikitextMixedContentTest >> test02WikitextMixedContentIsNotEquivalentToAnotherWikitextMixedContentWhenTheyDontShareTheSameContentType [
+
+	| multipleWikitextTemplate anotherMultipleWikitextTemplate |
+
+	multipleWikitextTemplate := WikitextMixedContent
+		conformedByAll:
+			( Array
+				with: ( WikitextTemplate withoutArgumentsNamed: 'Double Breaker' ) ).
+	anotherMultipleWikitextTemplate := WikitextMixedContent
+		conformedByAll: ( Array with: ( WikitextBasicContent being: 'Double Breaker' ) ).
+
+	self
+		deny:
+			( multipleWikitextTemplate
+				isEquivalentTo: anotherMultipleWikitextTemplate )
+]
+
+{ #category : #tests }
+WikitextMixedContentTest >> test03WikitextMixedContentIsNotEquivalentToAnotherWikitextMixedContentWhenTheyShareTheSameContentTypeButNotTheSameContent [
 
 	| multipleWikitextTemplate anotherMultipleWikitextTemplate |
 
