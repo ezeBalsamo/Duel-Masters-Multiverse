@@ -67,15 +67,20 @@ WikitextArgumentsSplitter >> isNotFullyClosed: aPotentialSplittedArgument [
 { #category : #'private - testing' }
 WikitextArgumentsSplitter >> isSuitableForMerging [
 
-	| firstArgumentToMerge lastArgumentToMerge extraOpenCurlyBraces extraCloseCurlyBraces |
+	| argumentsToMerge lastArgumentToMerge extraOpenCurlyBraces extraCloseCurlyBraces |
 
 	^ notFullyClosedSplittedArguments size > 1
-		then: [ firstArgumentToMerge := notFullyClosedSplittedArguments first.
+		then: [ argumentsToMerge := notFullyClosedSplittedArguments allButLast.
 			lastArgumentToMerge := notFullyClosedSplittedArguments last trimmed.
 
-			extraOpenCurlyBraces := ( self openCurlyBracesOccurrencesQuantityOf: firstArgumentToMerge )
-				- ( self closeCurlyBracesOccurrencesQuantityOf: firstArgumentToMerge ).
-			extraCloseCurlyBraces := ( self closeCurlyBracesOccurrencesQuantityOf: lastArgumentToMerge )
+			extraOpenCurlyBraces := argumentsToMerge
+				sumNumbers: [ :argumentToMerge | 
+					( self openCurlyBracesOccurrencesQuantityOf: argumentToMerge )
+						- ( self closeCurlyBracesOccurrencesQuantityOf: argumentToMerge )
+					].
+
+			extraCloseCurlyBraces := ( self
+				closeCurlyBracesOccurrencesQuantityOf: lastArgumentToMerge )
 				- ( self openCurlyBracesOccurrencesQuantityOf: lastArgumentToMerge ).
 
 			extraOpenCurlyBraces = extraCloseCurlyBraces
