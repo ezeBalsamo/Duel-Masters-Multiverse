@@ -160,3 +160,23 @@ WikitextArgumentsSplitterTest >> test10SplittingNamedWikitextArgumentWithMixedCo
 					'engtext = {{Tap Skill|Return one of your opponent''s creatures to their hand.|jp}}{{Double Breaker|jp}}'
 			]
 ]
+
+{ #category : #tests }
+WikitextArgumentsSplitterTest >> test11SplittingNamedWikitextArgumentWithMixedContentConformedByTwoTemplatesBothHavingArgumentsAndOneHavingAnInnerTemplateWithOneArgument [
+
+	| wikitextArgumentToSplit wikitextArgumentsSplitted |
+
+	wikitextArgumentToSplit := 'engtext = {{first_temp_name|{{inner_temp_name|inner_temp_argument}}|first_temp_argument}}{{second_temp_name|second_temp_argument}}'.
+
+	wikitextArgumentsSplitted := ( WikitextArgumentsSplitter
+		splitting: wikitextArgumentToSplit ) split.
+
+	self
+		withTheOnlyOneIn: wikitextArgumentsSplitted
+		do: [ :wikitextArgumentSplitted | 
+			self
+				assert: wikitextArgumentSplitted
+				equals:
+					'engtext = {{first_temp_name|{{inner_temp_name|inner_temp_argument}}|first_temp_argument}}{{second_temp_name|second_temp_argument}}'
+			]
+]
