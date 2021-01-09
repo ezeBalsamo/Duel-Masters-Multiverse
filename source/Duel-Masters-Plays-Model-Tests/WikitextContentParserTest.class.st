@@ -280,3 +280,20 @@ WikitextContentParserTest >> test14ParsingAWikitextBasicContentFromAVariableTemp
 		assert: ( wikitextContentParser isA: WikitextVariableTemplateAsContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
+
+{ #category : #tests }
+WikitextContentParserTest >> test15ParsingAWikitextBasicContentFromAVariableTemplateAsContentWithEverythingBeingVariable [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '{{Ruby|自|じ}}{{Ruby|動|どう}}{{Ruby|車|しゃ}}{{Ruby|男|おとこ}}'.
+
+	wikitextContentParser := WikitextContentParser
+		toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextBasicContent being: '自動車男'.
+
+	self
+		assert: ( wikitextContentParser isA: WikitextVariableTemplateAsContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]
