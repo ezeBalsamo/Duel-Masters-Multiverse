@@ -9,7 +9,7 @@ WikitextTemplateAsContentParser class >> canHandle: aWikitextContentToParse [
 
 	^ ( self isTemplateContent: aWikitextContentToParse )
 		and: [ ( self isMixedContent: aWikitextContentToParse ) not
-				and: [ ( self isTemplateVariableContent: aWikitextContentToParse ) not ]
+				and: [ ( self isVariableTemplateContent: aWikitextContentToParse ) not ]
 			]
 ]
 

@@ -7,7 +7,7 @@ Class {
 { #category : #'private - testing' }
 WikitextVariableTemplateAsContentParser class >> canHandle: aWikitextContentToParse [
 
-	^ self isTemplateVariableContent: aWikitextContentToParse
+	^ self isVariableTemplateContent: aWikitextContentToParse
 ]
 
 { #category : #initialization }
