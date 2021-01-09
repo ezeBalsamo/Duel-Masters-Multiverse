@@ -11,7 +11,7 @@ WikitextBasicContentParser class >> canHandle: aWikitextContentToParse [
 		with: ( self isTemplateContent: aWikitextContentToParse )
 		with: ( self isListedContent: aWikitextContentToParse )
 		with: ( self isMixedContent: aWikitextContentToParse )
-		with: ( self isTemplateVariableContent: aWikitextContentToParse ) )
+		with: ( self isVariableTemplateContent: aWikitextContentToParse ) )
 		allSatisfy: [ :condition | condition = false ]
 ]
 

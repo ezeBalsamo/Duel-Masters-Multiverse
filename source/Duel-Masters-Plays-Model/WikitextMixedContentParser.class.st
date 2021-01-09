@@ -7,7 +7,8 @@ Class {
 { #category : #'private - testing' }
 WikitextMixedContentParser class >> canHandle: aWikitextContentToParse [
 
-	^ self isMixedContent: aWikitextContentToParse
+	^ ( self isMixedContent: aWikitextContentToParse )
+		and: [ ( self isVariableTemplateContent: aWikitextContentToParse ) not ]
 ]
 
 { #category : #initialization }

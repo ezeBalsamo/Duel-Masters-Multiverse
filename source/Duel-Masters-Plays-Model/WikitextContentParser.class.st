@@ -85,7 +85,7 @@ WikitextContentParser class >> isTemplateContentWithListedContent: aWikitextCont
 ]
 
 { #category : #'private - testing' }
-WikitextContentParser class >> isTemplateVariableContent: aWikitextContentToParse [
+WikitextContentParser class >> isVariableTemplateContent: aWikitextContentToParse [
 
 	^ ( aWikitextContentToParse findBetweenSubstrings: '{{}}' )
 		anySatisfy: [ :token | token includesSubstring: 'Ruby|' ]
