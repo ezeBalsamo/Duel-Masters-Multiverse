@@ -14,17 +14,17 @@ WikitextMixedContent class >> conformedByAll: aWikitextContentCollection [
 ]
 
 { #category : #'private - testing' }
-WikitextMixedContent >> hasEquivalentContentsThan: aWikitextMixedContent [
+WikitextMixedContent >> hasContent: aPotentialContent [
 
 	^ wikitextContents
-		allSatisfy: [ :wikitextContent | aWikitextMixedContent hasWikitextContent: wikitextContent ]
+		anySatisfy: [ :wikitextContent | self is: wikitextContent equivalentTo: aPotentialContent ]
 ]
 
 { #category : #'private - testing' }
-WikitextMixedContent >> hasWikitextContent: aPotentialWikitextContent [
+WikitextMixedContent >> hasEquivalentContentsThan: aWikitextMixedContent [
 
 	^ wikitextContents
-		anySatisfy: [ :wikitextContent | self is: wikitextContent equivalentTo: aPotentialWikitextContent ]
+		allSatisfy: [ :wikitextContent | aWikitextMixedContent hasContent: wikitextContent ]
 ]
 
 { #category : #initialization }

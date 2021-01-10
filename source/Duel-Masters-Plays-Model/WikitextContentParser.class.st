@@ -13,6 +13,16 @@ WikitextContentParser class >> canHandle: aWikitextContentToParse [
 	self subclassResponsibility
 ]
 
+{ #category : #'private - accessing' }
+WikitextContentParser class >> clean: aWikitextContentToParse [
+
+	^ WikitextConfigurableCleaner new
+		configureWhiteSpacesCleaner;
+		configureDoubleCurlyBracesSurroundingSearchStringCleaner;
+		configureDoubleCurlyBracesSurroundingSlayerStringCleaner;
+		clean: aWikitextContentToParse
+]
+
 { #category : #'private - testing' }
 WikitextContentParser class >> includesTemplateContent: aWikitextContentToParse [
 
@@ -96,13 +106,10 @@ WikitextContentParser class >> toParse: aWikitextContentToParse [
 
 	| trimmedWikitextContentToParse |
 
-	trimmedWikitextContentToParse := WikitextWhiteSpacesCleaner new
-		clean: aWikitextContentToParse.
+	trimmedWikitextContentToParse := self clean: aWikitextContentToParse.
 
-	^ ( SuitableClassFinder
-		findDirectSubclassOf: self
-		suitableFor: trimmedWikitextContentToParse ) value new
-		initializeToParse: trimmedWikitextContentToParse
+	^ ( SuitableClassFinder findDirectSubclassOf: self suitableFor: trimmedWikitextContentToParse )
+		value new initializeToParse: trimmedWikitextContentToParse
 ]
 
 { #category : #'private - parsing' }

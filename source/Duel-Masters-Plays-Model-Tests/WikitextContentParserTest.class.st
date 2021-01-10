@@ -297,3 +297,55 @@ WikitextContentParserTest >> test15ParsingAWikitextBasicContentFromAVariableTemp
 		assert: ( wikitextContentParser isA: WikitextVariableTemplateAsContentParser );
 		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
 ]
+
+{ #category : #tests }
+WikitextContentParserTest >> test16ParsingTrimsCurlyBracesFromSearchStringInAWikitextListedContent [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '■ When this enters the [[battle zone]], you may {{search}} your [[deck]] for [[spell]]s, reveal one and add it to your [[hand]]. Then [[shuffle]] your [[deck]].'.
+
+	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextBasicContent
+		being:
+			'When this enters the battle zone, you may search your deck for spells, reveal one and add it to your hand. Then shuffle your deck.'.
+
+	self
+		assert: ( wikitextContentParser isA: WikitextListedContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]
+
+{ #category : #tests }
+WikitextContentParserTest >> test17ParsingPreservesOnlySearchStringFromAWikitextListedContent [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '■ {{Search|cap}} your [[deck]] for a [[spell]]. You may reveal one and add it to your [[hand]]. Then [[shuffle]] your [[deck]].'.
+
+	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextBasicContent
+		being: 'Search your deck for a spell. You may reveal one and add it to your hand. Then shuffle your deck.'.
+
+	self
+		assert: ( wikitextContentParser isA: WikitextListedContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]
+
+{ #category : #tests }
+WikitextContentParserTest >> test18ParsingTrimsCurlyBracesFromSlayerStringInAWikitextListedContent [
+
+	| wikitexContentToParse wikitextContentParser parsedWikitextContent expectedWikitextContent |
+
+	wikitexContentToParse := '■ One of your [[creature]]s gets "{{Slayer|no}}" until the end of the turn.'.
+
+	wikitextContentParser := WikitextContentParser toParse: wikitexContentToParse.
+	parsedWikitextContent := wikitextContentParser parse.
+	expectedWikitextContent := WikitextBasicContent
+		being: 'One of your creatures gets Slayer until the end of the turn.'.
+
+	self
+		assert: ( wikitextContentParser isA: WikitextListedContentParser );
+		assert: ( expectedWikitextContent isEquivalentTo: parsedWikitextContent )
+]
