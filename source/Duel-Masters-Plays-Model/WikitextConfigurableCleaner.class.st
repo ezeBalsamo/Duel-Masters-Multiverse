@@ -29,6 +29,18 @@ WikitextConfigurableCleaner >> configureBrTagsCleaner [
 ]
 
 { #category : #configuring }
+WikitextConfigurableCleaner >> configureDoubleCurlyBracesSurroundingSearchStringCleaner [
+
+	cleaners add: WikitextDoubleCurlyBracesSurroundingSearchStringCleaner new
+]
+
+{ #category : #configuring }
+WikitextConfigurableCleaner >> configureDoubleCurlyBracesSurroundingSlayerStringCleaner [
+
+	cleaners add: WikitextDoubleCurlyBracesSurroundingSlayerStringCleaner new
+]
+
+{ #category : #configuring }
 WikitextConfigurableCleaner >> configureDoubleSquareBracesCleaner [
 
 	cleaners add: WikitextDoubleSquareBracesCleaner new
