@@ -45,10 +45,13 @@ BaselineOfDuelMastersPlays >> setUpDependencies: spec [
 BaselineOfDuelMastersPlays >> setUpPackages: spec [
 
 	spec
-		package: 'Duel-Masters-Plays-Model' with: [ spec requires: #('Superluminal') ];
-		group: 'Deployment' with: 'Duel-Masters-Plays-Model';
-		package: 'Duel-Masters-Plays-Tools' with: [ spec requires: #('Buoy') ];
-		group: 'Tools' with: 'Duel-Masters-Plays-Tools'.
+		package: 'Duel-Masters-Card-Model';
+		package: 'Duel-Masters-Plays-Wikitext-Parsing-Model'
+			with: [ spec requires: #('Superluminal' 'Buoy') ];
+		group: 'Deployment'
+			with: #('Duel-Masters-Card-Model' 'Duel-Masters-Plays-Wikitext-Parsing-Model');
+		package: 'Duel-Masters-Tools' with: [ spec requires: #('Buoy') ];
+		group: 'Tools' with: 'Duel-Masters-Tools'.
 
 	self setUpTestPackages: spec
 ]
@@ -57,8 +60,11 @@ BaselineOfDuelMastersPlays >> setUpPackages: spec [
 BaselineOfDuelMastersPlays >> setUpTestPackages: spec [
 
 	spec
-		package: 'Duel-Masters-Plays-Model-Tests'
-			with: [ spec requires: #('Duel-Masters-Plays-Model' 'Buoy') ];
-		package: 'Duel-Masters-Plays-Tools-Tests' with: [ spec requires: #('Duel-Masters-Plays-Tools') ];
-		group: 'Tests' with: #('Duel-Masters-Plays-Model-Tests' 'Duel-Masters-Plays-Tools-Tests')
+		package: 'Duel-Masters-Card-Model-Tests' with: [ spec requires: #('Duel-Masters-Card-Model') ];
+		package: 'Duel-Masters-Plays-Wikitext-Parsing-Model-Tests'
+			with: [ spec requires: #('Duel-Masters-Plays-Wikitext-Parsing-Model' 'Buoy') ];
+		package: 'Duel-Masters-Tools-Tests' with: [ spec requires: #('Duel-Masters-Tools') ];
+		group: 'Tests'
+			with:
+			#('Duel-Masters-Card-Model-Tests Duel-Masters-Plays-Wikitext-Parsing-Model-Tests' 'Duel-Masters-Tools-Tests')
 ]
