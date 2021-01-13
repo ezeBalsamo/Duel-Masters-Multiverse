@@ -66,5 +66,5 @@ BaselineOfDuelMastersPlays >> setUpTestPackages: spec [
 		package: 'Duel-Masters-Tools-Tests' with: [ spec requires: #('Duel-Masters-Tools') ];
 		group: 'Tests'
 			with:
-			#('Duel-Masters-Card-Model-Tests Duel-Masters-Plays-Wikitext-Parsing-Model-Tests' 'Duel-Masters-Tools-Tests')
+			#('Duel-Masters-Card-Model-Tests' 'Duel-Masters-Plays-Wikitext-Parsing-Model-Tests' 'Duel-Masters-Tools-Tests')
 ]
