@@ -38,6 +38,11 @@ BaselineOfDuelMastersPlays >> setUpDependencies: spec [
 			with: [ spec
 				repository: 'github://ba-st/Buoy:v6/source';
 				loads: #('Deployment' 'Dependent-SUnit-Extensions')
+			];
+		baseline: 'Aconcagua'
+			with: [ spec
+				repository: 'github://ba-st/Aconcagua:v8/source';
+				loads: #('Deployment')
 			]
 ]
 
@@ -45,7 +50,7 @@ BaselineOfDuelMastersPlays >> setUpDependencies: spec [
 BaselineOfDuelMastersPlays >> setUpPackages: spec [
 
 	spec
-		package: 'Duel-Masters-Card-Model';
+		package: 'Duel-Masters-Card-Model' with: [ spec requires: #('Aconcagua') ];
 		package: 'Duel-Masters-Plays-Wikitext-Parsing-Model'
 			with: [ spec requires: #('Superluminal' 'Buoy') ];
 		group: 'Deployment'
@@ -62,7 +67,7 @@ BaselineOfDuelMastersPlays >> setUpTestPackages: spec [
 	spec
 		package: 'Duel-Masters-Card-Model-Tests' with: [ spec requires: #('Duel-Masters-Card-Model') ];
 		package: 'Duel-Masters-Plays-Wikitext-Parsing-Model-Tests'
-			with: [ spec requires: #('Duel-Masters-Plays-Wikitext-Parsing-Model' 'Buoy') ];
+			with: [ spec requires: #('Duel-Masters-Plays-Wikitext-Parsing-Model') ];
 		package: 'Duel-Masters-Tools-Tests' with: [ spec requires: #('Duel-Masters-Tools') ];
 		group: 'Tests'
 			with:
