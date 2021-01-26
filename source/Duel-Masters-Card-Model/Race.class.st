@@ -1,11 +1,17 @@
 Class {
-	#name : #Civilization,
+	#name : #Race,
 	#superclass : #Object,
 	#category : #'Duel-Masters-Card-Model'
 }
 
 { #category : #testing }
-Civilization >> isNamed: aPotentialName [
+Race >> isGeneric [
+
+	^false
+]
+
+{ #category : #testing }
+Race >> isOfTypeNamed: aPotentialTypeName [
 
 	self subclassResponsibility
 ]

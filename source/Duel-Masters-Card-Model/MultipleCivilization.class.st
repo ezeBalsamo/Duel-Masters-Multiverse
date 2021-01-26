@@ -1,6 +1,6 @@
 Class {
 	#name : #MultipleCivilization,
-	#superclass : #Object,
+	#superclass : #Civilization,
 	#instVars : [
 		'civilizations'
 	],
@@ -29,14 +29,14 @@ MultipleCivilization class >> conformedByAll: aCivilizationCollection [
 	^ self new initializeConformedByAll: aCivilizationCollection
 ]
 
-{ #category : #testing }
-MultipleCivilization >> includesCivilization: aPotentialCivilization [
-
-	^ civilizations anySatisfy: [ :civilization | civilization isEquivalentTo: aPotentialCivilization ]
-]
-
 { #category : #initialization }
 MultipleCivilization >> initializeConformedByAll: aCivilizationCollection [
 
 	civilizations := aCivilizationCollection
+]
+
+{ #category : #testing }
+MultipleCivilization >> isNamed: aPotentialName [
+
+	^ civilizations anySatisfy: [ :singleCivilization | singleCivilization isNamed: aPotentialName ]
 ]
