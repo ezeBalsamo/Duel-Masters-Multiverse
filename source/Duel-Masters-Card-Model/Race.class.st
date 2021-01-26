@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #testing }
+Race >> isGeneric [
+
+	^false
+]
+
+{ #category : #testing }
 Race >> isOfTypeNamed: aPotentialTypeName [
 
 	self subclassResponsibility

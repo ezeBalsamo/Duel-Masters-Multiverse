@@ -56,7 +56,7 @@ MultipleRaceTest >> test02MultipleRaceCantHaveOneRace [
 ]
 
 { #category : #tests }
-MultipleRaceTest >> test03MultipleRaceConformedByTwoUncategorizedRaces [
+MultipleRaceTest >> test03MultipleRaceConformedByTwoRaces [
 
 	| alienRaceTypeName armorloidRaceTypeName arcSeraphimRaceTypeName alienRace armorloidRace multipleRace |
 
@@ -70,6 +70,7 @@ MultipleRaceTest >> test03MultipleRaceConformedByTwoUncategorizedRaces [
 	multipleRace := MultipleRace conformedBy: alienRace and: armorloidRace.
 
 	self
+		deny: multipleRace isGeneric;
 		assert: ( multipleRace isOfTypeNamed: alienRaceTypeName );
 		assert: ( multipleRace isOfTypeNamed: armorloidRaceTypeName );
 		deny: ( multipleRace isOfTypeNamed: arcSeraphimRaceTypeName )

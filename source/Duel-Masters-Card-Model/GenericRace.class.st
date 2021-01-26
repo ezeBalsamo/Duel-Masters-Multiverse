@@ -1,5 +1,5 @@
 Class {
-	#name : #SingleRace,
+	#name : #GenericRace,
 	#superclass : #Race,
 	#instVars : [
 		'typeName',
@@ -9,7 +9,7 @@ Class {
 }
 
 { #category : #'private - preconditions' }
-SingleRace class >> assertNotEmpty: aPotentiaTypeName [
+GenericRace class >> assertNotEmpty: aPotentiaTypeName [
 
 	AssertionChecker
 		enforce: [ aPotentiaTypeName notEmpty ]
@@ -18,19 +18,19 @@ SingleRace class >> assertNotEmpty: aPotentiaTypeName [
 ]
 
 { #category : #'instance creation' }
-SingleRace class >> ofTypeNamed: aTypeName [
+GenericRace class >> ofTypeNamed: aTypeName [
 
 	^ self ofTypeNamed: aTypeName categorizedByAll: #()
 ]
 
 { #category : #'instance creation' }
-SingleRace class >> ofTypeNamed: aTypeName categorizedBy: aRaceParent [
+GenericRace class >> ofTypeNamed: aTypeName categorizedBy: aRaceParent [
 
 	^ self ofTypeNamed: aTypeName categorizedByAll: ( Array with: aRaceParent )
 ]
 
 { #category : #'instance creation' }
-SingleRace class >> ofTypeNamed: aTypeName categorizedByAll: aRaceParentCollection [
+GenericRace class >> ofTypeNamed: aTypeName categorizedByAll: aRaceParentCollection [
 
 	self assertNotEmpty: aTypeName.
 
@@ -38,20 +38,26 @@ SingleRace class >> ofTypeNamed: aTypeName categorizedByAll: aRaceParentCollecti
 ]
 
 { #category : #initialization }
-SingleRace >> initializeOfTypeNamed: aTypeName categorizedByAll: aRaceParentCollection [
+GenericRace >> initializeOfTypeNamed: aTypeName categorizedByAll: aRaceParentCollection [
 
 	typeName := aTypeName.
 	raceParents := aRaceParentCollection
 ]
 
 { #category : #'private - testing' }
-SingleRace >> isARaceParentOfTypeNamed: aPotentialTypeName [
+GenericRace >> isARaceParentOfTypeNamed: aPotentialTypeName [
 
 	^ raceParents anySatisfy: [ :race | race isOfTypeNamed: aPotentialTypeName ]
 ]
 
 { #category : #testing }
-SingleRace >> isOfTypeNamed: aPotentialTypeName [
+GenericRace >> isGeneric [
+
+	^ true
+]
+
+{ #category : #testing }
+GenericRace >> isOfTypeNamed: aPotentialTypeName [
 
 	^ typeName = aPotentialTypeName or: [ self isARaceParentOfTypeNamed: aPotentialTypeName ]
 ]

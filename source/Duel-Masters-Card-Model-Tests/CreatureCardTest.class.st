@@ -176,7 +176,7 @@ CreatureCardTest >> test06CreatureCardPowerMustBeAnInteger [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test07CreatureCardWithSingleCivilizationAndSingleRace [
+CreatureCardTest >> test07CreatureCardWithSingleCivilizationAndSingleUncategorizedRace [
 
 	| creatureName twoManas oneMana twoThousandsPower creatureCard |
 

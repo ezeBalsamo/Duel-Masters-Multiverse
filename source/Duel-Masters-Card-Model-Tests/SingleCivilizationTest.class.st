@@ -8,7 +8,16 @@ Class {
 }
 
 { #category : #tests }
-SingleCivilizationTest >> test01InstanceCreation [
+SingleCivilizationTest >> test01CivilizationNameMustNotBeEmpty [
+
+	self
+		should: [ SingleCivilization named: '' ]
+		raise: InstanceCreationFailed
+		withMessageText: 'A civilization must have a name.'
+]
+
+{ #category : #tests }
+SingleCivilizationTest >> test02InstanceCreation [
 
 	| fireCivilizationTypeName waterCivilizationTypeName civilization |
 
@@ -22,7 +31,7 @@ SingleCivilizationTest >> test01InstanceCreation [
 ]
 
 { #category : #tests }
-SingleCivilizationTest >> test02PrintString [
+SingleCivilizationTest >> test03PrintString [
 
 	| civilization |
 
