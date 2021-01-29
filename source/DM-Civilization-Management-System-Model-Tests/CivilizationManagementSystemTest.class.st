@@ -24,7 +24,7 @@ CivilizationManagementSystemTest >> test02CivilizationSystemHasNoDependencies [
 
 	civilizationSystem := CivilizationManagementSystem new.
 
-	self assertEmpty: civilizationSystem dependencies
+	self assert: civilizationSystem dependencies isEmpty
 ]
 
 { #category : #tests }

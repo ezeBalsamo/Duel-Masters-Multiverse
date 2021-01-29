@@ -24,7 +24,7 @@ RaceManagementSystemTest >> test02RaceSystemHasNoDependencies [
 
 	raceSystem := RaceManagementSystem new.
 
-	self assertEmpty: raceSystem dependencies
+	self assert: raceSystem dependencies isEmpty
 ]
 
 { #category : #tests }
