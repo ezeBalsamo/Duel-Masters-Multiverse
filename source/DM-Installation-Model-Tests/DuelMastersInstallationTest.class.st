@@ -43,6 +43,6 @@ DuelMastersInstallationTest >> test01SystemInstallation [
 DuelMastersInstallationTest >> test02ShutdownDoesNothing [
 
 	self
-		withTheOnlyOneIn: ( DuelMastersInstallation compiledMethodAt: #beAwareOfShutDownOf: ) comments
-		do: [ :comment | self assert: comment equals: 'do nothing.- ebalsamo' ]
+		assert: ( DuelMastersInstallation compiledMethodAt: #beAwareOfShutDownOf: ) comment
+		equals: '"do nothing.- ebalsamo"'
 ]
