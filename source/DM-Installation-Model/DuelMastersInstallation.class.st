@@ -15,7 +15,7 @@ DuelMastersInstallation >> beAwareOfShutDownOf: aCompositeSystem [
 { #category : #installing }
 DuelMastersInstallation >> install [
 
-	^super install: 'No version'
+	^ self install: 'No version'
 ]
 
 { #category : #accessing }

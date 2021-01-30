@@ -7,16 +7,17 @@ Class {
 	#category : #'DM-Installation-Model-Tests'
 }
 
-{ #category : #'private - accessing' }
-DuelMastersInstallationTest >> modulesEquivalenceComparisonBlock [
+{ #category : #'private - asserting' }
+DuelMastersInstallationTest >> assert: anInstalledModule isEquivalentToOneIn: anExpectedInstalledModuleClassCollection [
 
-	^ [ :anInstalledModule :anExpectedInstalledModule | anInstalledModule isEquivalentTo: anExpectedInstalledModule ]
+	^ anExpectedInstalledModuleClassCollection
+		anySatisfy: [ :moduleClass | anInstalledModule isA: moduleClass ]
 ]
 
 { #category : #tests }
 DuelMastersInstallationTest >> test01SystemInstallation [
 
-	| installation expectedInstallationName rootSystem installedModuleRegistrationSystem expectedInstalledModules |
+	| installation expectedInstallationName rootSystem installedModuleRegistrationSystem expectedInstalledModuleClasses installedModules |
 
 	installation := DuelMastersInstallation new.
 	expectedInstallationName := 'Duel Masters'.
@@ -24,12 +25,16 @@ DuelMastersInstallationTest >> test01SystemInstallation [
 	rootSystem startUp.
 
 	installedModuleRegistrationSystem := rootSystem >> #InstalledModuleRegistrationSystem.
-	expectedInstalledModules := installation modulesToInstall.
+
+	expectedInstalledModuleClasses := installation modulesToInstall.
+	installedModules := installedModuleRegistrationSystem installedModules.
 
 	self
 		assert: rootSystem name equals: expectedInstallationName;
 		assert: installation name equals: expectedInstallationName;
-		assert: installedModuleRegistrationSystem installedModules
-			hasEquivalentElementsThan: expectedInstalledModules
-			comparingWith: self modulesEquivalenceComparisonBlock
+		assert: expectedInstalledModuleClasses size equals: installedModules size.
+
+	installedModules
+		do:
+			[ :installedModule | self assert: installedModule isEquivalentToOneIn: expectedInstalledModuleClasses ]
 ]

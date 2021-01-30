@@ -74,7 +74,7 @@ BaselineOfDuelMasters >> setUpModelPackagesOn: aSpec [
 
 	aSpec 
 		group: 'Deployment'
-		with: #('DM-Civilization-Model' 'DM-Race-Model' 'DM-Card-Model' 'DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model' 'DM-Card-Management-System-Model' 'DM-Card-Module-Model' 'DMP-Wikitext-Parsing-Model').
+		with: #('DM-Civilization-Model' 'DM-Race-Model' 'DM-Card-Model' 'DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model' 'DM-Card-Management-System-Model' 'DM-Card-Module-Model' 'DM-Installation-Model' 'DMP-Wikitext-Parsing-Model').
 		
 	aSpec group: 'Tools' with: 'DM-Tools'
 ]
@@ -111,5 +111,5 @@ BaselineOfDuelMasters >> setUpTestPackagesOn: spec [
 	spec
 		group: 'Tests'
 		with:
-			#('DM-Civilization-Model-Tests' 'DM-Race-Model-Tests' 'DM-Card-Model-Tests' 'DM-Civilization-Management-System-Model-Tests' 'DM-Race-Management-System-Model-Tests' 'DM-Card-Management-System-Model-Tests' 'DM-Card-Module-Model-Tests' 'DMP-Wikitext-Parsing-Model-Tests' 'DM-Tools-Tests')
+			#('DM-Civilization-Model-Tests' 'DM-Race-Model-Tests' 'DM-Card-Model-Tests' 'DM-Civilization-Management-System-Model-Tests' 'DM-Race-Management-System-Model-Tests' 'DM-Card-Management-System-Model-Tests' 'DM-Card-Module-Model-Tests' 'DM-Installation-Model-Tests' 'DMP-Wikitext-Parsing-Model-Tests' 'DM-Tools-Tests')
 ]
