@@ -38,3 +38,11 @@ DuelMastersInstallationTest >> test01SystemInstallation [
 		do:
 			[ :installedModule | self assert: installedModule isEquivalentToOneIn: expectedInstalledModuleClasses ]
 ]
+
+{ #category : #tests }
+DuelMastersInstallationTest >> test02ShutdownDoesNothing [
+
+	self
+		withTheOnlyOneIn: ( DuelMastersInstallation compiledMethodAt: #beAwareOfShutDownOf: ) comments
+		do: [ :comment | self assert: comment equals: 'do nothing.- ebalsamo' ]
+]
