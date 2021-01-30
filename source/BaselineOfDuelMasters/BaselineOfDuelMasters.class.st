@@ -102,7 +102,7 @@ BaselineOfDuelMasters >> setUpTestPackagesOn: spec [
 
 	spec package: 'DM-Card-Module-Model-Tests' with: [ spec requires: #('DM-Card-Module-Model') ].
 
-	spec package: 'DM-Card-Installation-Model-Tests' with: [ spec requires: #('DM-Card-Installation-Model') ].
+	spec package: 'DM-Installation-Model-Tests' with: [ spec requires: #('DM-Installation-Model') ].
 	
 	spec package: 'DMP-Wikitext-Parsing-Model-Tests' with: [ spec requires: #('DMP-Wikitext-Parsing-Model') ].
 
