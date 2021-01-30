@@ -25,6 +25,24 @@ CardModule >> name [
 	^ 'Cards Management'
 ]
 
+{ #category : #'private - system registration' }
+CardModule >> registerCardManagementSystemForInstallationIn: systems [
+
+	^ self register: [ CardManagementSystem new ] in: systems
+]
+
+{ #category : #'private - system registration' }
+CardModule >> registerCivilizationManagementSystemForInstallationIn: systems [
+
+	^ self register: [ CivilizationManagementSystem new ] in: systems
+]
+
+{ #category : #'private - system registration' }
+CardModule >> registerRaceManagementSystemForInstallationIn: systems [
+
+	^ self register: [ RaceManagementSystem new ] in: systems
+]
+
 { #category : #private }
 CardModule >> rootSystem [
 

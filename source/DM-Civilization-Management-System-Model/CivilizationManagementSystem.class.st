@@ -19,5 +19,5 @@ CivilizationManagementSystem >> implementedInterfaces [
 { #category : #accessing }
 CivilizationManagementSystem >> name [
 
-	^'Civilization System'
+	^'Civilization Management System'
 ]

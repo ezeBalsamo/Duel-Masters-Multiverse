@@ -66,6 +66,8 @@ BaselineOfDuelMasters >> setUpModelPackagesOn: aSpec [
 		
 	aSpec package: 'DM-Card-Module-Model' with: [ aSpec requires: 'DM-Card-Management-System-Model'  ].
 
+	aSpec package: 'DM-Installation-Model' with: [ aSpec requires: 'DM-Card-Module-Model'  ].
+	
 	aSpec package: 'DMP-Wikitext-Parsing-Model' with: [ aSpec requires: 'Buoy' ].
 		
 	aSpec package: 'DM-Tools' with: [ aSpec requires: 'Buoy' ].
@@ -100,6 +102,8 @@ BaselineOfDuelMasters >> setUpTestPackagesOn: spec [
 
 	spec package: 'DM-Card-Module-Model-Tests' with: [ spec requires: #('DM-Card-Module-Model') ].
 
+	spec package: 'DM-Card-Installation-Model-Tests' with: [ spec requires: #('DM-Card-Installation-Model') ].
+	
 	spec package: 'DMP-Wikitext-Parsing-Model-Tests' with: [ spec requires: #('DMP-Wikitext-Parsing-Model') ].
 
 	spec package: 'DM-Tools-Tests' with: [ spec requires: #('DM-Tools') ].

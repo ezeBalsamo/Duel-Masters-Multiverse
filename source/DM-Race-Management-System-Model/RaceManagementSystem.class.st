@@ -19,5 +19,5 @@ RaceManagementSystem >> implementedInterfaces [
 { #category : #accessing }
 RaceManagementSystem >> name [
 
-	^ 'Race System'
+	^ 'Race Management System'
 ]

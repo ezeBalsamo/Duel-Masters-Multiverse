@@ -14,7 +14,7 @@ CardManagementSystemTest >> test01Name [
 
 	cardSystem := CardManagementSystem new.
 
-	self assert: cardSystem name equals: 'Card System'
+	self assert: cardSystem name equals: 'Card Management System'
 ]
 
 { #category : #tests }

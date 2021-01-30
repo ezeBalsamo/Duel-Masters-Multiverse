@@ -38,3 +38,17 @@ CardModuleTest >> test02SystemInterfacesToInstall [
 		equals:
 			#(#CivilizationManagementSystemInterface #RaceManagementSystemInterface #CardManagementSystemInterface)
 ]
+
+{ #category : #tests }
+CardModuleTest >> test03ModuleInstallation [
+
+	| cardModule |
+
+	rootSystem register: InstalledModuleRegistrationSystem new.
+	cardModule := CardModule toInstallOn: rootSystem.
+	cardModule install.
+
+	rootSystem systemImplementing: #CivilizationManagementSystemInterface ifNone: [ self fail ].
+	rootSystem systemImplementing: #RaceManagementSystemInterface ifNone: [ self fail ].
+	rootSystem systemImplementing: #CardManagementSystemInterface ifNone: [ self fail ]
+]

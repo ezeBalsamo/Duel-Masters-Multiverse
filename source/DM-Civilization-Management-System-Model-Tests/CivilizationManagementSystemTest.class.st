@@ -14,7 +14,7 @@ CivilizationManagementSystemTest >> test01Name [
 
 	civilizationSystem := CivilizationManagementSystem new.
 
-	self assert: civilizationSystem name equals: 'Civilization System'
+	self assert: civilizationSystem name equals: 'Civilization Management System'
 ]
 
 { #category : #tests }

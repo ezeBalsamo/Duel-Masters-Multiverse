@@ -19,5 +19,5 @@ CardManagementSystem >> implementedInterfaces [
 { #category : #accessing }
 CardManagementSystem >> name [
 
-	^ 'Card System'
+	^ 'Card Management System'
 ]

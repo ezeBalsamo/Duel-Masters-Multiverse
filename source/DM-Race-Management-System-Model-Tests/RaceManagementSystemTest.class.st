@@ -14,7 +14,7 @@ RaceManagementSystemTest >> test01Name [
 
 	raceSystem := RaceManagementSystem new.
 
-	self assert: raceSystem name equals: 'Race System'
+	self assert: raceSystem name equals: 'Race Management System'
 ]
 
 { #category : #tests }
