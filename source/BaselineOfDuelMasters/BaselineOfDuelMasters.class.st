@@ -10,13 +10,26 @@ BaselineOfDuelMasters >> baseline: spec [
 	<baseline>
 	spec
 		for: #pharo
-		do: [ self
+		do: [ spec preLoadDoIt: #lockDependenciesIn:.
+
+			self
 				setUpDependencies: spec;
 				setUpPackages: spec.
 			spec
 				group: 'CI' with: 'Tests';
 				group: 'Development' with: #('Tools' 'Tests')
 			]
+]
+
+{ #category : #accessing }
+BaselineOfDuelMasters >> lockDependenciesIn: spec [
+
+	Metacello new
+		baseline: 'Glorp';
+		repository: 'github://pharo-rdbms/glorp:master/';
+		onLock: [ :lock | lock honor ];
+		onConflictUseIncoming;
+		lock
 ]
 
 { #category : #accessing }
