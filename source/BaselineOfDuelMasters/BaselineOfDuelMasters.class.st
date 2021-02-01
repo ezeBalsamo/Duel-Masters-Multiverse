@@ -48,7 +48,19 @@ BaselineOfDuelMasters >> setUpDependencies: spec [
 			with: [ spec
 				repository: 'github://ba-st/Kepler:v5/source';
 				loads: #('Deployment')
+			];
+		baseline: 'Sagan'
+			with: [ spec
+				repository: 'github://ba-st/Sagan:v4.1.0/source';
+				loads: #('Deployment' 'PostgreSQL')
 			]
+]
+
+{ #category : #'private - packages set up' }
+BaselineOfDuelMasters >> setUpDependentSUnitExtensionsOn: aSpec [
+
+	aSpec package: 'DM-SUnit-Model' with: [ aSpec requires: #('Buoy' 'Kepler') ].
+	aSpec group: 'Dependent-SUnit-Extensions' with: 'DM-SUnit-Model'
 ]
 
 { #category : #'private - packages set up' }
@@ -64,19 +76,17 @@ BaselineOfDuelMasters >> setUpModelPackagesOn: aSpec [
 		package: 'DM-Race-Management-System-Model' with: [ aSpec requires: 'Kepler' ];
 		package: 'DM-Card-Management-System-Model' with: [ aSpec requires: #('DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model') ].
 		
-	aSpec package: 'DM-Card-Module-Model' with: [ aSpec requires: 'DM-Card-Management-System-Model'  ].
+	aSpec 
+		package: 'DM-Card-Module-Model' with: [ aSpec requires: 'DM-Card-Management-System-Model' ];
+		package: 'DM-Repository-Provider-Module-Model' with: [ aSpec requires: 'Sagan' ].
 
-	aSpec package: 'DM-Installation-Model' with: [ aSpec requires: 'DM-Card-Module-Model'  ].
+	aSpec package: 'DM-Installation-Model' with: [ aSpec requires: 'DM-Card-Module-Model' ].
 	
 	aSpec package: 'DMP-Wikitext-Parsing-Model' with: [ aSpec requires: 'Buoy' ].
-		
-	aSpec package: 'DM-Tools' with: [ aSpec requires: 'Buoy' ].
 
 	aSpec 
 		group: 'Deployment'
-		with: #('DM-Civilization-Model' 'DM-Race-Model' 'DM-Card-Model' 'DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model' 'DM-Card-Management-System-Model' 'DM-Card-Module-Model' 'DM-Installation-Model' 'DMP-Wikitext-Parsing-Model').
-		
-	aSpec group: 'Tools' with: 'DM-Tools'
+		with: #('DM-Civilization-Model' 'DM-Race-Model' 'DM-Card-Model' 'DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model' 'DM-Card-Management-System-Model' 'DM-Card-Module-Model' 'DM-Repository-Provider-Module-Model' 'DM-Installation-Model' 'DMP-Wikitext-Parsing-Model').
 ]
 
 { #category : #'private - packages set up' }
@@ -84,6 +94,8 @@ BaselineOfDuelMasters >> setUpPackages: spec [
 
 	self
 		setUpModelPackagesOn: spec;
+		setUpDependentSUnitExtensionsOn: spec;
+		setUpToolsPackagesOn: spec;
 		setUpTestPackagesOn: spec
 ]
 
@@ -100,16 +112,28 @@ BaselineOfDuelMasters >> setUpTestPackagesOn: spec [
 		package: 'DM-Race-Management-System-Model-Tests' with: [ spec requires: #('DM-Race-Management-System-Model') ];
 		package: 'DM-Card-Management-System-Model-Tests' with: [ spec requires: #('DM-Card-Management-System-Model') ].
 
-	spec package: 'DM-Card-Module-Model-Tests' with: [ spec requires: #('DM-Card-Module-Model') ].
+	spec 
+		package: 'DM-Card-Module-Model-Tests' with: [ spec requires: #('DM-Card-Module-Model') ];
+		package: 'DM-Repository-Provider-Module-Model-Tests' with: [ spec requires: #('DM-Repository-Provider-Module-Model') ].
 
 	spec package: 'DM-Installation-Model-Tests' with: [ spec requires: #('DM-Installation-Model') ].
 	
 	spec package: 'DMP-Wikitext-Parsing-Model-Tests' with: [ spec requires: #('DMP-Wikitext-Parsing-Model') ].
 
 	spec package: 'DM-Tools-Tests' with: [ spec requires: #('DM-Tools') ].
+	
+	spec package: 'DM-SUnit-Tests' with: [ spec requires: #('DM-SUnit-Model') ] .
 
 	spec
 		group: 'Tests'
 		with:
-			#('DM-Civilization-Model-Tests' 'DM-Race-Model-Tests' 'DM-Card-Model-Tests' 'DM-Civilization-Management-System-Model-Tests' 'DM-Race-Management-System-Model-Tests' 'DM-Card-Management-System-Model-Tests' 'DM-Card-Module-Model-Tests' 'DM-Installation-Model-Tests' 'DMP-Wikitext-Parsing-Model-Tests' 'DM-Tools-Tests')
+			#('DM-Civilization-Model-Tests' 'DM-Race-Model-Tests' 'DM-Card-Model-Tests' 'DM-Civilization-Management-System-Model-Tests' 'DM-Race-Management-System-Model-Tests' 'DM-Card-Management-System-Model-Tests' 'DM-Card-Module-Model-Tests' 'DM-Repository-Provider-Module-Model-Tests' 'DM-Installation-Model-Tests' 'DMP-Wikitext-Parsing-Model-Tests' 'DM-Tools-Tests' 'DM-SUnit-Tests')
+]
+
+{ #category : #'private - packages set up' }
+BaselineOfDuelMasters >> setUpToolsPackagesOn: aSpec [
+
+	aSpec package: 'DM-Tools' with: [ aSpec requires: 'Buoy' ].
+
+	aSpec group: 'Tools' with: 'DM-Tools'
 ]

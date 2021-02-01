@@ -1,6 +1,6 @@
 Extension { #name : #TestAsserter }
 
-{ #category : #'*DM-Tools' }
+{ #category : #'*DM-SUnit-Model' }
 TestAsserter >> assert: anActualCollection hasEquivalentElementsThan: anExpectedCollection comparingWith: aDyadicBlock [
 
 	| additionalElements missingElements collectionFormatter |
@@ -34,4 +34,12 @@ TestAsserter >> assert: anActualCollection hasEquivalentElementsThan: anExpected
 								cr
 							]
 					] )
+]
+
+{ #category : #'*DM-SUnit-Model' }
+TestAsserter >> assertTheOnlyOneIn: aCollection is: aPotentialElement [
+
+	self
+		withTheOnlyOneIn: aCollection
+		do: [ :anElement | self assert: aPotentialElement equals: anElement ]
 ]
