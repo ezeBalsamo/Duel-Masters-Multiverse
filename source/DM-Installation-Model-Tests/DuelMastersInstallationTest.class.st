@@ -42,6 +42,10 @@ DuelMastersInstallationTest >> test01SystemInstallation [
 { #category : #tests }
 DuelMastersInstallationTest >> test02ShutdownDoesNothing [
 
+	"This method should be deleted when SystemInstallation>>#beAwareOfShutDownOf: becomes a template method.- ebalsamo"
+
+	DuelMastersInstallation new beAwareOfShutDownOf: CompositeSystem new.
+
 	self
 		assert: ( DuelMastersInstallation compiledMethodAt: #beAwareOfShutDownOf: ) comment
 		equals: '"do nothing.- ebalsamo"'
