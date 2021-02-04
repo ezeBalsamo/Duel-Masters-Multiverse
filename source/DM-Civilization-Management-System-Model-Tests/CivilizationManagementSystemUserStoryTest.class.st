@@ -88,3 +88,22 @@ CivilizationManagementSystemUserStoryTest >> test03UpdatingASingleCivilization [
 		withTheOnlyOneIn: self allSingleCivilizations
 		do: [ :storedCivilization | self assert: updatedSingleCivilization equals: updatedSingleCivilization ]
 ]
+
+{ #category : #tests }
+CivilizationManagementSystemUserStoryTest >> test04PurgingASingleCivilization [
+
+	| fireCivilizationName singleCivilization |
+
+	fireCivilizationName := 'Fire'.
+	singleCivilization := SingleCivilization named: fireCivilizationName.
+
+	self assert: self allSingleCivilizations isEmpty.
+
+	civilizationManagementSystem storeCivilization: singleCivilization.
+
+	self
+		withTheOnlyOneIn: self allSingleCivilizations
+		do: [ :storedCivilization | civilizationManagementSystem purgeCivilization: storedCivilization ].
+		
+	self assert: self allSingleCivilizations isEmpty.
+]

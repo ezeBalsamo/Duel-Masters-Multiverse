@@ -31,6 +31,12 @@ CivilizationManagementSystem >> name [
 	^'Civilization Management System'
 ]
 
+{ #category : #management }
+CivilizationManagementSystem >> purgeCivilization: aSingleCivilization [
+
+	singleCivilizations purge: aSingleCivilization 
+]
+
 { #category : #installing }
 CivilizationManagementSystem >> resolveDependencies [
 
