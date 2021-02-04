@@ -67,26 +67,28 @@ BaselineOfDuelMasters >> setUpDependentSUnitExtensionsOn: aSpec [
 BaselineOfDuelMasters >> setUpModelPackagesOn: aSpec [
 
 	aSpec
-		package: 'DM-Civilization-Model' with: [ aSpec requires: 'Buoy' ];
+		package: 'DM-Civilization-Model' with: [ aSpec requires: #('Buoy' 'DM-Tools') ];
 		package: 'DM-Race-Model' with: [ aSpec requires: 'Buoy' ];
 		package: 'DM-Card-Model' with: [ aSpec requires: #('Buoy' 'Aconcagua') ].
-		
+
 	aSpec
-		package: 'DM-Civilization-Management-System-Model' with: [ aSpec requires: 'Kepler' ];
+		package: 'DM-Civilization-Management-System-Model' with: [ aSpec requires: #('Kepler' 'Sagan') ];
 		package: 'DM-Race-Management-System-Model' with: [ aSpec requires: 'Kepler' ];
 		package: 'DM-Card-Management-System-Model' with: [ aSpec requires: #('DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model') ].
-		
-	aSpec 
+
+	aSpec
 		package: 'DM-Card-Module-Model' with: [ aSpec requires: 'DM-Card-Management-System-Model' ];
-		package: 'DM-Repository-Provider-Module-Model' with: [ aSpec requires: 'Sagan' ].
+		package: 'DM-RDB-Repository-Provider-Module-Model' with: [ aSpec requires: 'Sagan' ];
+		package: 'DM-In-Memory-Repository-Provider-Module-Model' with: [ aSpec requires: 'Sagan' ].
 
 	aSpec package: 'DM-Installation-Model' with: [ aSpec requires: 'DM-Card-Module-Model' ].
-	
+
 	aSpec package: 'DMP-Wikitext-Parsing-Model' with: [ aSpec requires: 'Buoy' ].
 
-	aSpec 
+	aSpec
 		group: 'Deployment'
-		with: #('DM-Civilization-Model' 'DM-Race-Model' 'DM-Card-Model' 'DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model' 'DM-Card-Management-System-Model' 'DM-Card-Module-Model' 'DM-Repository-Provider-Module-Model' 'DM-Installation-Model' 'DMP-Wikitext-Parsing-Model').
+		with:
+			#('DM-Civilization-Model' 'DM-Race-Model' 'DM-Card-Model' 'DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model' 'DM-Card-Management-System-Model' 'DM-Card-Module-Model' 'DM-RDB-Repository-Provider-Module-Model' 'DM-In-Memory-Repository-Provider-Module-Model' 'DM-Installation-Model' 'DMP-Wikitext-Parsing-Model')
 ]
 
 { #category : #'private - packages set up' }
@@ -108,26 +110,27 @@ BaselineOfDuelMasters >> setUpTestPackagesOn: spec [
 		package: 'DM-Card-Model-Tests' with: [ spec requires: #('DM-Card-Model' 'DM-Civilization-Model' 'DM-Race-Model' 'Aconcagua') ].
 
 	spec
-		package: 'DM-Civilization-Management-System-Model-Tests' with: [ spec requires: #('DM-Civilization-Management-System-Model') ];
+		package: 'DM-Civilization-Management-System-Model-Tests' with: [ spec requires: #('DM-Civilization-Management-System-Model' 'DM-SUnit-Model') ];
 		package: 'DM-Race-Management-System-Model-Tests' with: [ spec requires: #('DM-Race-Management-System-Model') ];
 		package: 'DM-Card-Management-System-Model-Tests' with: [ spec requires: #('DM-Card-Management-System-Model') ].
 
-	spec 
-		package: 'DM-Card-Module-Model-Tests' with: [ spec requires: #('DM-Card-Module-Model') ];
-		package: 'DM-Repository-Provider-Module-Model-Tests' with: [ spec requires: #('DM-Repository-Provider-Module-Model') ].
+	spec
+		package: 'DM-Card-Module-Model-Tests' with: [ spec requires: #('DM-Card-Module-Model' 'DM-SUnit-Model') ];
+		package: 'DM-RDB-Repository-Provider-Module-Model-Tests' with: [ spec requires: #('DM-RDB-Repository-Provider-Module-Model' 'DM-SUnit-Model') ];
+		package: 'DM-In-Memory-Repository-Provider-Module-Model-Tests' with: [ spec requires: #('DM-In-Memory-Repository-Provider-Module-Model' 'DM-SUnit-Model') ].
 
 	spec package: 'DM-Installation-Model-Tests' with: [ spec requires: #('DM-Installation-Model') ].
-	
+
 	spec package: 'DMP-Wikitext-Parsing-Model-Tests' with: [ spec requires: #('DMP-Wikitext-Parsing-Model') ].
 
 	spec package: 'DM-Tools-Tests' with: [ spec requires: #('DM-Tools') ].
-	
-	spec package: 'DM-SUnit-Tests' with: [ spec requires: #('DM-SUnit-Model') ] .
+
+	spec package: 'DM-SUnit-Tests' with: [ spec requires: #('DM-SUnit-Model') ].
 
 	spec
 		group: 'Tests'
 		with:
-			#('DM-Civilization-Model-Tests' 'DM-Race-Model-Tests' 'DM-Card-Model-Tests' 'DM-Civilization-Management-System-Model-Tests' 'DM-Race-Management-System-Model-Tests' 'DM-Card-Management-System-Model-Tests' 'DM-Card-Module-Model-Tests' 'DM-Repository-Provider-Module-Model-Tests' 'DM-Installation-Model-Tests' 'DMP-Wikitext-Parsing-Model-Tests' 'DM-Tools-Tests' 'DM-SUnit-Tests')
+			#('DM-Civilization-Model-Tests' 'DM-Race-Model-Tests' 'DM-Card-Model-Tests' 'DM-Civilization-Management-System-Model-Tests' 'DM-Race-Management-System-Model-Tests' 'DM-Card-Management-System-Model-Tests' 'DM-Card-Module-Model-Tests' 'DM-RDB-Repository-Provider-Module-Model-Tests' 'DM-In-Memory-Repository-Provider-Module-Model-Tests' 'DM-Installation-Model-Tests' 'DMP-Wikitext-Parsing-Model-Tests' 'DM-Tools-Tests' 'DM-SUnit-Tests')
 ]
 
 { #category : #'private - packages set up' }

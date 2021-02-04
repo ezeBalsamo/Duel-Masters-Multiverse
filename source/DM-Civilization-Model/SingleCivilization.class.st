@@ -24,6 +24,12 @@ SingleCivilization class >> named: aCivilizationName [
 	^ self new initializeNamed: aCivilizationName
 ]
 
+{ #category : #testing }
+SingleCivilization >> hasSameNameThan: aSingleCivilization [
+
+	^ aSingleCivilization isNamed: name
+]
+
 { #category : #initialization }
 SingleCivilization >> initializeNamed: aCivilizationName [
 
@@ -43,4 +49,12 @@ SingleCivilization >> printOn: aStream [
 		nextPutAll: name;
 		space;
 		nextPutAll: 'civilization'
+]
+
+{ #category : #updating }
+SingleCivilization >> synchronizeWith: aSingleCivilization [
+
+	( ObjectSynchronizer
+		synchronizingInternalCollaboratorsFrom: self
+		withThoseFrom: aSingleCivilization ) synchronize
 ]

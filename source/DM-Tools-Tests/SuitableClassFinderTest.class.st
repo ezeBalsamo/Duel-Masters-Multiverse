@@ -15,13 +15,13 @@ Class {
 	#category : #'DM-Tools-Tests'
 }
 
-{ #category : #running }
+{ #category : #'private - accessing' }
 SuitableClassFinderTest >> canHandleMessageFor: aCollection [
 
 	^ 'canHandle: aNumber ^<1s> includes: aNumber' expandMacrosWith: aCollection asString
 ]
 
-{ #category : #'accessing - private' }
+{ #category : #'private - accessing' }
 SuitableClassFinderTest >> canHandleMessageFor: aCollection with: aDescription [
 
 	^ 'canHandle: aNumber with: aDescription ^(<1s> includes: aNumber) and: [ ''<2s>'' = aDescription]'
@@ -29,19 +29,19 @@ SuitableClassFinderTest >> canHandleMessageFor: aCollection with: aDescription [
 		with: aDescription asString
 ]
 
-{ #category : #'accessing - private' }
+{ #category : #'private - compiling' }
 SuitableClassFinderTest >> compileCanHandleMethodFor: aCollection inMetaclassOf: aClass [
 
 	aClass class compile: ( self canHandleMessageFor: aCollection )
 ]
 
-{ #category : #'accessing - private' }
+{ #category : #'private - compiling' }
 SuitableClassFinderTest >> compileCanHandleMethodFor: aCollection with: aDescription inMetaclassOf: aClass [
 
 	aClass class compile: ( self canHandleMessageFor: aCollection with: aDescription )
 ]
 
-{ #category : #'accessing - private' }
+{ #category : #'private - accessing' }
 SuitableClassFinderTest >> createSubclassOf: aSuperclass named: aClassName [
 
 	^ aSuperclass

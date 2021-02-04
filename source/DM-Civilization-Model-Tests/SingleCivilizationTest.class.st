@@ -19,15 +19,15 @@ SingleCivilizationTest >> test01CivilizationNameMustNotBeEmpty [
 { #category : #tests }
 SingleCivilizationTest >> test02InstanceCreation [
 
-	| fireCivilizationTypeName waterCivilizationTypeName civilization |
+	| fireCivilizationName waterCivilizationName civilization |
 
-	fireCivilizationTypeName := 'Fire'.
-	waterCivilizationTypeName := 'Water'.
+	fireCivilizationName := 'Fire'.
+	waterCivilizationName := 'Water'.
 
-	civilization := SingleCivilization named: fireCivilizationTypeName.
+	civilization := SingleCivilization named: fireCivilizationName.
 	self
-		assert: ( civilization isNamed: fireCivilizationTypeName );
-		deny: ( civilization isNamed: waterCivilizationTypeName )
+		assert: ( civilization isNamed: fireCivilizationName );
+		deny: ( civilization isNamed: waterCivilizationName )
 ]
 
 { #category : #tests }
@@ -37,4 +37,31 @@ SingleCivilizationTest >> test03PrintString [
 
 	civilization := SingleCivilization named: 'Nature'.
 	self assert: civilization printString equals: 'Nature civilization'
+]
+
+{ #category : #tests }
+SingleCivilizationTest >> test04SingleCivilizationHavingSameNameThanAnotherSingleCivilization [
+
+	| fireCivilizationName civilization anotherCivilization |
+
+	fireCivilizationName := 'Fire'.
+
+	civilization := SingleCivilization named: fireCivilizationName.
+	anotherCivilization := SingleCivilization named: fireCivilizationName.
+
+	self assert: ( civilization hasSameNameThan: anotherCivilization )
+]
+
+{ #category : #tests }
+SingleCivilizationTest >> test05SingleCivilizationHavingDifferentNameThanAnotherSingleCivilization [
+
+	| fireCivilizationName waterCivilizationName civilization anotherCivilization |
+
+	fireCivilizationName := 'Fire'.
+	waterCivilizationName := 'Water'.
+
+	civilization := SingleCivilization named: fireCivilizationName.
+	anotherCivilization := SingleCivilization named: waterCivilizationName.
+
+	self deny: ( civilization hasSameNameThan: anotherCivilization )
 ]
