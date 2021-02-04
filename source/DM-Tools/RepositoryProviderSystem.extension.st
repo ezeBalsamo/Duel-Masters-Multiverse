@@ -15,3 +15,14 @@ RepositoryProviderSystem class >> providingRDBRepositoriesWithPooledSessionsLogi
 		register: ( RDBMSRepositoryProvider using: aLogin ) as: 'Repository Provider';
 		yourself
 ]
+
+{ #category : #'*DM-Tools' }
+RepositoryProviderSystem >> repositoryToStoreObjectsOfType: aBusinessObjectClass
+	checkingConflictsAccordingTo: aCriteriaBasedConflictCheckingStrategy [
+
+
+	^ self
+		createRepositoryFor: 'Repository Provider'
+		storingObjectsOfType: aBusinessObjectClass
+		checkingConflictsAccordingTo: aCriteriaBasedConflictCheckingStrategy
+]
