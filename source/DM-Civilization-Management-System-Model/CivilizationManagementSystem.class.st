@@ -2,7 +2,7 @@ Class {
 	#name : #CivilizationManagementSystem,
 	#superclass : #SubsystemImplementation,
 	#instVars : [
-		'singleCivilizations'
+		'civilizations'
 	],
 	#category : #'DM-Civilization-Management-System-Model'
 }
@@ -10,7 +10,7 @@ Class {
 { #category : #querying }
 CivilizationManagementSystem >> allCivilizations [
 
-	^ singleCivilizations findAll
+	^ civilizations findAll
 ]
 
 { #category : #installing }
@@ -34,7 +34,7 @@ CivilizationManagementSystem >> name [
 { #category : #management }
 CivilizationManagementSystem >> purgeCivilization: aSingleCivilization [
 
-	singleCivilizations purge: aSingleCivilization 
+	civilizations purge: aSingleCivilization 
 ]
 
 { #category : #installing }
@@ -44,7 +44,7 @@ CivilizationManagementSystem >> resolveDependencies [
 
 	super resolveDependencies.
 	repositoryProviderSystem := self parent >> #RepositoryProviderSystem.
-	singleCivilizations := repositoryProviderSystem
+	civilizations := repositoryProviderSystem
 		repositoryToStoreObjectsOfType: SingleCivilization
 		checkingConflictsAccordingTo:
 			( CriteriaBasedConflictCheckingStrategy
@@ -55,19 +55,19 @@ CivilizationManagementSystem >> resolveDependencies [
 { #category : #management }
 CivilizationManagementSystem >> storeCivilization: aSingleCivilization [
 
-	singleCivilizations store: aSingleCivilization
+	civilizations store: aSingleCivilization
 ]
 
 { #category : #management }
 CivilizationManagementSystem >> updateCivilization: aSingleCivilization with: anUpdatedSingleCivilization [
 
-	singleCivilizations update: aSingleCivilization with: anUpdatedSingleCivilization
+	civilizations update: aSingleCivilization with: anUpdatedSingleCivilization
 ]
 
 { #category : #querying }
 CivilizationManagementSystem >> withCivilizationNamed: aCivilizationName do: aFoundBlock else: aNotFoundBlock [
 
-	^ singleCivilizations
+	^ civilizations
 		withOneMatching: [ :civilization | civilization isNamed: aCivilizationName ]
 		do: aFoundBlock
 		else: aNotFoundBlock

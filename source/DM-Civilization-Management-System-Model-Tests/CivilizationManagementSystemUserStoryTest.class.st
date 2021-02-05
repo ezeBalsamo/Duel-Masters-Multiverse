@@ -13,6 +13,24 @@ CivilizationManagementSystemUserStoryTest >> allSingleCivilizations [
 	^ civilizationManagementSystem allCivilizations
 ]
 
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> fireCivilization [
+
+	^ SingleCivilization named: self fireCivilizationName
+]
+
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> fireCivilizationName [
+
+	^ 'Fire'
+]
+
+{ #category : #'private - support' }
+CivilizationManagementSystemUserStoryTest >> purge: aSingleCivilization [
+
+	civilizationManagementSystem purgeCivilization: aSingleCivilization
+]
+
 { #category : #running }
 CivilizationManagementSystemUserStoryTest >> setUp [
 
@@ -27,83 +45,176 @@ CivilizationManagementSystemUserStoryTest >> setUpRequirements [
 	self registerSubsystem: CivilizationManagementSystem new
 ]
 
-{ #category : #tests }
-CivilizationManagementSystemUserStoryTest >> test01StoringASingleCivilization [
+{ #category : #'private - support' }
+CivilizationManagementSystemUserStoryTest >> store: aCivilization [
 
-	| fireCivilizationName singleCivilization |
-
-	fireCivilizationName := 'Fire'.
-	singleCivilization := SingleCivilization named: fireCivilizationName.
-
-	self assert: self allSingleCivilizations isEmpty.
-
-	civilizationManagementSystem storeCivilization: singleCivilization.
-
-	civilizationManagementSystem
-		withCivilizationNamed: fireCivilizationName
-		do: [ :storedCivilization | self assert: singleCivilization equals: storedCivilization ]
-		else: [ self fail ]
+	civilizationManagementSystem storeCivilization: aCivilization
 ]
 
 { #category : #tests }
-CivilizationManagementSystemUserStoryTest >> test02CantStoreASingleCivilizationWhenIsAlreadyStoreAnotherWithTheSameName [
+CivilizationManagementSystemUserStoryTest >> test01StoringACivilization [
 
-	| fireCivilizationName singleCivilization anotherSingleCivilization |
+	| fireCivilization |
 
-	fireCivilizationName := 'Fire'.
-	singleCivilization := SingleCivilization named: fireCivilizationName.
-	anotherSingleCivilization := SingleCivilization named: fireCivilizationName.
+	fireCivilization := self fireCivilization.
 
 	self assert: self allSingleCivilizations isEmpty.
 
-	civilizationManagementSystem storeCivilization: singleCivilization.
-
-	civilizationManagementSystem
-		withCivilizationNamed: fireCivilizationName
-		do: [ :storedCivilization | self assert: singleCivilization equals: storedCivilization ]
-		else: [ self fail ].
+	self store: fireCivilization.
 
 	self
-		should: [ civilizationManagementSystem storeCivilization: anotherSingleCivilization ]
+		withCivilizationNamed: self fireCivilizationName
+		do: [ :storedCivilization | self assert: fireCivilization equals: storedCivilization ]
+]
+
+{ #category : #tests }
+CivilizationManagementSystemUserStoryTest >> test02StoringManyCivilizations [
+
+	| fireCivilization waterCivilization |
+
+	fireCivilization := self fireCivilization.
+	waterCivilization := self waterCivilization.
+
+	self assert: self allSingleCivilizations isEmpty.
+
+	self
+		store: fireCivilization;
+		store: waterCivilization.
+
+	self assert: self allSingleCivilizations size equals: 2.
+
+	self
+		withCivilizationNamed: self fireCivilizationName
+		do: [ :storedCivilization | self assert: fireCivilization equals: storedCivilization ].
+
+	self
+		withCivilizationNamed: self waterCivilizationName
+		do: [ :storedCivilization | self assert: waterCivilization equals: storedCivilization ]
+]
+
+{ #category : #tests }
+CivilizationManagementSystemUserStoryTest >> test03CantStoreACivilizationWhenIsAlreadyStoreAnotherWithTheSameName [
+
+	| fireCivilization anotherFireCivilization |
+
+	fireCivilization := self fireCivilization.
+	anotherFireCivilization := self fireCivilization.
+
+	self assert: self allSingleCivilizations isEmpty.
+
+	self store: fireCivilization.
+
+	self
+		withCivilizationNamed: self fireCivilizationName
+		do: [ :storedCivilization | self assert: fireCivilization equals: storedCivilization ].
+
+	self
+		should: [ self store: anotherFireCivilization ]
 		raise: ConflictingObjectFound
-		withMessageText: ( 'Something is in conflict with <1p>' expandMacrosWith: anotherSingleCivilization )
+		withMessageText: ( 'Something is in conflict with <1p>' expandMacrosWith: anotherFireCivilization )
 ]
 
 { #category : #tests }
-CivilizationManagementSystemUserStoryTest >> test03UpdatingASingleCivilization [
+CivilizationManagementSystemUserStoryTest >> test04UpdatingACivilization [
 
-	| badSpelledFireCivilizationName properlySpelledFireCivilizationName singleCivilization updatedSingleCivilization |
+	| civilizationToUpdate updatedCivilization |
 
-	badSpelledFireCivilizationName := 'Firee'.
-	properlySpelledFireCivilizationName := 'Fire'.
-	singleCivilization := SingleCivilization named: badSpelledFireCivilizationName.
-	updatedSingleCivilization := SingleCivilization named: properlySpelledFireCivilizationName.
+	civilizationToUpdate := self fireCivilization.
+	updatedCivilization := self waterCivilization.
 
 	self assert: self allSingleCivilizations isEmpty.
 
-	civilizationManagementSystem storeCivilization: singleCivilization.
-	civilizationManagementSystem updateCivilization: singleCivilization with: updatedSingleCivilization.
+	self store: civilizationToUpdate.
+	self update: civilizationToUpdate with: updatedCivilization.
 
 	self
 		withTheOnlyOneIn: self allSingleCivilizations
-		do: [ :storedCivilization | self assert: updatedSingleCivilization equals: updatedSingleCivilization ]
+		do: [ :storedCivilization | 
+			self
+				assert: storedCivilization equals: civilizationToUpdate;
+				assert: ( storedCivilization hasSameNameThan: updatedCivilization );
+				assert: ( storedCivilization hasSameNameThan: civilizationToUpdate )
+			]
 ]
 
 { #category : #tests }
-CivilizationManagementSystemUserStoryTest >> test04PurgingASingleCivilization [
+CivilizationManagementSystemUserStoryTest >> test05CantUpdateACivilizationWhenAlreadyExistsAnotherOneWithTheSameName [
 
-	| fireCivilizationName singleCivilization |
+	| fireCivilization waterCivilization anotherWaterCivilization |
 
-	fireCivilizationName := 'Fire'.
-	singleCivilization := SingleCivilization named: fireCivilizationName.
+	fireCivilization := self fireCivilization.
+	waterCivilization := self waterCivilization.
+
+	self
+		store: fireCivilization;
+		store: waterCivilization.
+
+	anotherWaterCivilization := self waterCivilization.
+
+	self
+		should: [ self update: fireCivilization with: anotherWaterCivilization ]
+		raise: ConflictingObjectFound
+		withMessageText: ( 'Something is in conflict with <1p>' expandMacrosWith: anotherWaterCivilization )
+]
+
+{ #category : #tests }
+CivilizationManagementSystemUserStoryTest >> test06PurgingACivilization [
+
+	| fireCivilization |
+
+	fireCivilization := self fireCivilization.
 
 	self assert: self allSingleCivilizations isEmpty.
 
-	civilizationManagementSystem storeCivilization: singleCivilization.
+	self store: fireCivilization.
 
 	self
 		withTheOnlyOneIn: self allSingleCivilizations
-		do: [ :storedCivilization | civilizationManagementSystem purgeCivilization: storedCivilization ].
-		
+		do: [ :storedCivilization | self purge: storedCivilization ].
+
+	self assert: self allSingleCivilizations isEmpty
+]
+
+{ #category : #tests }
+CivilizationManagementSystemUserStoryTest >> test07CantPurgeANotManagedCivilization [
+
+	| fireCivilization |
+
+	fireCivilization := self fireCivilization.
+
 	self assert: self allSingleCivilizations isEmpty.
+
+	self
+		should: [ self purge: fireCivilization ]
+		raise: ObjectNotFound
+		withMessageText: ( '<1p> was not found.' expandMacrosWith: fireCivilization ).
+
+	self assert: self allSingleCivilizations isEmpty
+]
+
+{ #category : #'private - support' }
+CivilizationManagementSystemUserStoryTest >> update: aCivilization with: anUpdatedCivilization [
+
+	civilizationManagementSystem updateCivilization: aCivilization with: anUpdatedCivilization
+]
+
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> waterCivilization [
+
+	^ SingleCivilization named: self waterCivilizationName
+]
+
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> waterCivilizationName [
+
+	^ 'Water'
+]
+
+{ #category : #'private - support' }
+CivilizationManagementSystemUserStoryTest >> withCivilizationNamed: aCivilizationName do: aBlock [
+
+	civilizationManagementSystem
+		withCivilizationNamed: aCivilizationName
+		do: aBlock
+		else: [ self fail ]
 ]

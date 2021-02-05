@@ -11,5 +11,6 @@ ManifestKeplerCivilizationsManagement class >> initialize [
 	Kepler
 		registerInterfaceAt: #CivilizationManagementSystemInterface
 		named: 'Civilization Management System Interface'
-		declaring: #(#name)
+		declaring:
+			#(#purgeCivilization: #storeCivilization: #updateCivilization:with: #allCivilizations #withCivilizationNamed:do:else:)
 ]
