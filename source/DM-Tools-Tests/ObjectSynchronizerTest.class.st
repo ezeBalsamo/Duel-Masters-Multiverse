@@ -12,6 +12,13 @@ Class {
 }
 
 { #category : #'private - compiling' }
+ObjectSynchronizerTest >> compileGetterMethodsIn: aClass [
+
+	( self getterMethodsFor: aClass )
+		do: [ :getterMethodToCompile | aClass compile: getterMethodToCompile ]
+]
+
+{ #category : #'private - compiling' }
 ObjectSynchronizerTest >> compileInitializationMethodIn: aClass [
 
 	aClass compile: ( self initializationMethodFor: aClass )
@@ -21,6 +28,13 @@ ObjectSynchronizerTest >> compileInitializationMethodIn: aClass [
 ObjectSynchronizerTest >> compileInstanceCreationMethodInMetaclassOf: aClass [
 
 	aClass class compile: ( self instanceCreationMethodFor: aClass )
+]
+
+{ #category : #'private - accessing' }
+ObjectSynchronizerTest >> getterMethodsFor: aClass [
+
+	^ aClass instVarNames
+		collect: [ :instanceCollaboratorName | '<1s> ^<1s>' expandMacrosWith: instanceCollaboratorName ]
 ]
 
 { #category : #'private - accessing' }
@@ -81,7 +95,11 @@ ObjectSynchronizerTest >> setUp [
 
 	self
 		compileInitializationMethodIn: dummyObjectClass;
-		compileInitializationMethodIn: anotherDummyObjectClass
+		compileInitializationMethodIn: anotherDummyObjectClass.
+
+	self
+		compileGetterMethodsIn: dummyObjectClass;
+		compileGetterMethodsIn: anotherDummyObjectClass
 ]
 
 { #category : #running }
