@@ -46,10 +46,9 @@ CivilizationManagementSystem >> resolveDependencies [
 	repositoryProviderSystem := self parent >> #RepositoryProviderSystem.
 	civilizations := repositoryProviderSystem
 		repositoryToStoreObjectsOfType: SingleCivilization
-		checkingConflictsAccordingTo:
-			( CriteriaBasedConflictCheckingStrategy
-				accordingTo:
-					[ :objectInRepository :criteria :objectInMemory | objectInMemory hasSameNameThan: objectInRepository ] )
+		checkingConflictsAccordingTo: ( CriteriaBasedConflictCheckingStrategy forSingleAspectMatching: #name ).
+
+	CivilizationMappingConfiguration new applyTo: civilizations
 ]
 
 { #category : #management }
@@ -68,7 +67,7 @@ CivilizationManagementSystem >> updateCivilization: aSingleCivilization with: an
 CivilizationManagementSystem >> withCivilizationNamed: aCivilizationName do: aFoundBlock else: aNotFoundBlock [
 
 	^ civilizations
-		withOneMatching: [ :civilization | civilization isNamed: aCivilizationName ]
+		withOneMatching: [ :civilization | civilization name = aCivilizationName ]
 		do: aFoundBlock
 		else: aNotFoundBlock
 ]

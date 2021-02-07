@@ -26,7 +26,7 @@ ObjectSynchronizer class >> synchronizingInternalCollaboratorsFrom: aDomainObjec
 	^ self
 		synchronizingInternalCollaboratorsFrom: aDomainObject
 		withThoseFrom: anUpdatedDomainObject
-		exceptAll: #()
+		exceptAll: {#sequentialNumber}
 ]
 
 { #category : #'instance creation' }
@@ -85,7 +85,7 @@ ObjectSynchronizer >> synchronizeInternalCollaboratorNamed: anInternalCollaborat
 
 	| updatedInternalCollaborator |
 
-	updatedInternalCollaborator := updatedDomainObject instVarNamed: anInternalCollaboratorNameToUpdate.
+	updatedInternalCollaborator := updatedDomainObject perform: anInternalCollaboratorNameToUpdate.
 
 	domainObjectToUpdate
 		instVarNamed: anInternalCollaboratorNameToUpdate
