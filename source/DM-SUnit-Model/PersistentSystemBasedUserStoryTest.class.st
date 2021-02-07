@@ -7,6 +7,38 @@ Class {
 	#category : #'DM-SUnit-Model'
 }
 
+{ #category : #'private - building' }
+PersistentSystemBasedUserStoryTest class >> buildRDBSuiteForCI [
+
+	| suite |
+
+	suite := self buildSuiteForCI.
+	suite allTests do: #useRelationalDatabaseRepositories.
+	^ suite
+]
+
+{ #category : #'private - building' }
+PersistentSystemBasedUserStoryTest class >> buildSuiteForCI [
+
+	| suite |
+
+	suite := self suiteClass named: self name asString.
+	self allSubclasses
+		do: [ :testClass | 
+			testClass isAbstract
+				ifFalse: [ suite addTest: testClass buildSuiteFromSelectors ]
+			].
+	^ suite
+]
+
+{ #category : #'instance creation' }
+PersistentSystemBasedUserStoryTest class >> suite [
+
+	"This method is implemented to run a RDB Test Suite, both from Pharo System Browser and from SmalltalkCI.- ebalsamo"
+
+	^ self buildRDBSuiteForCI
+]
+
 { #category : #initialization }
 PersistentSystemBasedUserStoryTest >> initialize [
 

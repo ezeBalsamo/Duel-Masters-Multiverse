@@ -208,3 +208,35 @@ TestAsserterDuelMastersExtensionsTest >> test08AssertTheOnlyOneElementInACollect
 
 	self shouldnt: [ asserter assertTheOnlyOneIn: #(1) is: 1 ] raise: TestFailure
 ]
+
+{ #category : #tests }
+TestAsserterDuelMastersExtensionsTest >> test09AssertAllTestsFromATestCaseIsTheTestCaseItself [
+
+	| testCase |
+
+	testCase := TestCase new.
+
+	self assertTheOnlyOneIn: testCase allTests is: testCase
+]
+
+{ #category : #tests }
+TestAsserterDuelMastersExtensionsTest >> test10AssertAllTestsFromANewTestSuiteIsEmpty [
+
+	| testSuite |
+
+	testSuite := TestSuite named: 'The Test Suite'.
+
+	self assert: testSuite allTests isEmpty
+]
+
+{ #category : #tests }
+TestAsserterDuelMastersExtensionsTest >> test11AssertAllTestsFromATestSuiteWithATestCaseIsTheTestCase [
+
+	| testCase testSuite |
+
+	testCase := TestCase new.
+	testSuite := TestSuite named: 'The Test Suite'.
+	testSuite addTest: testCase.
+
+	self assertTheOnlyOneIn: testSuite allTests is: testCase
+]
