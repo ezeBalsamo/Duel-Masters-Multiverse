@@ -2,10 +2,10 @@
 
 ## Basic Installation
 
-You can load **Duel Masters Plays** evaluating:
+You can load **Duel Masters** evaluating:
 ```smalltalk
 Metacello new
-	baseline: 'DuelMastersPlays';
+	baseline: 'DuelMasters';
 	repository: 'github://ezeBalsamo/Duel-Masters-Plays:release-candidate/source';
 	load.
 ```
@@ -19,11 +19,11 @@ In order to include **Duel Masters Plays** as part of your project, you should r
 setUpDependencies: spec
 
 	spec
-		baseline: 'DuelMastersPlays'
+		baseline: 'DuelMasters'
 			with: [ spec
 				repository: 'github://ezeBalsamo/Duel-Masters-Plays:v{XX}';
 				loads: #('Deployment') ];
-		import: 'DuelMastersPlays'.
+		import: 'DuelMasters'.
 ```
 > Replace `{XX}` with the version you want to depend on
 
@@ -34,7 +34,7 @@ baseline: spec
 	spec
 		for: #common
 		do: [ self setUpDependencies: spec.
-			spec package: 'My-Package' with: [ spec requires: #('DuelMastersPlays') ] ]
+			spec package: 'My-Package' with: [ spec requires: #('DuelMasters') ] ]
 ```
 
 ## Provided groups
