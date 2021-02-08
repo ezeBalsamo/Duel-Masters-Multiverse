@@ -1,6 +1,8 @@
 Class {
 	#name : #SingleCivilization,
 	#superclass : #Civilization,
+	#traits : 'PersistentObjectBehaviour',
+	#classTraits : 'PersistentObjectBehaviour classTrait',
 	#instVars : [
 		'name'
 	],
@@ -24,6 +26,12 @@ SingleCivilization class >> named: aCivilizationName [
 	^ self new initializeNamed: aCivilizationName
 ]
 
+{ #category : #testing }
+SingleCivilization >> hasSameNameThan: aSingleCivilization [
+
+	^ aSingleCivilization isNamed: self name
+]
+
 { #category : #initialization }
 SingleCivilization >> initializeNamed: aCivilizationName [
 
@@ -33,14 +41,20 @@ SingleCivilization >> initializeNamed: aCivilizationName [
 { #category : #'private - testing' }
 SingleCivilization >> isNamed: aPotentialName [
 
-	^ name = aPotentialName
+	^ self name = aPotentialName
+]
+
+{ #category : #'private - accessing' }
+SingleCivilization >> name [
+
+	^ name
 ]
 
 { #category : #printing }
 SingleCivilization >> printOn: aStream [
 
 	aStream
-		nextPutAll: name;
+		nextPutAll: self name;
 		space;
 		nextPutAll: 'civilization'
 ]

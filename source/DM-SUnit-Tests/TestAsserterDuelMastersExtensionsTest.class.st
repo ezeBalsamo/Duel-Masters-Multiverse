@@ -1,11 +1,11 @@
 Class {
-	#name : #TestAsserterDuelMastersToolsExtensionsTest,
+	#name : #TestAsserterDuelMastersExtensionsTest,
 	#superclass : #TestCase,
-	#category : #'DM-Tools-Tests'
+	#category : #'DM-SUnit-Tests'
 }
 
 { #category : #'private - printing' }
-TestAsserterDuelMastersToolsExtensionsTest >> additionsMessageTextFor: anAdditionalElementCollection on: aStream [
+TestAsserterDuelMastersExtensionsTest >> additionsMessageTextFor: anAdditionalElementCollection on: aStream [
 
 	aStream
 		nextPutAll: 'additions : ';
@@ -14,13 +14,13 @@ TestAsserterDuelMastersToolsExtensionsTest >> additionsMessageTextFor: anAdditio
 ]
 
 { #category : #'private - accessing' }
-TestAsserterDuelMastersToolsExtensionsTest >> baseErrorMessageText [
+TestAsserterDuelMastersExtensionsTest >> baseErrorMessageText [
 
 	^ 'Given Collections do not match!'
 ]
 
 { #category : #'private - printing' }
-TestAsserterDuelMastersToolsExtensionsTest >> baseErrorMessageTextOn: aStream [
+TestAsserterDuelMastersExtensionsTest >> baseErrorMessageTextOn: aStream [
 
 	aStream
 		nextPutAll: self baseErrorMessageText;
@@ -28,19 +28,19 @@ TestAsserterDuelMastersToolsExtensionsTest >> baseErrorMessageTextOn: aStream [
 ]
 
 { #category : #'private - accessing' }
-TestAsserterDuelMastersToolsExtensionsTest >> dyadicBlockComparingWith: aSelector [
+TestAsserterDuelMastersExtensionsTest >> dyadicBlockComparingWith: aSelector [
 
 	^ [ :anElement :anotherElement | anElement perform: aSelector with: anotherElement ]
 ]
 
 { #category : #'private - formatting' }
-TestAsserterDuelMastersToolsExtensionsTest >> formatted: aCollection [
+TestAsserterDuelMastersExtensionsTest >> formatted: aCollection [
 
 	^ ( CollectionFormatter separatingWith: ',' ) format: aCollection
 ]
 
 { #category : #'private - accessing' }
-TestAsserterDuelMastersToolsExtensionsTest >> messageTextWhenAdditionalElementsAre: anAdditionalElementCollection [
+TestAsserterDuelMastersExtensionsTest >> messageTextWhenAdditionalElementsAre: anAdditionalElementCollection [
 
 	^ String
 		streamContents: [ :aStream | 
@@ -50,7 +50,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> messageTextWhenAdditionalElementsA
 ]
 
 { #category : #'private - accessing' }
-TestAsserterDuelMastersToolsExtensionsTest >> messageTextWhenAdditionalElementsAre: anAdditionalElementCollection
+TestAsserterDuelMastersExtensionsTest >> messageTextWhenAdditionalElementsAre: anAdditionalElementCollection
 	andMissingElementsAre: aMissingElementCollection [
 
 
@@ -64,7 +64,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> messageTextWhenAdditionalElementsA
 ]
 
 { #category : #'private - accessing' }
-TestAsserterDuelMastersToolsExtensionsTest >> messageTextWhenMissingElementsAre: aMissingElementCollection [
+TestAsserterDuelMastersExtensionsTest >> messageTextWhenMissingElementsAre: aMissingElementCollection [
 
 	^ String
 		streamContents: [ :aStream | 
@@ -74,7 +74,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> messageTextWhenMissingElementsAre:
 ]
 
 { #category : #'private - printing' }
-TestAsserterDuelMastersToolsExtensionsTest >> missingsMessageTextFor: anAdditionalElementCollection on: aStream [
+TestAsserterDuelMastersExtensionsTest >> missingsMessageTextFor: anAdditionalElementCollection on: aStream [
 
 	aStream
 		nextPutAll: 'missing: ';
@@ -83,7 +83,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> missingsMessageTextFor: anAddition
 ]
 
 { #category : #tests }
-TestAsserterDuelMastersToolsExtensionsTest >> test01AssertHasEquivalentElementsComparingWithMessageForEquivalentCollections [
+TestAsserterDuelMastersExtensionsTest >> test01AssertHasEquivalentElementsComparingWithMessageForEquivalentCollections [
 
 	| asserter |
 
@@ -99,7 +99,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> test01AssertHasEquivalentElementsC
 ]
 
 { #category : #tests }
-TestAsserterDuelMastersToolsExtensionsTest >> test02AssertHasEquivalentElementsComparingWithMessageForEquivalentCollectionsSendingAMessage [
+TestAsserterDuelMastersExtensionsTest >> test02AssertHasEquivalentElementsComparingWithMessageForEquivalentCollectionsSendingAMessage [
 
 	| asserter |
 
@@ -115,7 +115,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> test02AssertHasEquivalentElementsC
 ]
 
 { #category : #tests }
-TestAsserterDuelMastersToolsExtensionsTest >> test03AssertHasEquivalentElementsComparingWithMessageHavingOnlyOneAdditionalElement [
+TestAsserterDuelMastersExtensionsTest >> test03AssertHasEquivalentElementsComparingWithMessageHavingOnlyOneAdditionalElement [
 
 	| asserter |
 
@@ -131,7 +131,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> test03AssertHasEquivalentElementsC
 ]
 
 { #category : #tests }
-TestAsserterDuelMastersToolsExtensionsTest >> test04AssertHasEquivalentElementsComparingWithMessageHavingManyAdditionalElements [
+TestAsserterDuelMastersExtensionsTest >> test04AssertHasEquivalentElementsComparingWithMessageHavingManyAdditionalElements [
 
 	| asserter |
 
@@ -148,7 +148,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> test04AssertHasEquivalentElementsC
 ]
 
 { #category : #tests }
-TestAsserterDuelMastersToolsExtensionsTest >> test05AssertHasEquivalentElementsComparingWithMessageHavingOnlyOneMissingElement [
+TestAsserterDuelMastersExtensionsTest >> test05AssertHasEquivalentElementsComparingWithMessageHavingOnlyOneMissingElement [
 
 	| asserter |
 
@@ -165,7 +165,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> test05AssertHasEquivalentElementsC
 ]
 
 { #category : #tests }
-TestAsserterDuelMastersToolsExtensionsTest >> test06AssertHasEquivalentElementsComparingWithMessageHavingManyMissingElements [
+TestAsserterDuelMastersExtensionsTest >> test06AssertHasEquivalentElementsComparingWithMessageHavingManyMissingElements [
 
 	| asserter |
 
@@ -183,7 +183,7 @@ TestAsserterDuelMastersToolsExtensionsTest >> test06AssertHasEquivalentElementsC
 ]
 
 { #category : #tests }
-TestAsserterDuelMastersToolsExtensionsTest >> test07AssertHasEquivalentElementsComparingWithMessageHavingBothAdditionalAndMissingElements [
+TestAsserterDuelMastersExtensionsTest >> test07AssertHasEquivalentElementsComparingWithMessageHavingBothAdditionalAndMissingElements [
 
 	| asserter |
 
@@ -197,4 +197,46 @@ TestAsserterDuelMastersToolsExtensionsTest >> test07AssertHasEquivalentElementsC
 			]
 		raise: TestFailure
 		withMessageText: ( self messageTextWhenAdditionalElementsAre: #(1) andMissingElementsAre: #(4) )
+]
+
+{ #category : #tests }
+TestAsserterDuelMastersExtensionsTest >> test08AssertTheOnlyOneElementInACollectionIsAnElement [
+
+	| asserter |
+
+	asserter := TestAsserter new.
+
+	self shouldnt: [ asserter assertTheOnlyOneIn: #(1) is: 1 ] raise: TestFailure
+]
+
+{ #category : #tests }
+TestAsserterDuelMastersExtensionsTest >> test09AssertAllTestsFromATestCaseIsTheTestCaseItself [
+
+	| testCase |
+
+	testCase := TestCase new.
+
+	self assertTheOnlyOneIn: testCase allTests is: testCase
+]
+
+{ #category : #tests }
+TestAsserterDuelMastersExtensionsTest >> test10AssertAllTestsFromANewTestSuiteIsEmpty [
+
+	| testSuite |
+
+	testSuite := TestSuite named: 'The Test Suite'.
+
+	self assert: testSuite allTests isEmpty
+]
+
+{ #category : #tests }
+TestAsserterDuelMastersExtensionsTest >> test11AssertAllTestsFromATestSuiteWithATestCaseIsTheTestCase [
+
+	| testCase testSuite |
+
+	testCase := TestCase new.
+	testSuite := TestSuite named: 'The Test Suite'.
+	testSuite addTest: testCase.
+
+	self assertTheOnlyOneIn: testSuite allTests is: testCase
 ]

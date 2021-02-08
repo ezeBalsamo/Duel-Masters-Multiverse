@@ -19,7 +19,7 @@ DuelMastersInstallationTest >> test01SystemInstallation [
 
 	| installation expectedInstallationName rootSystem installedModuleRegistrationSystem expectedInstalledModuleClasses installedModules |
 
-	installation := DuelMastersInstallation new.
+	installation := DuelMastersInstallation providingInMemoryRepositories.
 	expectedInstallationName := 'Duel Masters'.
 	rootSystem := installation install.
 	rootSystem startUp.
@@ -41,6 +41,10 @@ DuelMastersInstallationTest >> test01SystemInstallation [
 
 { #category : #tests }
 DuelMastersInstallationTest >> test02ShutdownDoesNothing [
+
+	"This method should be deleted when SystemInstallation>>#beAwareOfShutDownOf: becomes a template method.- ebalsamo"
+
+	DuelMastersInstallation providingInMemoryRepositories beAwareOfShutDownOf: CompositeSystem new.
 
 	self
 		assert: ( DuelMastersInstallation compiledMethodAt: #beAwareOfShutDownOf: ) comment
