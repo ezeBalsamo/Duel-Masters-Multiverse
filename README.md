@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/logos/128x128.png">
- <h1 align="center">Duel Masters Plays</h1>
+ <h1 align="center">Duel Masters Multiverse</h1>
   <p align="center">
-    Duel Masters Plays Global!
+    A fan-made Duel Masters card game
     <br>
     <a href="docs/"><strong>Explore the docs »</strong></a>
     <br>
@@ -19,7 +19,7 @@
 [![Pharo 8.0](https://img.shields.io/badge/Pharo-8.0-informational)](https://pharo.org)
 
 
-The idea is not to translate the existing Duel Masters PLAY'S game, developed by Takara Tomy and DeNA, but to complement it so that most of us can have much more fun with it!
+Duel Masters Multiverse focuses on gathering the three main card games (Duel Masters, Kaijudo and the new Duel Masters PLAY'S) into a single game, playable in both Spanish and English.
 
 ## License
 
