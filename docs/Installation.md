@@ -2,18 +2,18 @@
 
 ## Basic Installation
 
-You can load **Duel Masters** evaluating:
+You can load **Duel Masters Multiverse** evaluating:
 ```smalltalk
 Metacello new
 	baseline: 'DuelMasters';
-	repository: 'github://ezeBalsamo/Duel-Masters-Plays:release-candidate/source';
+	repository: 'github://ezeBalsamo/Duel-Masters-Multiverse:release-candidate/source';
 	load.
 ```
 >  Change `release-candidate` to some released version if you want a pinned version
 
 ## Using as dependency
 
-In order to include **Duel Masters Plays** as part of your project, you should reference the package in your product baseline:
+In order to include **Duel Masters Multiverse** as part of your project, you should reference the package in your product baseline:
 
 ```smalltalk
 setUpDependencies: spec
@@ -21,7 +21,7 @@ setUpDependencies: spec
 	spec
 		baseline: 'DuelMasters'
 			with: [ spec
-				repository: 'github://ezeBalsamo/Duel-Masters-Plays:v{XX}';
+				repository: 'github://ezeBalsamo/Duel-Masters-Multiverse:v{XX}';
 				loads: #('Deployment') ];
 		import: 'DuelMasters'.
 ```
