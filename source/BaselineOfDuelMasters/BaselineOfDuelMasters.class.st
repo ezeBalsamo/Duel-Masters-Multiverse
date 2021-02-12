@@ -10,8 +10,11 @@ BaselineOfDuelMasters >> baseline: spec [
 	<baseline>
 	spec
 		for: #pharo
-		do: [ self
-				setUpDependencies: spec;
+		do: [ | dependenciesBuilder |
+
+			dependenciesBuilder := BaselineDependenciesBuilder configuringDependenciesOn: spec.
+			self
+				setUpDependenciesWith: dependenciesBuilder;
 				setUpPackages: spec.
 			spec
 				group: 'CI' with: 'Tests';
@@ -26,34 +29,24 @@ BaselineOfDuelMasters >> projectClass [
 ]
 
 { #category : #'private - dependencies set up' }
-BaselineOfDuelMasters >> setUpDependencies: spec [
+BaselineOfDuelMasters >> setUpDependenciesWith: aBaselineDependenciesBuilder [
 
-	spec
-		baseline: 'Superluminal'
-			with: [ spec
-				repository: 'github://ba-st/Superluminal:v1.2.0/source';
-				loads: #('Core')
-			];
-		baseline: 'Buoy'
-			with: [ spec
-				repository: 'github://ba-st/Buoy:v6/source';
-				loads: #('Deployment' 'Dependent-SUnit-Extensions')
-			];
-		baseline: 'Aconcagua'
-			with: [ spec
-				repository: 'github://ba-st/Aconcagua:v8/source';
-				loads: #('Deployment')
-			];
-		baseline: 'Kepler'
-			with: [ spec
-				repository: 'github://ba-st/Kepler:v5/source';
-				loads: #('Deployment' 'Dependent-SUnit-Extensions')
-			];
-		baseline: 'Sagan'
-			with: [ spec
-				repository: 'github://ba-st/Sagan:v4.1.0/source';
-				loads: #('Deployment' 'PostgreSQL')
-			]
+	aBaselineDependenciesBuilder
+		configureDependencyTo: 'Superluminal'
+			hostedIn: 'github://ba-st/Superluminal:v1.2.0/source'
+			loading: 'Core';
+		configureDependencyTo: 'Buoy'
+			hostedIn: 'github://ba-st/Buoy:v6/source'
+			loadingAll: #('Deployment' 'Dependent-SUnit-Extensions');
+		configureDependencyTo: 'Aconcagua'
+			hostedIn: 'github://ba-st/Aconcagua:v8/source'
+			loading: 'Deployment';
+		configureDependencyTo: 'Kepler'
+			hostedIn: 'github://ba-st/Kepler:v5/source'
+			loadingAll: #('Deployment' 'Dependent-SUnit-Extensions');
+		configureDependencyTo: 'Sagan'
+			hostedIn: 'github://ba-st/Sagan:v4.1.0/source'
+			loadingAll: #('Deployment' 'PostgreSQL')
 ]
 
 { #category : #'private - packages set up' }
