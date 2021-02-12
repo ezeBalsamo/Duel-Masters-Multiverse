@@ -4,22 +4,97 @@ Class {
 	#category : #BaselineOfDuelMasters
 }
 
+{ #category : #'private - dependencies accessing' }
+BaselineOfDuelMasters >> aconcaguaDependency [
+
+	^ self
+		dependencyTo: 'Aconcagua'
+		hostedIn: 'github://ba-st/Aconcagua:v8/source'
+		loading: 'Deployment'
+]
+
 { #category : #accessing }
 BaselineOfDuelMasters >> baseline: spec [
 
 	<baseline>
 	spec
 		for: #pharo
-		do: [ | dependenciesBuilder |
-
-			dependenciesBuilder := BaselineDependenciesBuilder configuringDependenciesOn: spec.
-			self
-				setUpDependenciesWith: dependenciesBuilder;
+		do: [ self
+				setUpDependencies: spec;
 				setUpPackages: spec.
 			spec
 				group: 'CI' with: 'Tests';
 				group: 'Development' with: #('Tools' 'Tests')
 			]
+]
+
+{ #category : #'private - dependencies set up' }
+BaselineOfDuelMasters >> baselineNameFrom: aDependency [
+
+	^ aDependency at: #baselineName
+]
+
+{ #category : #'private - dependencies accessing' }
+BaselineOfDuelMasters >> buoyDependency [
+
+	^ self
+		dependencyTo: 'Buoy'
+		hostedIn: 'github://ba-st/Buoy:v6/source'
+		loadingAll: #('Deployment' 'Dependent-SUnit-Extensions')
+]
+
+{ #category : #'private - dependencies set up' }
+BaselineOfDuelMasters >> configure: aDependency in: aSpec [
+
+	aSpec
+		baseline: ( self baselineNameFrom: aDependency )
+		with: [ aSpec
+				repository: ( self repositoryFrom: aDependency );
+				loads: ( self groupNamesFrom: aDependency )
+			]
+]
+
+{ #category : #'private - accessing' }
+BaselineOfDuelMasters >> dependencies [
+
+	^ OrderedCollection new
+		add: self superluminalDependency;
+		add: self buoyDependency;
+		add: self aconcaguaDependency;
+		add: self keplerDependency;
+		add: self saganDependency;
+		yourself
+]
+
+{ #category : #'private - dependencies set up' }
+BaselineOfDuelMasters >> dependencyTo: aBaselineName hostedIn: aRepository loading: aGroupName [
+
+	^ self dependencyTo: aBaselineName hostedIn: aRepository loadingAll: {aGroupName}
+]
+
+{ #category : #'private - dependencies set up' }
+BaselineOfDuelMasters >> dependencyTo: aBaselineName hostedIn: aRepository loadingAll: aGroupNameCollection [
+
+	^ Dictionary new
+		at: #baselineName put: aBaselineName;
+		at: #repository put: aRepository;
+		at: #groupNames put: aGroupNameCollection;
+		yourself
+]
+
+{ #category : #'private - dependencies set up' }
+BaselineOfDuelMasters >> groupNamesFrom: aDependency [
+
+	^ aDependency at: #groupNames
+]
+
+{ #category : #'private - dependencies accessing' }
+BaselineOfDuelMasters >> keplerDependency [
+
+	^ self
+		dependencyTo: 'Kepler'
+		hostedIn: 'github://ba-st/Kepler:v5/source'
+		loadingAll: #('Deployment' 'Dependent-SUnit-Extensions')
 ]
 
 { #category : #accessing }
@@ -29,24 +104,24 @@ BaselineOfDuelMasters >> projectClass [
 ]
 
 { #category : #'private - dependencies set up' }
-BaselineOfDuelMasters >> setUpDependenciesWith: aBaselineDependenciesBuilder [
+BaselineOfDuelMasters >> repositoryFrom: aDependency [
 
-	aBaselineDependenciesBuilder
-		configureDependencyTo: 'Superluminal'
-			hostedIn: 'github://ba-st/Superluminal:v1.2.0/source'
-			loading: 'Core';
-		configureDependencyTo: 'Buoy'
-			hostedIn: 'github://ba-st/Buoy:v6/source'
-			loadingAll: #('Deployment' 'Dependent-SUnit-Extensions');
-		configureDependencyTo: 'Aconcagua'
-			hostedIn: 'github://ba-st/Aconcagua:v8/source'
-			loading: 'Deployment';
-		configureDependencyTo: 'Kepler'
-			hostedIn: 'github://ba-st/Kepler:v5/source'
-			loadingAll: #('Deployment' 'Dependent-SUnit-Extensions');
-		configureDependencyTo: 'Sagan'
-			hostedIn: 'github://ba-st/Sagan:v4.1.0/source'
-			loadingAll: #('Deployment' 'PostgreSQL')
+	^ aDependency at: #repository
+]
+
+{ #category : #'private - dependencies accessing' }
+BaselineOfDuelMasters >> saganDependency [
+
+	^ self
+		dependencyTo: 'Sagan'
+		hostedIn: 'github://ba-st/Sagan:v4.1.0/source'
+		loadingAll: #('Deployment' 'PostgreSQL')
+]
+
+{ #category : #'private - dependencies set up' }
+BaselineOfDuelMasters >> setUpDependencies: spec [
+
+	self withDependenciesDo: [ :dependency | self configure: dependency in: spec ]
 ]
 
 { #category : #'private - packages set up' }
@@ -132,4 +207,19 @@ BaselineOfDuelMasters >> setUpToolsPackagesOn: aSpec [
 	aSpec package: 'DM-Tools' with: [ aSpec requires: 'Buoy' ].
 
 	aSpec group: 'Tools' with: 'DM-Tools'
+]
+
+{ #category : #'private - dependencies accessing' }
+BaselineOfDuelMasters >> superluminalDependency [
+
+	^ self
+		dependencyTo: 'Superluminal'
+		hostedIn: 'github://ba-st/Superluminal:v1.2.0/source'
+		loading: 'Core'
+]
+
+{ #category : #'private - dependencies set up' }
+BaselineOfDuelMasters >> withDependenciesDo: aBlock [
+
+	self dependencies do: aBlock
 ]
