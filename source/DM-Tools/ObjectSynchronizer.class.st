@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'domainObjectToUpdate',
 		'updatedDomainObject',
-		'internalCollaboratorsToAvoidSinchronizing'
+		'internalCollaboratorsToAvoidSynchronizing'
 	],
 	#category : #'DM-Tools'
 }
@@ -26,25 +26,25 @@ ObjectSynchronizer class >> synchronizingInternalCollaboratorsFrom: aDomainObjec
 	^ self
 		synchronizingInternalCollaboratorsFrom: aDomainObject
 		withThoseFrom: anUpdatedDomainObject
-		exceptAll: {#sequentialNumber}
+		exceptAll: #()
 ]
 
 { #category : #'instance creation' }
 ObjectSynchronizer class >> synchronizingInternalCollaboratorsFrom: aDomainObject
 	withThoseFrom: anUpdatedDomainObject
-	except: anInternalCollaboratorToAvoidSinchronizing [
+	except: anInternalCollaboratorToAvoidSynchronizing [
 
 
 	^ self
 		synchronizingInternalCollaboratorsFrom: aDomainObject
 		withThoseFrom: anUpdatedDomainObject
-		exceptAll: {anInternalCollaboratorToAvoidSinchronizing}
+		exceptAll: {anInternalCollaboratorToAvoidSynchronizing}
 ]
 
 { #category : #'instance creation' }
 ObjectSynchronizer class >> synchronizingInternalCollaboratorsFrom: aDomainObject
 	withThoseFrom: anUpdatedDomainObject
-	exceptAll: anInternalCollaboratorCollectionToAvoidSinchronizing [
+	exceptAll: anInternalCollaboratorCollectionToAvoidSynchronizing [
 
 
 	self assert: aDomainObject isFromTheSameClassThan: anUpdatedDomainObject.
@@ -52,24 +52,27 @@ ObjectSynchronizer class >> synchronizingInternalCollaboratorsFrom: aDomainObjec
 	^ self new
 		initializeSynchronizingInternalCollaboratorsFrom: aDomainObject
 		withThoseFrom: anUpdatedDomainObject
-		exceptAll: anInternalCollaboratorCollectionToAvoidSinchronizing
+		exceptAll:
+			( anInternalCollaboratorCollectionToAvoidSynchronizing asOrderedCollection
+				add: #sequentialNumber;
+				yourself )
 ]
 
 { #category : #initialization }
 ObjectSynchronizer >> initializeSynchronizingInternalCollaboratorsFrom: aDomainObject
 	withThoseFrom: anUpdatedDomainObject
-	exceptAll: anInternalCollaboratorCollectionToAvoidSinchronizing [
+	exceptAll: anInternalCollaboratorCollectionToAvoidSynchronizing [
 
 
 	domainObjectToUpdate := aDomainObject.
 	updatedDomainObject := anUpdatedDomainObject.
-	internalCollaboratorsToAvoidSinchronizing := anInternalCollaboratorCollectionToAvoidSinchronizing
+	internalCollaboratorsToAvoidSynchronizing := anInternalCollaboratorCollectionToAvoidSynchronizing
 ]
 
 { #category : #'private - accessing' }
 ObjectSynchronizer >> internalCollaboratorsToUpdate [
 
-	^ domainObjectToUpdate class instVarNames copyWithoutAll: internalCollaboratorsToAvoidSinchronizing
+	^ domainObjectToUpdate class instVarNames copyWithoutAll: internalCollaboratorsToAvoidSynchronizing
 ]
 
 { #category : #synchronizing }

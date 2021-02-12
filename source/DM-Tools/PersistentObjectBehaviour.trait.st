@@ -19,15 +19,22 @@ PersistentObjectBehaviour >> hash [
 ]
 
 { #category : #'private - accessing' }
+PersistentObjectBehaviour >> internalCollaboratorsToAvoidSynchronizing [
+
+	^ #()
+]
+
+{ #category : #'private - accessing' }
 PersistentObjectBehaviour >> sequentialNumber [
 
 	^sequentialNumber
 ]
 
 { #category : #updating }
-PersistentObjectBehaviour >> synchronizeWith: aSingleCivilization [
+PersistentObjectBehaviour >> synchronizeWith: anUpdatedDomainObject [
 
 	( ObjectSynchronizer
 		synchronizingInternalCollaboratorsFrom: self
-		withThoseFrom: aSingleCivilization ) synchronize
+		withThoseFrom: anUpdatedDomainObject
+		exceptAll: self internalCollaboratorsToAvoidSynchronizing ) synchronize
 ]
