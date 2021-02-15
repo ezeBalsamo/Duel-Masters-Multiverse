@@ -1,7 +1,7 @@
 Class {
 	#name : #CivilizationMappingConfiguration,
 	#superclass : #Object,
-	#category : #'DM-Card-Module-Model'
+	#category : #'DM-Civilization-Management-System-Model'
 }
 
 { #category : #applying }
