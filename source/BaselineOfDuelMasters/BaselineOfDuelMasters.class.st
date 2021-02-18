@@ -414,6 +414,12 @@ BaselineOfDuelMasters >> packageNameOf: aPackage [
 ]
 
 { #category : #'private - packages set up' }
+BaselineOfDuelMasters >> packageNamed: aPackageName requiring: aRequirementName [
+
+	^ self packageNamed: aPackageName requiringAll: {aRequirementName}
+]
+
+{ #category : #'private - packages set up' }
 BaselineOfDuelMasters >> packageNamed: aPackageName requiringAll: aRequirementNameCollection [
 
 	^ Dictionary new
