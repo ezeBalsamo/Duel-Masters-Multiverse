@@ -4,63 +4,171 @@ Class {
 	#category : #BaselineOfDuelMasters
 }
 
-{ #category : #'private - dependencies accessing' }
-BaselineOfDuelMasters >> aconcaguaDependency [
-
-	^ self
-		dependencyTo: 'Aconcagua'
-		hostedIn: 'github://ba-st/Aconcagua:v8/source'
-		loading: 'Deployment'
-]
-
 { #category : #accessing }
-BaselineOfDuelMasters >> baseline: spec [
+BaselineOfDuelMasters >> baseline: aSpec [
 
 	<baseline>
-	spec
+	aSpec
 		for: #pharo
 		do: [ self
-				setUpDependencies: spec;
-				setUpPackages: spec.
-			spec
-				group: 'CI' with: 'Tests';
-				group: 'Development' with: #('Tools' 'Tests')
+				setUpDependenciesIn: aSpec;
+				setUpPackagesIn: aSpec;
+				setUpGroupsIn: aSpec
 			]
 ]
 
 { #category : #'private - dependencies set up' }
-BaselineOfDuelMasters >> baselineNameFrom: aDependency [
+BaselineOfDuelMasters >> baselineNameOf: aDependency [
 
 	^ aDependency at: #baselineName
 ]
 
-{ #category : #'private - dependencies accessing' }
-BaselineOfDuelMasters >> buoyDependency [
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> cardManagementSystemModelPackage [
+
+	^ self systemModelPackageNamed: 'DM-Card-Management' requiring: self keplerDependencyName
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> cardManagementSystemModelTestsPackage [
+
+	| cardMagenementSystemModelPackageName |
+
+	cardMagenementSystemModelPackageName := self systemModelPackageNameFor: 'DM-Card-Management'.
+	^ self
+		testsPackageNamed: cardMagenementSystemModelPackageName
+		requiringAll: ( Array with: cardMagenementSystemModelPackageName )
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> cardModelPackage [
+
+	^ self modelPackageNamed: 'DM-Card' requiringAll: #()
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> cardModelTestsPackage [
+
+	| cardModelPackageName |
+
+	cardModelPackageName := self modelPackageNameFor: 'DM-Card'.
+	^ self
+		testsPackageNamed: cardModelPackageName
+		requiringAll:
+			( Array
+				with: ( self modelPackageNameFor: 'DM-Civilization' )
+				with: ( self modelPackageNameFor: 'DM-Race' )
+				with: cardModelPackageName )
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> cardModuleModelPackage [
 
 	^ self
-		dependencyTo: 'Buoy'
-		hostedIn: 'github://ba-st/Buoy:v6/source'
-		loadingAll: #('Deployment' 'Dependent-SUnit-Extensions')
+		moduleModelPackageNamed: 'DM-Card'
+		requiringAll:
+			( Array
+				with: self keplerDependencyName
+				with: ( self systemModelPackageNameFor: 'DM-Civilization-Management' )
+				with: ( self systemModelPackageNameFor: 'DM-Race-Management' )
+				with: ( self systemModelPackageNameFor: 'DM-Card-Management' ) )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> cardModuleModelTestsPackage [
+
+	| cardModuleModelPackageName |
+
+	cardModuleModelPackageName := self moduleModelPackageNameFor: 'DM-Card'.
+	^ self
+		testsPackageNamed: cardModuleModelPackageName
+		requiringAll:
+			( Array
+				with: cardModuleModelPackageName
+				with: ( self moduleModelPackageNameFor: 'DM-Repository-Provider' ) )
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> civilizationManagementSystemModelPackage [
+
+	^ self
+		systemModelPackageNamed: 'DM-Civilization-Management'
+		requiringAll:
+			( Array
+				with: self keplerDependencyName
+				with: self saganDependencyName
+				with: ( self systemModelPackageNameFor: 'DM-Repository-Provider' )
+				with: ( self modelPackageNameFor: 'DM-Civilization' ) )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> civilizationManagementSystemModelTestsPackage [
+
+	| civillizationMagenementSystemModelPackageName |
+
+	civillizationMagenementSystemModelPackageName := self
+		systemModelPackageNameFor: 'DM-Civilization-Management'.
+	^ self
+		testsPackageNamed: civillizationMagenementSystemModelPackageName
+		requiringAll:
+			( Array
+				with: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) )
+				with: self keplerDependencyName
+				with: civillizationMagenementSystemModelPackageName
+				with: ( self modelPackageNameFor: 'DM-Civilization' ) )
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> civilizationModelPackage [
+
+	^ self modelPackageNamed: 'DM-Civilization' requiring: ( self extensionPackageNameFor: 'DM-Sagan' )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> civilizationModelTestsPackage [
+
+	| civillizationModelPackageName |
+
+	civillizationModelPackageName := self modelPackageNameFor: 'DM-Civilization'.
+	^ self testsPackageNamed: civillizationModelPackageName requiring: civillizationModelPackageName
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> collectionsAbstractBaseExtensionsPackage [
+
+	^ self extensionPackageNamed: 'DM-Collections-Abstract-Base' requiringAll: #()
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> collectionsStringsBaseExtensionsPackage [
+
+	^ self extensionPackageNamed: 'DM-Collections-Strings-Base' requiringAll: #()
 ]
 
 { #category : #'private - dependencies set up' }
-BaselineOfDuelMasters >> configure: aDependency in: aSpec [
+BaselineOfDuelMasters >> configure: aDependency asDependencyIn: aSpec [
 
 	aSpec
-		baseline: ( self baselineNameFrom: aDependency )
+		baseline: ( self baselineNameOf: aDependency )
 		with: [ aSpec
-				repository: ( self repositoryFrom: aDependency );
-				loads: ( self groupNamesFrom: aDependency )
+				repository: ( self repositoryOf: aDependency );
+				loads: ( self groupNamesOf: aDependency )
 			]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'private - packages set up' }
+BaselineOfDuelMasters >> configure: aPackage asPackageIn: aSpec [
+
+	aSpec
+		package: ( self packageNameOf: aPackage )
+		with: [ aSpec requires: ( self requirementNamesOf: aPackage ) ]
+]
+
+{ #category : #'private - dependencies accessing' }
 BaselineOfDuelMasters >> dependencies [
 
 	^ OrderedCollection new
 		add: self superluminalDependency;
-		add: self buoyDependency;
-		add: self aconcaguaDependency;
 		add: self keplerDependency;
 		add: self saganDependency;
 		yourself
@@ -82,19 +190,236 @@ BaselineOfDuelMasters >> dependencyTo: aBaselineName hostedIn: aRepository loadi
 		yourself
 ]
 
+{ #category : #'private - groups set up' }
+BaselineOfDuelMasters >> dependentSUnitExtensionsPackageNames [
+
+	^ self dependentSUnitExtensionsPackages
+		collect: [ :modelPackage | self packageNameOf: modelPackage ]
+]
+
+{ #category : #'private - dependent sunit packages accessing' }
+BaselineOfDuelMasters >> dependentSUnitExtensionsPackages [
+
+	^ OrderedCollection
+		with:
+			( self
+				packageNamed: 'DM-Sunit'
+				requiring: ( self extensionPackageNameFor: 'DM-Collections-Abstract-Base' ) )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> dependentSUnitTestsPackage [
+
+	| dependentSUnitPackageName |
+
+	dependentSUnitPackageName := 'DM-SUnit'.
+	^ self testsPackageNamed: dependentSUnitPackageName requiring: dependentSUnitPackageName
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> exceptionModelPackage [
+
+	^ self modelPackageNamed: 'DM-Exception' requiringAll: #()
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> exceptionModelTestsPackage [
+
+	| exceptionModelPackageName |
+
+	exceptionModelPackageName := self modelPackageNameFor: 'DM-Exception'.
+	^ self testsPackageNamed: exceptionModelPackageName requiring: exceptionModelPackageName
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> extensionPackageNameFor: anExtensionPackageName [
+
+	^ '<1s-Extensions>' expandMacrosWith: anExtensionPackageName
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> extensionPackageNamed: anExtensionPackageName requiring: aRequirementName [
+
+	^ self extensionPackageNamed: anExtensionPackageName requiringAll: {aRequirementName}
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> extensionPackageNamed: anExtensionPackageName requiringAll: aRequirementNameCollection [
+
+	^ self
+		packageNamed: ( self extensionPackageNameFor: anExtensionPackageName )
+		requiringAll: aRequirementNameCollection
+]
+
+{ #category : #'private - groups set up' }
+BaselineOfDuelMasters >> extensionPackageNames [
+
+	^ self extensionPackages collect: [ :modelPackage | self packageNameOf: modelPackage ]
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> extensionPackages [
+
+	^ OrderedCollection new
+		add: self collectionsStringsBaseExtensionsPackage;
+		add: self collectionsAbstractBaseExtensionsPackage;
+		add: self toolDependencyAnalyserCoreExtensionsPackage;
+		add: self saganExtensionsPackage;
+		add: self kernelBasicObjectsExtensionsPackage;
+		yourself
+]
+
 { #category : #'private - dependencies set up' }
-BaselineOfDuelMasters >> groupNamesFrom: aDependency [
+BaselineOfDuelMasters >> groupNamesOf: aDependency [
 
 	^ aDependency at: #groupNames
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> installationModelPackage [
+
+	^ self
+		modelPackageNamed: 'DM-Installation'
+		requiringAll:
+			( Array
+				with: self keplerDependencyName
+				with: ( self moduleModelPackageNameFor: 'DM-Repository-Provider' )
+				with: ( self moduleModelPackageNameFor: 'DM-Card' ) )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> installationModelTestsPackage [
+
+	| installationModelPackageName |
+
+	installationModelPackageName := self modelPackageNameFor: 'DM-Installation'.
+	^ self
+		testsPackageNamed: installationModelPackageName
+		requiringAll: ( Array with: self keplerDependencyName with: installationModelPackageName )
 ]
 
 { #category : #'private - dependencies accessing' }
 BaselineOfDuelMasters >> keplerDependency [
 
 	^ self
-		dependencyTo: 'Kepler'
+		dependencyTo: self keplerDependencyName
 		hostedIn: 'github://ba-st/Kepler:v5/source'
-		loadingAll: #('Deployment' 'Dependent-SUnit-Extensions')
+		loadingAll: #('Extended' 'Dependent-SUnit-Extensions')
+]
+
+{ #category : #'private - dependencies accessing' }
+BaselineOfDuelMasters >> keplerDependencyName [
+
+	^ #Kepler
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> kernelBasicObjectsExtensionsPackage [
+
+	^ self extensionPackageNamed: 'DM-Kernel-BasicObjects' requiringAll: #()
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> metaprogrammingModelPackage [
+
+	^ self
+		modelPackageNamed: 'DM-Metaprogramming'
+		requiring: ( self modelPackageNameFor: 'DM-Exception' )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> metaprogrammingModelTestsPackage [
+
+	| metaprogrammingModelPackageName |
+
+	metaprogrammingModelPackageName := self modelPackageNameFor: 'DM-Metaprogramming'.
+	^ self
+		testsPackageNamed: metaprogrammingModelPackageName
+		requiringAll: ( Array with: ( self modelPackageNameFor: 'DM-Exception' ) with: metaprogrammingModelPackageName )
+]
+
+{ #category : #'private - groups set up' }
+BaselineOfDuelMasters >> modelAndExtensionPackageNames [
+
+	^ OrderedCollection new
+		addAll: self modelPackageNames;
+		addAll: self extensionPackageNames;
+		yourself
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> modelPackageNameFor: aModelPackageName [
+
+	^ '<1s>-Model' expandMacrosWith: aModelPackageName
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> modelPackageNamed: aModelPackageName requiring: aRequirementName [
+
+	^ self modelPackageNamed: aModelPackageName requiringAll: {aRequirementName}
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> modelPackageNamed: aModelPackageName requiringAll: aRequirementNameCollection [
+
+	^ self
+		packageNamed: ( self modelPackageNameFor: aModelPackageName )
+		requiringAll: aRequirementNameCollection
+]
+
+{ #category : #'private - groups set up' }
+BaselineOfDuelMasters >> modelPackageNames [
+
+	^ self modelPackages collect: [ :modelPackage | self packageNameOf: modelPackage ]
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> modelPackages [
+
+	^ OrderedCollection new
+		add: self civilizationModelPackage;
+		add: self raceModelPackage;
+		add: self cardModelPackage;
+		add: self civilizationManagementSystemModelPackage;
+		add: self raceManagementSystemModelPackage;
+		add: self cardManagementSystemModelPackage;
+		add: self repositoryProviderSystemModelPackage;
+		add: self cardModuleModelPackage;
+		add: self repositoryProviderModuleModelPackage;
+		add: self installationModelPackage;
+		add: self exceptionModelPackage;
+		add: self metaprogrammingModelPackage;
+		add: self wikitextParsingModelPackage;
+		yourself
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> moduleModelPackageNameFor: aModuleModelPackageName [
+
+	^ self modelPackageNameFor: ( '<1s>-Module' expandMacrosWith: aModuleModelPackageName )
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> moduleModelPackageNamed: aModuleModelPackageName requiringAll: aRequirementNameCollection [
+
+	^ self
+		packageNamed: ( self moduleModelPackageNameFor: aModuleModelPackageName )
+		requiringAll: aRequirementNameCollection
+]
+
+{ #category : #'private - packages set up' }
+BaselineOfDuelMasters >> packageNameOf: aPackage [
+
+	^ aPackage at: #packageName
+]
+
+{ #category : #'private - packages set up' }
+BaselineOfDuelMasters >> packageNamed: aPackageName requiringAll: aRequirementNameCollection [
+
+	^ Dictionary new
+		at: #packageName put: aPackageName;
+		at: #requirementNames put: aRequirementNameCollection;
+		yourself
 ]
 
 { #category : #accessing }
@@ -103,123 +428,262 @@ BaselineOfDuelMasters >> projectClass [
 	^ MetacelloCypressBaselineProject
 ]
 
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> raceManagementSystemModelPackage [
+
+	^ self systemModelPackageNamed: 'DM-Race-Management' requiring: self keplerDependencyName
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> raceManagementSystemModelTestsPackage [
+
+	| raceMagenementSystemModelPackageName |
+
+	raceMagenementSystemModelPackageName := self systemModelPackageNameFor: 'DM-Race-Management'.
+	^ self
+		testsPackageNamed: raceMagenementSystemModelPackageName
+		requiringAll: ( Array with: raceMagenementSystemModelPackageName )
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> raceModelPackage [
+
+	^ self modelPackageNamed: 'DM-Race' requiringAll: #()
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> raceModelTestsPackage [
+
+	| raceModelPackageName |
+
+	raceModelPackageName := self modelPackageNameFor: 'DM-Race'.
+	^ self testsPackageNamed: raceModelPackageName requiring: raceModelPackageName
+]
+
 { #category : #'private - dependencies set up' }
-BaselineOfDuelMasters >> repositoryFrom: aDependency [
+BaselineOfDuelMasters >> repositoryOf: aDependency [
 
 	^ aDependency at: #repository
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> repositoryProviderModuleModelPackage [
+
+	^ self
+		moduleModelPackageNamed: 'DM-Repository-Provider'
+		requiringAll:
+			( Array
+				with: self keplerDependencyName
+				with: self saganDependencyName
+				with: ( self systemModelPackageNameFor: 'DM-Repository-Provider' )
+				with: ( self extensionPackageNameFor: 'DM-Sagan' ) )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> repositoryProviderModuleModelTestsPackage [
+
+	| repositoryProviderModuleModelPackageName |
+
+	repositoryProviderModuleModelPackageName := self
+		moduleModelPackageNameFor: 'DM-Repository-Provider'.
+	^ self
+		testsPackageNamed: repositoryProviderModuleModelPackageName
+		requiringAll: ( Array with: self keplerDependencyName with: repositoryProviderModuleModelPackageName )
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> repositoryProviderSystemModelPackage [
+
+	^ self
+		systemModelPackageNamed: 'DM-Civilization-Management'
+		requiringAll: ( Array with: self keplerDependencyName with: self saganDependencyName )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> repositoryProviderSystemModelTestsPackage [
+
+	| repositoryProviderPackageName |
+
+	repositoryProviderPackageName := 'DM-Repository-Provider'.
+	^ self
+		testsPackageNamed: ( self systemModelPackageNameFor: repositoryProviderPackageName )
+		requiringAll:
+			( Array
+				with: self keplerDependencyName
+				with: ( self moduleModelPackageNameFor: repositoryProviderPackageName ) )
+]
+
+{ #category : #'private - packages set up' }
+BaselineOfDuelMasters >> requirementNamesOf: aPackage [
+
+	^ aPackage at: #requirementNames
 ]
 
 { #category : #'private - dependencies accessing' }
 BaselineOfDuelMasters >> saganDependency [
 
 	^ self
-		dependencyTo: 'Sagan'
+		dependencyTo: self saganDependencyName
 		hostedIn: 'github://ba-st/Sagan:v4.1.0/source'
 		loadingAll: #('Deployment' 'PostgreSQL')
 ]
 
+{ #category : #'private - dependencies accessing' }
+BaselineOfDuelMasters >> saganDependencyName [
+
+	^ #Sagan
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> saganExtensionsPackage [
+
+	^ self extensionPackageNamed: 'DM-Sagan' requiring: self saganDependencyName
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> saganExtensionsTestsPackage [
+
+	| saganExtensionsPackageName |
+
+	saganExtensionsPackageName := self extensionPackageNameFor: 'DM-Sagan'.
+	^ self testsPackageNamed: saganExtensionsPackageName requiring: saganExtensionsPackageName
+]
+
 { #category : #'private - dependencies set up' }
-BaselineOfDuelMasters >> setUpDependencies: spec [
+BaselineOfDuelMasters >> setUpDependenciesIn: spec [
 
-	self withDependenciesDo: [ :dependency | self configure: dependency in: spec ]
+	self dependencies do: [ :dependency | self configure: dependency asDependencyIn: spec ]
 ]
 
-{ #category : #'private - packages set up' }
-BaselineOfDuelMasters >> setUpDependentSUnitExtensionsOn: aSpec [
-
-	aSpec package: 'DM-SUnit-Model' with: [ aSpec requires: #('Buoy' 'Kepler') ].
-	aSpec group: 'Dependent-SUnit-Extensions' with: 'DM-SUnit-Model'
-]
-
-{ #category : #'private - packages set up' }
-BaselineOfDuelMasters >> setUpModelPackagesOn: aSpec [
+{ #category : #'private - groups set up' }
+BaselineOfDuelMasters >> setUpGroupsIn: aSpec [
 
 	aSpec
-		package: 'DM-Civilization-Model' with: [ aSpec requires: #('Buoy' 'DM-Tools') ];
-		package: 'DM-Race-Model' with: [ aSpec requires: 'Buoy' ];
-		package: 'DM-Card-Model' with: [ aSpec requires: #('Buoy' 'Aconcagua') ].
-
-	aSpec
-		package: 'DM-Civilization-Management-System-Model' with: [ aSpec requires: #('Kepler' 'Sagan') ];
-		package: 'DM-Race-Management-System-Model' with: [ aSpec requires: 'Kepler' ];
-		package: 'DM-Card-Management-System-Model' with: [ aSpec requires: #('DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model') ].
-
-	aSpec
-		package: 'DM-Card-Module-Model' with: [ aSpec requires: 'DM-Card-Management-System-Model' ];
-		package: 'DM-RDB-Repository-Provider-Module-Model' with: [ aSpec requires: 'Sagan' ];
-		package: 'DM-In-Memory-Repository-Provider-Module-Model' with: [ aSpec requires: 'Sagan' ].
-
-	aSpec package: 'DM-Installation-Model' with: [ aSpec requires: 'DM-Card-Module-Model' ].
-
-	aSpec package: 'DMP-Wikitext-Parsing-Model' with: [ aSpec requires: 'Buoy' ].
-
-	aSpec
-		group: 'Deployment'
-		with:
-			#('DM-Civilization-Model' 'DM-Race-Model' 'DM-Card-Model' 'DM-Civilization-Management-System-Model' 'DM-Race-Management-System-Model' 'DM-Card-Management-System-Model' 'DM-Card-Module-Model' 'DM-RDB-Repository-Provider-Module-Model' 'DM-In-Memory-Repository-Provider-Module-Model' 'DM-Installation-Model' 'DMP-Wikitext-Parsing-Model')
+		group: 'Deployment' with: self modelAndExtensionPackageNames;
+		group: 'Tests' with: self testPackageNames;
+		group: 'Dependent-SUnit-Extensions' with: self dependentSUnitExtensionsPackageNames;
+		group: 'CI' with: 'Tests';
+		group: 'Development' with: #('Tools' 'Tests')
 ]
 
 { #category : #'private - packages set up' }
-BaselineOfDuelMasters >> setUpPackages: spec [
+BaselineOfDuelMasters >> setUpPackagesIn: aSpec [
 
-	self
-		setUpModelPackagesOn: spec;
-		setUpDependentSUnitExtensionsOn: spec;
-		setUpToolsPackagesOn: spec;
-		setUpTestPackagesOn: spec
-]
-
-{ #category : #'private - packages set up' }
-BaselineOfDuelMasters >> setUpTestPackagesOn: spec [
-
-	spec
-		package: 'DM-Civilization-Model-Tests' with: [ spec requires: #('DM-Civilization-Model' 'Buoy') ];
-		package: 'DM-Race-Model-Tests' with: [ spec requires: #('DM-Race-Model' 'Buoy') ];
-		package: 'DM-Card-Model-Tests' with: [ spec requires: #('DM-Card-Model' 'DM-Civilization-Model' 'DM-Race-Model' 'Aconcagua') ].
-
-	spec
-		package: 'DM-Civilization-Management-System-Model-Tests' with: [ spec requires: #('DM-Civilization-Management-System-Model' 'DM-SUnit-Model') ];
-		package: 'DM-Race-Management-System-Model-Tests' with: [ spec requires: #('DM-Race-Management-System-Model') ];
-		package: 'DM-Card-Management-System-Model-Tests' with: [ spec requires: #('DM-Card-Management-System-Model') ].
-
-	spec
-		package: 'DM-Card-Module-Model-Tests' with: [ spec requires: #('DM-Card-Module-Model' 'DM-SUnit-Model') ];
-		package: 'DM-RDB-Repository-Provider-Module-Model-Tests' with: [ spec requires: #('DM-RDB-Repository-Provider-Module-Model' 'DM-SUnit-Model') ];
-		package: 'DM-In-Memory-Repository-Provider-Module-Model-Tests' with: [ spec requires: #('DM-In-Memory-Repository-Provider-Module-Model' 'DM-SUnit-Model') ].
-
-	spec package: 'DM-Installation-Model-Tests' with: [ spec requires: #('DM-Installation-Model') ].
-
-	spec package: 'DMP-Wikitext-Parsing-Model-Tests' with: [ spec requires: #('DMP-Wikitext-Parsing-Model') ].
-
-	spec package: 'DM-Tools-Tests' with: [ spec requires: #('DM-Tools') ].
-
-	spec package: 'DM-SUnit-Tests' with: [ spec requires: #('DM-SUnit-Model') ].
-
-	spec
-		group: 'Tests'
-		with:
-			#('DM-Civilization-Model-Tests' 'DM-Race-Model-Tests' 'DM-Card-Model-Tests' 'DM-Civilization-Management-System-Model-Tests' 'DM-Race-Management-System-Model-Tests' 'DM-Card-Management-System-Model-Tests' 'DM-Card-Module-Model-Tests' 'DM-RDB-Repository-Provider-Module-Model-Tests' 'DM-In-Memory-Repository-Provider-Module-Model-Tests' 'DM-Installation-Model-Tests' 'DMP-Wikitext-Parsing-Model-Tests' 'DM-Tools-Tests' 'DM-SUnit-Tests')
-]
-
-{ #category : #'private - packages set up' }
-BaselineOfDuelMasters >> setUpToolsPackagesOn: aSpec [
-
-	aSpec package: 'DM-Tools' with: [ aSpec requires: 'Buoy' ].
-
-	aSpec group: 'Tools' with: 'DM-Tools'
+	OrderedCollection new
+		addAll: self modelPackages;
+		addAll: self extensionPackages;
+		addAll: self dependentSUnitExtensionsPackages;
+		addAll: self testPackages;
+		do: [ :package | self configure: package asPackageIn: aSpec ]
 ]
 
 { #category : #'private - dependencies accessing' }
 BaselineOfDuelMasters >> superluminalDependency [
 
 	^ self
-		dependencyTo: 'Superluminal'
+		dependencyTo: self superluminalDependencyName
 		hostedIn: 'github://ba-st/Superluminal:v1.2.0/source'
 		loading: 'Core'
 ]
 
-{ #category : #'private - dependencies set up' }
-BaselineOfDuelMasters >> withDependenciesDo: aBlock [
+{ #category : #'private - dependencies accessing' }
+BaselineOfDuelMasters >> superluminalDependencyName [
 
-	self dependencies do: aBlock
+	^ #Superluminal
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> systemModelPackageNameFor: aSystemModelPackageName [
+
+	^ self modelPackageNameFor: ( '<1s>-System' expandMacrosWith: aSystemModelPackageName )
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> systemModelPackageNamed: aSystemModelPackageName requiring: aRequirementName [
+
+	^ self systemModelPackageNamed: aSystemModelPackageName requiringAll: {aRequirementName}
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> systemModelPackageNamed: aSystemModelPackageName requiringAll: aRequirementNameCollection [
+
+	^ self
+		packageNamed: ( self systemModelPackageNameFor: aSystemModelPackageName )
+		requiringAll: aRequirementNameCollection
+]
+
+{ #category : #'private - groups set up' }
+BaselineOfDuelMasters >> testPackageNames [
+
+	^ self testPackages collect: [ :modelPackage | self packageNameOf: modelPackage ]
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> testPackages [
+
+	^ OrderedCollection new
+		add: self civilizationModelTestsPackage;
+		add: self raceModelTestsPackage;
+		add: self cardModelTestsPackage;
+		add: self civilizationManagementSystemModelTestsPackage;
+		add: self raceManagementSystemModelTestsPackage;
+		add: self cardManagementSystemModelTestsPackage;
+		add: self repositoryProviderSystemModelTestsPackage;
+		add: self cardModuleModelTestsPackage;
+		add: self repositoryProviderModuleModelTestsPackage;
+		add: self installationModelTestsPackage;
+		add: self exceptionModelTestsPackage;
+		add: self metaprogrammingModelTestsPackage;
+		add: self wikitextParsingModelTestsPackage;
+		add: self dependentSUnitTestsPackage;
+		add: self saganExtensionsTestsPackage;
+		yourself
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> testsPackageNameFor: aTestsPackageName [
+
+	^ '<1s>-Tests' expandMacrosWith: aTestsPackageName
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> testsPackageNamed: aTestsPackageName requiring: aRequirementName [
+
+	^ self testsPackageNamed: aTestsPackageName requiringAll: {aRequirementName}
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> testsPackageNamed: aTestsPackageName requiringAll: aRequirementNameCollection [
+
+	^ self
+		packageNamed: ( self testsPackageNameFor: aTestsPackageName )
+		requiringAll: aRequirementNameCollection
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> toolDependencyAnalyserCoreExtensionsPackage [
+
+	^ self extensionPackageNamed: 'DM-Tool-DependencyAnalyser-Core' requiringAll: #()
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> wikitextParsingModelPackage [
+
+	^ self
+		modelPackageNamed: 'DMP-Wikitext-Parsing'
+		requiringAll:
+			( Array
+				with: ( self modelPackageNameFor: 'DM-Metaprogramming' )
+				with: ( self extensionPackageNameFor: 'DM-Collections-Strings-Base' ) )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> wikitextParsingModelTestsPackage [
+
+	| wikitextParsingModelPackageName |
+
+	wikitextParsingModelPackageName := self modelPackageNameFor: 'DMP-Wikitext-Parsing'.
+	^ self
+		testsPackageNamed: wikitextParsingModelPackageName
+		requiring: wikitextParsingModelPackageName
 ]
