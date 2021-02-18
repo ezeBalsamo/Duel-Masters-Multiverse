@@ -203,7 +203,7 @@ BaselineOfDuelMasters >> dependentSUnitExtensionsPackages [
 	^ OrderedCollection
 		with:
 			( self
-				packageNamed: 'DM-Sunit'
+				packageNamed: 'DM-SUnit'
 				requiring: ( self extensionPackageNameFor: 'DM-Collections-Abstract-Base' ) )
 ]
 
