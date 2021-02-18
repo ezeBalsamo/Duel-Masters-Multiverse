@@ -380,10 +380,10 @@ BaselineOfDuelMasters >> modelPackages [
 		add: self civilizationModelPackage;
 		add: self raceModelPackage;
 		add: self cardModelPackage;
+		add: self repositoryProviderSystemModelPackage;
 		add: self civilizationManagementSystemModelPackage;
 		add: self raceManagementSystemModelPackage;
 		add: self cardManagementSystemModelPackage;
-		add: self repositoryProviderSystemModelPackage;
 		add: self cardModuleModelPackage;
 		add: self repositoryProviderModuleModelPackage;
 		add: self installationModelPackage;
@@ -631,10 +631,10 @@ BaselineOfDuelMasters >> testPackages [
 		add: self civilizationModelTestsPackage;
 		add: self raceModelTestsPackage;
 		add: self cardModelTestsPackage;
+		add: self repositoryProviderSystemModelTestsPackage;
 		add: self civilizationManagementSystemModelTestsPackage;
 		add: self raceManagementSystemModelTestsPackage;
 		add: self cardManagementSystemModelTestsPackage;
-		add: self repositoryProviderSystemModelTestsPackage;
 		add: self cardModuleModelTestsPackage;
 		add: self repositoryProviderModuleModelTestsPackage;
 		add: self installationModelTestsPackage;
