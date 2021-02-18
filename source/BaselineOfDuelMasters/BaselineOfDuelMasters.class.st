@@ -501,7 +501,7 @@ BaselineOfDuelMasters >> repositoryProviderModuleModelTestsPackage [
 BaselineOfDuelMasters >> repositoryProviderSystemModelPackage [
 
 	^ self
-		systemModelPackageNamed: 'DM-Civilization-Management'
+		systemModelPackageNamed: 'DM-Repository-Provider'
 		requiringAll: ( Array with: self keplerDependencyName with: self saganDependencyName )
 ]
 
