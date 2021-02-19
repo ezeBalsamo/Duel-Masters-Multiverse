@@ -142,7 +142,9 @@ BaselineOfDuelMasters >> collectionsAbstractBaseExtensionsPackage [
 { #category : #'private - extensions package accessing' }
 BaselineOfDuelMasters >> collectionsStringsBaseExtensionsPackage [
 
-	^ self extensionPackageNamed: 'DM-Collections-Strings-Base' requiringAll: #()
+	^ self
+		extensionPackageNamed: 'DM-Collections-Strings-Base'
+		requiring: ( self extensionPackageNameFor: 'DM-Kernel-BasicObjects' )
 ]
 
 { #category : #'private - dependencies set up' }
