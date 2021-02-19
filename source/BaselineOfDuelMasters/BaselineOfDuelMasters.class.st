@@ -637,8 +637,8 @@ BaselineOfDuelMasters >> testPackages [
 		add: self civilizationManagementSystemModelTestsPackage;
 		add: self raceManagementSystemModelTestsPackage;
 		add: self cardManagementSystemModelTestsPackage;
-		add: self cardModuleModelTestsPackage;
 		add: self repositoryProviderModuleModelTestsPackage;
+		add: self cardModuleModelTestsPackage;
 		add: self installationModelTestsPackage;
 		add: self exceptionModelTestsPackage;
 		add: self metaprogrammingModelTestsPackage;
