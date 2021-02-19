@@ -234,7 +234,7 @@ BaselineOfDuelMasters >> exceptionModelTestsPackage [
 { #category : #'private - extensions package accessing' }
 BaselineOfDuelMasters >> extensionPackageNameFor: anExtensionPackageName [
 
-	^ '<1s-Extensions>' expandMacrosWith: anExtensionPackageName
+	^ '<1s>-Extensions' expandMacrosWith: anExtensionPackageName
 ]
 
 { #category : #'private - extensions package accessing' }
