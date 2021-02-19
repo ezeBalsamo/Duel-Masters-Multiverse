@@ -571,7 +571,7 @@ BaselineOfDuelMasters >> setUpGroupsIn: aSpec [
 		group: 'Tests' with: self testPackageNames;
 		group: 'Dependent-SUnit-Extensions' with: self dependentSUnitExtensionsPackageNames;
 		group: 'CI' with: 'Tests';
-		group: 'Development' with: #('Tools' 'Tests')
+		group: 'Development' with: 'Tests'
 ]
 
 { #category : #'private - packages set up' }
