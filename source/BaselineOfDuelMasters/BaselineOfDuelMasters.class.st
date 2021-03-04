@@ -467,7 +467,7 @@ BaselineOfDuelMasters >> raceManagementSystemModelTestsPackage [
 { #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> raceModelPackage [
 
-	^ self modelPackageNamed: 'DM-Race' requiringAll: #()
+	^ self modelPackageNamed: 'DM-Race' requiring: 'Buoy-Assertions'
 ]
 
 { #category : #'private - test packages accessing' }
