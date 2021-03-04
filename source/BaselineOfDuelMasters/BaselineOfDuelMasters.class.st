@@ -410,9 +410,9 @@ BaselineOfDuelMasters >> moduleModelPackageNamed: aModuleModelPackageName requir
 ]
 
 { #category : #'private - packages set up' }
-BaselineOfDuelMasters >> packageNameOf: aPackage [
+BaselineOfDuelMasters >> packageNameOf: aPackageRepresentation [
 
-	^ aPackage at: #packageName
+	^ aPackageRepresentation at: #packageName
 ]
 
 { #category : #'private - packages set up' }
@@ -427,6 +427,17 @@ BaselineOfDuelMasters >> packageNamed: aPackageName requiringAll: aRequirementNa
 	^ Dictionary new
 		at: #packageName put: aPackageName;
 		at: #requirementNames put: aRequirementNameCollection;
+		yourself
+]
+
+{ #category : #'private - packages set up' }
+BaselineOfDuelMasters >> packages [
+
+	^ OrderedCollection new
+		addAll: self modelPackages;
+		addAll: self extensionPackages;
+		addAll: self dependentSUnitExtensionsPackages;
+		addAll: self testPackages;
 		yourself
 ]
 
@@ -522,9 +533,9 @@ BaselineOfDuelMasters >> repositoryProviderSystemModelTestsPackage [
 ]
 
 { #category : #'private - packages set up' }
-BaselineOfDuelMasters >> requirementNamesOf: aPackage [
+BaselineOfDuelMasters >> requirementNamesOf: aPackageRepresentation [
 
-	^ aPackage at: #requirementNames
+	^ aPackageRepresentation at: #requirementNames
 ]
 
 { #category : #'private - dependencies accessing' }
@@ -577,12 +588,7 @@ BaselineOfDuelMasters >> setUpGroupsIn: aSpec [
 { #category : #'private - packages set up' }
 BaselineOfDuelMasters >> setUpPackagesIn: aSpec [
 
-	OrderedCollection new
-		addAll: self modelPackages;
-		addAll: self extensionPackages;
-		addAll: self dependentSUnitExtensionsPackages;
-		addAll: self testPackages;
-		do: [ :package | self configure: package asPackageIn: aSpec ]
+	self packages do: [ :package | self configure: package asPackageIn: aSpec ]
 ]
 
 { #category : #'private - dependencies accessing' }
