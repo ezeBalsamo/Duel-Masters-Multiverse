@@ -275,6 +275,8 @@ BaselineOfDuelMasters >> extensionPackages [
 		add: self toolDependencyAnalyserCoreExtensionsPackage;
 		add: self saganExtensionsPackage;
 		add: self kernelBasicObjectsExtensionsPackage;
+		add: self transcriptCoreBaseExtensionsPackage;
+		add: self transcriptNonInteractiveBaseExtensionsPackage;
 		yourself
 ]
 
@@ -678,6 +680,18 @@ BaselineOfDuelMasters >> testsPackageNamed: aTestsPackageName requiringAll: aReq
 BaselineOfDuelMasters >> toolDependencyAnalyserCoreExtensionsPackage [
 
 	^ self extensionPackageNamed: 'DM-Tool-DependencyAnalyser-Core' requiringAll: #()
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> transcriptCoreBaseExtensionsPackage [
+
+	^ self extensionPackageNamed: 'DM-Transcript-Core-Base' requiringAll: #()
+]
+
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> transcriptNonInteractiveBaseExtensionsPackage [
+
+	^ self extensionPackageNamed: 'DM-Transcript-NonInteractive-Base' requiringAll: #()
 ]
 
 { #category : #'private - model package accessing' }

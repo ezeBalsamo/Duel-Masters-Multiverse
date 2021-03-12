@@ -38,6 +38,17 @@ PackageIntegrityTest >> allDefinedDependenciesFrom: anInternalDependencyNamesCol
 	^ allDefinedDependencies
 ]
 
+{ #category : #asserting }
+PackageIntegrityTest >> assert: aBoolean description: aFailureExplanation [
+
+	super
+		assert: aBoolean
+		description: [ self
+				considerOpeningFailureLog;
+				failureExplanationWithTestNameDueTo: aFailureExplanation
+			]
+]
+
 { #category : #'private - accessing' }
 PackageIntegrityTest >> assertIsNotOwnProject: aRepositoryName [
 
@@ -150,8 +161,10 @@ PackageIntegrityTest >> compareBaselineDependenciesOf: aPackageName
 { #category : #'private - evaluating' }
 PackageIntegrityTest >> considerOpeningFailureLog [
 
-	self failureLog dependents isEmpty
-		ifTrue: [ self failureLog open ]
+	| failureLog |
+
+	failureLog := self failureLog.
+	( failureLog isInteractive and: [ failureLog dependents isEmpty ] ) then: [ failureLog open ]
 ]
 
 { #category : #'private - accessing' }
@@ -309,32 +322,32 @@ PackageIntegrityTest >> packageNameOf: aPackageRepresentation [
 { #category : #running }
 PackageIntegrityTest >> pharoCollectionPackageNamesUsed [
 
-	^ OrderedCollection new
-		add: 'Collections-Sequenceable';
-		add: 'Collections-Strings';
-		add: 'Collections-Abstract';
-		add: 'Collections-Unordered';
-		yourself
+	^ OrderedCollection
+		with: 'Collections-Sequenceable'
+		with: 'Collections-Strings'
+		with: 'Collections-Abstract'
+		with: 'Collections-Unordered'
 ]
 
 { #category : #running }
 PackageIntegrityTest >> pharoPackageOrganizerPackageNamesUsed [
 
-	^ OrderedCollection new
-		add: 'RPackage-Core';
-		add: 'Tool-DependencyAnalyser';
-		add: 'Tool-DependencyAnalyser-UI';
-		yourself
+	^ OrderedCollection
+		with: 'RPackage-Core'
+		with: 'Tool-DependencyAnalyser'
+		with: 'Tool-DependencyAnalyser-UI'
+]
+
+{ #category : #running }
+PackageIntegrityTest >> pharoTranscriptPackageNamesUsed [
+
+	^ OrderedCollection with: 'Transcript-Core' with: 'Transcript-NonInteractive'
 ]
 
 { #category : #running }
 PackageIntegrityTest >> pharoVersioningPackageNamesUsed [
 
-	^ OrderedCollection new
-		add: 'Metacello-Base';
-		add: 'Metacello-Core';
-		add: 'Iceberg';
-		yourself
+	^ OrderedCollection with: 'Metacello-Base' with: 'Metacello-Core' with: 'Iceberg'
 ]
 
 { #category : #'private - evaluating' }
@@ -381,12 +394,7 @@ PackageIntegrityTest >> runRecordingFailuresOn: aBlockClosure [
 
 	failureDetails := String streamContents: aBlockClosure.
 
-	self
-		assert: failureDetails isEmpty
-		description: [ self
-				considerOpeningFailureLog;
-				failureExplanationWithTestNameDueTo: failureDetails
-			]
+	self assert: failureDetails isEmpty description: failureDetails
 ]
 
 { #category : #running }
@@ -408,7 +416,7 @@ PackageIntegrityTest >> setUpKnownPharoPackageNames [
 	knownPharoPackageNames := OrderedCollection new
 		add: 'Kernel';
 		add: 'SUnit-Core';
-		add: 'Transcript-Core';
+		addAll: self pharoTranscriptPackageNamesUsed;
 		addAll: self pharoCollectionPackageNamesUsed;
 		addAll: self pharoPackageOrganizerPackageNamesUsed;
 		addAll: self pharoVersioningPackageNamesUsed;
