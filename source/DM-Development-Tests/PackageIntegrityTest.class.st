@@ -84,7 +84,11 @@ PackageIntegrityTest >> baselineDependencyNameFrom: aBaselineDependencyNameColle
 				baselineDependencyNameFrom: aBaselineDependencyNameCollection
 				loadingRepositoryNamed: loaderRepositoryName
 			]
-		ifNone: [ self fail ]
+		ifNone: [ self
+				fail:
+					( 'No baseline defined dependencies requires repository named <1s>.'
+						expandMacrosWith: aRepositoryName )
+			]
 ]
 
 { #category : #'private - accessing' }
@@ -141,6 +145,13 @@ PackageIntegrityTest >> compareBaselineDependenciesOf: aPackageName
 
 	missing isNotEmpty
 		ifTrue: [ self record: missing asMissingDependenciesOf: aPackageName on: aStream ]
+]
+
+{ #category : #'private - evaluating' }
+PackageIntegrityTest >> considerOpeningFailureLog [
+
+	self failureLog dependents isEmpty
+		ifTrue: [ self failureLog open ]
 ]
 
 { #category : #'private - accessing' }
@@ -206,6 +217,20 @@ PackageIntegrityTest >> externalDependencyNamesFrom: calculatedDependencyNames
 		reject: [ :aDependencyName | self is: aDependencyName requiredBy: anInternalDependencyNamesCollection ]
 ]
 
+{ #category : #'private - evaluating' }
+PackageIntegrityTest >> failureExplanationWithTestNameDueTo: aFailureExplanation [
+
+	^ String
+		streamContents: [ :aStream | 
+			92 timesRepeat: [ aStream nextPutAll: '-' ].
+			aStream
+				cr;
+				print: self;
+				cr;
+				nextPutAll: aFailureExplanation
+			]
+]
+
 { #category : #'private - accessing' }
 PackageIntegrityTest >> internalDependencyNamesFrom: calculatedDependencyNames [
 
@@ -247,7 +272,7 @@ PackageIntegrityTest >> isInternalDependency: aPackageName [
 	^ aPackageName beginsWith: 'DM'
 ]
 
-{ #category : #tests }
+{ #category : #running }
 PackageIntegrityTest >> isLogging [
 
 	"Overriding this method so failures are log on Trascript"
@@ -349,14 +374,19 @@ PackageIntegrityTest >> requirementNamesOf: aPackageRepresentation [
 	^ aPackageRepresentation at: #requirementNames
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'private - evaluating' }
 PackageIntegrityTest >> runRecordingFailuresOn: aBlockClosure [
 
 	| failureDetails |
 
 	failureDetails := String streamContents: aBlockClosure.
 
-	self assert: failureDetails isEmpty description: failureDetails
+	self
+		assert: failureDetails isEmpty
+		description: [ self
+				considerOpeningFailureLog;
+				failureExplanationWithTestNameDueTo: failureDetails
+			]
 ]
 
 { #category : #running }
@@ -378,6 +408,7 @@ PackageIntegrityTest >> setUpKnownPharoPackageNames [
 	knownPharoPackageNames := OrderedCollection new
 		add: 'Kernel';
 		add: 'SUnit-Core';
+		add: 'Transcript-Core';
 		addAll: self pharoCollectionPackageNamesUsed;
 		addAll: self pharoPackageOrganizerPackageNamesUsed;
 		addAll: self pharoVersioningPackageNamesUsed;
