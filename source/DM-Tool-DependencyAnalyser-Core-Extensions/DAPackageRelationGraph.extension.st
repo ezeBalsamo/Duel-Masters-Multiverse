@@ -22,7 +22,7 @@ DAPackageRelationGraph >> addPackageOf: aLiteral from: aRGMethodDefinition asMes
 
 	| methodImplementors |
 
-	methodImplementors := self implementorsOf: aLiteral differentFrom: aRGMethodDefinition methodClass.
+	methodImplementors := self implementorsOf: aLiteral differentFrom: aRGMethodDefinition.
 
 	methodImplementors size = 1
 		ifTrue: [ | literalPackage |
@@ -55,30 +55,25 @@ DAPackageRelationGraph >> findReferencesIn: aRGMethodDefinition for: aDAPackage 
 DAPackageRelationGraph >> findReferencesIn: aLiteralCollection of: aRGMethodDefinition for: aDAPackage [
 
 	aLiteralCollection
-		select: [ :literal | self isReferencingASelector: literal ]
-		thenDo: [ :literal | 
-			self
-				addPackageOf: literal
-				from: aRGMethodDefinition
-				asMessageSendReferenceDependencyFrom: aDAPackage
-			].
-
-	aLiteralCollection
-		select: [ :literal | self isReference: literal ]
-		thenDo:
-			[ :literal | self addPackageOf: literal from: aRGMethodDefinition asClassReferenceDependencyFrom: aDAPackage ]
+		do: [ :literal | 
+			( self isReference: literal )
+				ifTrue: [ self addPackageOf: literal from: aRGMethodDefinition asClassReferenceDependencyFrom: aDAPackage ]
+				ifFalse: [ ( self referencesSelector: literal )
+						ifTrue: [ self
+								addPackageOf: literal
+								from: aRGMethodDefinition
+								asMessageSendReferenceDependencyFrom: aDAPackage
+							]
+					]
+			]
 ]
 
 { #category : #'*DM-Tool-DependencyAnalyser-Core-Extensions' }
-DAPackageRelationGraph >> implementorsOf: aLiteral differentFrom: aClass [
+DAPackageRelationGraph >> implementorsOf: aLiteral differentFrom: aRGMethodDefinition [
 
-	^ aLiteral implementors reject: [ :method | method methodClass = aClass ]
-]
+	"This is done to avoid considering cases when an object implements a method with the same selector as another object since it's delegating it"
 
-{ #category : #'*DM-Tool-DependencyAnalyser-Core-Extensions' }
-DAPackageRelationGraph >> isReferencingASelector: aLiteral [
-
-	^ aLiteral isSymbol
+	^ aLiteral implementors reject: [ :method | method = aRGMethodDefinition ]
 ]
 
 { #category : #'*DM-Tool-DependencyAnalyser-Core-Extensions' }
@@ -90,4 +85,10 @@ DAPackageRelationGraph >> packageForMethod: aRGMethodDefinition [
 	^ self packages
 		detect: [ :each | each rPackageSet packageName = packageName ]
 		ifNone: [ self daPackageWith: packageName ]
+]
+
+{ #category : #'*DM-Tool-DependencyAnalyser-Core-Extensions' }
+DAPackageRelationGraph >> referencesSelector: aLiteral [
+
+	^ aLiteral isSymbol
 ]

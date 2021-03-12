@@ -18,9 +18,9 @@ BaselineOfDuelMasters >> baseline: aSpec [
 ]
 
 { #category : #'private - dependencies set up' }
-BaselineOfDuelMasters >> baselineNameOf: aDependency [
+BaselineOfDuelMasters >> baselineNameOf: aDependencyRepresentation [
 
-	^ aDependency at: #baselineName
+	^ aDependencyRepresentation at: #baselineName
 ]
 
 { #category : #'private - model package accessing' }
@@ -43,7 +43,7 @@ BaselineOfDuelMasters >> cardManagementSystemModelTestsPackage [
 { #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> cardModelPackage [
 
-	^ self modelPackageNamed: 'DM-Card' requiringAll: #()
+	^ self modelPackageNamed: 'DM-Card' requiring: self keplerDependencyName
 ]
 
 { #category : #'private - test packages accessing' }
@@ -68,7 +68,6 @@ BaselineOfDuelMasters >> cardModuleModelPackage [
 		moduleModelPackageNamed: 'DM-Card'
 		requiringAll:
 			( Array
-				with: self keplerDependencyName
 				with: ( self systemModelPackageNameFor: 'DM-Civilization-Management' )
 				with: ( self systemModelPackageNameFor: 'DM-Race-Management' )
 				with: ( self systemModelPackageNameFor: 'DM-Card-Management' ) )
@@ -85,7 +84,7 @@ BaselineOfDuelMasters >> cardModuleModelTestsPackage [
 		requiringAll:
 			( Array
 				with: cardModuleModelPackageName
-				with: ( self moduleModelPackageNameFor: 'DM-Repository-Provider' ) )
+				with: ( self testsPackageNameFor: ( self moduleModelPackageNameFor: 'DM-Repository-Provider' ) ) )
 ]
 
 { #category : #'private - model package accessing' }
@@ -95,8 +94,6 @@ BaselineOfDuelMasters >> civilizationManagementSystemModelPackage [
 		systemModelPackageNamed: 'DM-Civilization-Management'
 		requiringAll:
 			( Array
-				with: self keplerDependencyName
-				with: self saganDependencyName
 				with: ( self systemModelPackageNameFor: 'DM-Repository-Provider' )
 				with: ( self modelPackageNameFor: 'DM-Civilization' ) )
 ]
@@ -113,7 +110,6 @@ BaselineOfDuelMasters >> civilizationManagementSystemModelTestsPackage [
 		requiringAll:
 			( Array
 				with: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) )
-				with: self keplerDependencyName
 				with: civillizationMagenementSystemModelPackageName
 				with: ( self modelPackageNameFor: 'DM-Civilization' ) )
 ]
@@ -206,7 +202,10 @@ BaselineOfDuelMasters >> dependentSUnitExtensionsPackages [
 		with:
 			( self
 				packageNamed: 'DM-SUnit'
-				requiring: ( self extensionPackageNameFor: 'DM-Collections-Abstract-Base' ) )
+				requiringAll:
+					( Array
+						with: ( self extensionPackageNameFor: 'DM-Collections-Abstract-Base' )
+						with: self keplerDependencyName ) )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -216,6 +215,12 @@ BaselineOfDuelMasters >> dependentSUnitTestsPackage [
 
 	dependentSUnitPackageName := 'DM-SUnit'.
 	^ self testsPackageNamed: dependentSUnitPackageName requiring: dependentSUnitPackageName
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> developmentTestsPackage [
+
+	^ self testsPackageNamed: 'DM-Development' requiring: self keplerDependencyName
 ]
 
 { #category : #'private - model package accessing' }
@@ -230,7 +235,9 @@ BaselineOfDuelMasters >> exceptionModelTestsPackage [
 	| exceptionModelPackageName |
 
 	exceptionModelPackageName := self modelPackageNameFor: 'DM-Exception'.
-	^ self testsPackageNamed: exceptionModelPackageName requiring: exceptionModelPackageName
+	^ self
+		testsPackageNamed: exceptionModelPackageName
+		requiringAll: ( Array with: self keplerDependencyName with: exceptionModelPackageName )
 ]
 
 { #category : #'private - extensions package accessing' }
@@ -284,7 +291,6 @@ BaselineOfDuelMasters >> installationModelPackage [
 		modelPackageNamed: 'DM-Installation'
 		requiringAll:
 			( Array
-				with: self keplerDependencyName
 				with: ( self moduleModelPackageNameFor: 'DM-Repository-Provider' )
 				with: ( self moduleModelPackageNameFor: 'DM-Card' ) )
 ]
@@ -295,9 +301,7 @@ BaselineOfDuelMasters >> installationModelTestsPackage [
 	| installationModelPackageName |
 
 	installationModelPackageName := self modelPackageNameFor: 'DM-Installation'.
-	^ self
-		testsPackageNamed: installationModelPackageName
-		requiringAll: ( Array with: self keplerDependencyName with: installationModelPackageName )
+	^ self testsPackageNamed: installationModelPackageName requiring: installationModelPackageName
 ]
 
 { #category : #'private - dependencies accessing' }
@@ -326,7 +330,7 @@ BaselineOfDuelMasters >> metaprogrammingModelPackage [
 
 	^ self
 		modelPackageNamed: 'DM-Metaprogramming'
-		requiring: ( self modelPackageNameFor: 'DM-Exception' )
+		requiringAll: ( Array with: ( self modelPackageNameFor: 'DM-Exception' ) with: self keplerDependencyName )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -467,7 +471,7 @@ BaselineOfDuelMasters >> raceManagementSystemModelTestsPackage [
 { #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> raceModelPackage [
 
-	^ self modelPackageNamed: 'DM-Race' requiring: 'Buoy-Assertions'
+	^ self modelPackageNamed: 'DM-Race' requiring: self keplerDependencyName
 ]
 
 { #category : #'private - test packages accessing' }
@@ -492,8 +496,6 @@ BaselineOfDuelMasters >> repositoryProviderModuleModelPackage [
 		moduleModelPackageNamed: 'DM-Repository-Provider'
 		requiringAll:
 			( Array
-				with: self keplerDependencyName
-				with: self saganDependencyName
 				with: ( self systemModelPackageNameFor: 'DM-Repository-Provider' )
 				with: ( self extensionPackageNameFor: 'DM-Sagan' ) )
 ]
@@ -507,15 +509,13 @@ BaselineOfDuelMasters >> repositoryProviderModuleModelTestsPackage [
 		moduleModelPackageNameFor: 'DM-Repository-Provider'.
 	^ self
 		testsPackageNamed: repositoryProviderModuleModelPackageName
-		requiringAll: ( Array with: self keplerDependencyName with: repositoryProviderModuleModelPackageName )
+		requiring: repositoryProviderModuleModelPackageName
 ]
 
 { #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> repositoryProviderSystemModelPackage [
 
-	^ self
-		systemModelPackageNamed: 'DM-Repository-Provider'
-		requiringAll: ( Array with: self keplerDependencyName with: self saganDependencyName )
+	^ self systemModelPackageNamed: 'DM-Repository-Provider' requiring: self saganDependencyName
 ]
 
 { #category : #'private - test packages accessing' }
@@ -526,10 +526,7 @@ BaselineOfDuelMasters >> repositoryProviderSystemModelTestsPackage [
 	repositoryProviderPackageName := 'DM-Repository-Provider'.
 	^ self
 		testsPackageNamed: ( self systemModelPackageNameFor: repositoryProviderPackageName )
-		requiringAll:
-			( Array
-				with: self keplerDependencyName
-				with: ( self moduleModelPackageNameFor: repositoryProviderPackageName ) )
+		requiring: ( self moduleModelPackageNameFor: repositoryProviderPackageName )
 ]
 
 { #category : #'private - packages set up' }
@@ -556,7 +553,9 @@ BaselineOfDuelMasters >> saganDependencyName [
 { #category : #'private - extensions package accessing' }
 BaselineOfDuelMasters >> saganExtensionsPackage [
 
-	^ self extensionPackageNamed: 'DM-Sagan' requiring: self saganDependencyName
+	^ self
+		extensionPackageNamed: 'DM-Sagan'
+		requiringAll: ( Array with: self saganDependencyName with: self keplerDependencyName )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -651,6 +650,7 @@ BaselineOfDuelMasters >> testPackages [
 		add: self wikitextParsingModelTestsPackage;
 		add: self dependentSUnitTestsPackage;
 		add: self saganExtensionsTestsPackage;
+		add: self developmentTestsPackage;
 		yourself
 ]
 
