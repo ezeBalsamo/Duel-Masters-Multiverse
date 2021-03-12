@@ -244,6 +244,12 @@ PackageIntegrityTest >> failureExplanationWithTestNameDueTo: aFailureExplanation
 			]
 ]
 
+{ #category : #'private - evaluating' }
+PackageIntegrityTest >> format: aCollection [
+
+	^ ( CollectionFormatter separatingWith: ', ' andLastWith: ' and ' ) format: aCollection
+]
+
 { #category : #'private - accessing' }
 PackageIntegrityTest >> internalDependencyNamesFrom: calculatedDependencyNames [
 
@@ -374,10 +380,21 @@ PackageIntegrityTest >> record: aDependencyNameCollection dueTo: anExplanation o
 	| dependencies |
 
 	aStream nextPutAll: anExplanation.
-	dependencies := ( CollectionFormatter separatingWith: ', ' andLastWith: ' and ' )
-		format: aDependencyNameCollection.
+	dependencies := self format: aDependencyNameCollection.
 	aStream
 		nextPutAll: dependencies;
+		cr
+]
+
+{ #category : #tests }
+PackageIntegrityTest >> recordOn: aStream that: aSelector from: aPackageName isMissingMethodPotentiallyImplementedBy: anOwnedPackageNameCollection [
+
+	aStream
+		nextPutAll:
+			( '<1s> from <2s> is a missing method potentially implemented by this own packages: <3s>.'
+				expandMacrosWith: aSelector
+				with: aPackageName
+				with: ( self format: anOwnedPackageNameCollection ) );
 		cr
 ]
 
@@ -465,6 +482,35 @@ PackageIntegrityTest >> test03PackageRequirements [
 						compareBaselineDependenciesOf: aPackageName
 						withThoseCalculatedWith: relationGraph
 						recordingFailuresOn: aStream
+					]
+			]
+]
+
+{ #category : #tests }
+PackageIntegrityTest >> test04NoOwnedPackageHasMissingMethodsThatSendsMessagesPotentiallyImplementedByAnOwnedPackage [
+
+	self
+		runRecordingFailuresOn: [ :aStream | 
+			self
+				withOwnedPackageNamesDo: [ :aPackageName | 
+					| messageSendAnalyzer |
+
+					messageSendAnalyzer := DAMessageSendAnalyzer on: aPackageName.
+					messageSendAnalyzer missingMethodsWithPotentialMatch
+						keysAndValuesDo: [ :selector :packageNamesImplementingIt | 
+							| ownedPackageNames |
+
+							ownedPackageNames := packageNamesImplementingIt
+								select: [ :anImplementorPackageName | self isInternalDependency: anImplementorPackageName ].
+
+							ownedPackageNames
+								ifNotEmpty: [ self
+										recordOn: aStream
+										that: selector
+										from: aPackageName
+										isMissingMethodPotentiallyImplementedBy: ownedPackageNames
+									]
+							]
 					]
 			]
 ]

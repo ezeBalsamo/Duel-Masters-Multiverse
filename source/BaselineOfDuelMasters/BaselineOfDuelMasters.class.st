@@ -43,7 +43,7 @@ BaselineOfDuelMasters >> cardManagementSystemModelTestsPackage [
 { #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> cardModelPackage [
 
-	^ self modelPackageNamed: 'DM-Card' requiring: self keplerDependencyName
+	^ self modelPackageNamed: 'DM-Card' requiring: ( self modelPackageNameFor: 'DM-Race' )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -220,7 +220,13 @@ BaselineOfDuelMasters >> dependentSUnitTestsPackage [
 { #category : #'private - test packages accessing' }
 BaselineOfDuelMasters >> developmentTestsPackage [
 
-	^ self testsPackageNamed: 'DM-Development' requiring: self keplerDependencyName
+	^ self
+		testsPackageNamed: 'DM-Development'
+		requiringAll:
+			( Array
+				with: ( self extensionPackageNameFor: 'DM-Transcript-Core-Base' )
+				with: ( self extensionPackageNameFor: 'DM-Transcript-NonInteractive-Base' )
+				with: self keplerDependencyName )
 ]
 
 { #category : #'private - model package accessing' }
@@ -528,7 +534,7 @@ BaselineOfDuelMasters >> repositoryProviderSystemModelTestsPackage [
 	repositoryProviderPackageName := 'DM-Repository-Provider'.
 	^ self
 		testsPackageNamed: ( self systemModelPackageNameFor: repositoryProviderPackageName )
-		requiring: ( self moduleModelPackageNameFor: repositoryProviderPackageName )
+		requiringAll: ( Array with: 'DM-SUnit' with: ( self moduleModelPackageNameFor: repositoryProviderPackageName ) )
 ]
 
 { #category : #'private - packages set up' }
