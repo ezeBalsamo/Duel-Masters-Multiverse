@@ -479,7 +479,7 @@ PackageIntegrityTest >> test02AllOwnedPackagesAreIncludedInRepository [
 	repositoryPackageNames := IceRepository registry
 		detect: [ :anIceLibgitRepository | self isMainRepository: anIceLibgitRepository ]
 		ifFound: [ :anIceLibgitRepository | anIceLibgitRepository loadedPackages collect: #packageName ]
-		ifNone: [ self fail ].
+		ifNone: [ self skip: 'Skipped since it''s beign run in CI.' ].
 
 	ownedPackageNamesWithBaselinePackageName := self ownedPackageNames copyWith: self ownBaselineName.
 
