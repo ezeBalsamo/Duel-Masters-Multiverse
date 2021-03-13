@@ -38,6 +38,26 @@ PackageIntegrityTest >> allDefinedDependenciesFrom: anInternalDependencyNamesCol
 	^ allDefinedDependencies
 ]
 
+{ #category : #'private - evaluating' }
+PackageIntegrityTest >> analyzeMissingMethodsWithPotentialMatchWith: aDAMessageSendAnalyzer recordingFailuresOn: aStream [
+
+	aDAMessageSendAnalyzer missingMethodsWithPotentialMatch
+		keysAndValuesDo: [ :selector :packageNamesImplementingIt | 
+			| ownedPackageNames |
+
+			ownedPackageNames := packageNamesImplementingIt
+				select: [ :anImplementorPackageName | self isInternalDependency: anImplementorPackageName ].
+
+			ownedPackageNames
+				ifNotEmpty: [ self
+						recordOn: aStream
+						that: selector
+						from: aDAMessageSendAnalyzer packageName
+						isMissingMethodPotentiallyImplementedBy: ownedPackageNames
+					]
+			]
+]
+
 { #category : #asserting }
 PackageIntegrityTest >> assert: aBoolean description: aFailureExplanation [
 
@@ -342,6 +362,7 @@ PackageIntegrityTest >> pharoPackageOrganizerPackageNamesUsed [
 		with: 'RPackage-Core'
 		with: 'Tool-DependencyAnalyser'
 		with: 'Tool-DependencyAnalyser-UI'
+		with: 'Tool-DependencyAnalyser-Tests'
 ]
 
 { #category : #running }
@@ -386,7 +407,7 @@ PackageIntegrityTest >> record: aDependencyNameCollection dueTo: anExplanation o
 		cr
 ]
 
-{ #category : #tests }
+{ #category : #'private - evaluating' }
 PackageIntegrityTest >> recordOn: aStream that: aSelector from: aPackageName isMissingMethodPotentiallyImplementedBy: anOwnedPackageNameCollection [
 
 	aStream
@@ -496,21 +517,9 @@ PackageIntegrityTest >> test04NoOwnedPackageHasMissingMethodsThatSendsMessagesPo
 					| messageSendAnalyzer |
 
 					messageSendAnalyzer := DAMessageSendAnalyzer on: aPackageName.
-					messageSendAnalyzer missingMethodsWithPotentialMatch
-						keysAndValuesDo: [ :selector :packageNamesImplementingIt | 
-							| ownedPackageNames |
-
-							ownedPackageNames := packageNamesImplementingIt
-								select: [ :anImplementorPackageName | self isInternalDependency: anImplementorPackageName ].
-
-							ownedPackageNames
-								ifNotEmpty: [ self
-										recordOn: aStream
-										that: selector
-										from: aPackageName
-										isMissingMethodPotentiallyImplementedBy: ownedPackageNames
-									]
-							]
+					self
+						analyzeMissingMethodsWithPotentialMatchWith: messageSendAnalyzer
+						recordingFailuresOn: aStream
 					]
 			]
 ]

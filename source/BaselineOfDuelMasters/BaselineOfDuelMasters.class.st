@@ -658,6 +658,7 @@ BaselineOfDuelMasters >> testPackages [
 		add: self wikitextParsingModelTestsPackage;
 		add: self dependentSUnitTestsPackage;
 		add: self saganExtensionsTestsPackage;
+		add: self toolDependencyAnalyserCoreExtensionsTestsPackage;
 		add: self developmentTestsPackage;
 		yourself
 ]
@@ -686,6 +687,14 @@ BaselineOfDuelMasters >> testsPackageNamed: aTestsPackageName requiringAll: aReq
 BaselineOfDuelMasters >> toolDependencyAnalyserCoreExtensionsPackage [
 
 	^ self extensionPackageNamed: 'DM-Tool-DependencyAnalyser-Core' requiringAll: #()
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> toolDependencyAnalyserCoreExtensionsTestsPackage [
+
+	^ self
+		testsPackageNamed: ( self extensionPackageNameFor: 'DM-Tool-DependencyAnalyser-Core' )
+		requiringAll: #()
 ]
 
 { #category : #'private - extensions package accessing' }
