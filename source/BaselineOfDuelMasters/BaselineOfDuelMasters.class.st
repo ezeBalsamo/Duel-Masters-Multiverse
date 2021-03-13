@@ -692,9 +692,13 @@ BaselineOfDuelMasters >> toolDependencyAnalyserCoreExtensionsPackage [
 { #category : #'private - test packages accessing' }
 BaselineOfDuelMasters >> toolDependencyAnalyserCoreExtensionsTestsPackage [
 
+	| toolDependencyAnalyzerCoreExtensionsPackage |
+
+	toolDependencyAnalyzerCoreExtensionsPackage := self
+		extensionPackageNameFor: 'DM-Tool-DependencyAnalyser-Core'.
 	^ self
-		testsPackageNamed: ( self extensionPackageNameFor: 'DM-Tool-DependencyAnalyser-Core' )
-		requiringAll: #()
+		testsPackageNamed: toolDependencyAnalyzerCoreExtensionsPackage
+		requiringAll: ( Array with: toolDependencyAnalyzerCoreExtensionsPackage with: self keplerDependencyName )
 ]
 
 { #category : #'private - extensions package accessing' }

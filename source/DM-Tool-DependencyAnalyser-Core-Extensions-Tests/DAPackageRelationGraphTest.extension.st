@@ -25,5 +25,8 @@ DAPackageRelationGraphTest >> testAddMessageSendReferenceDependencies [
 	aPackageRelationGraph addReferenceDependencies: packageRegexCore.
 	packageRegexCore removeAllInternal.
 
-	self deny: ( packageRegexCore dependencies select: #isMessageSendReferenceDependency ) isEmpty
+	self
+		deny:
+			( packageRegexCore dependencies
+				select: [ :dependency | dependency isA: DAMessageSendReferenceDependency ] ) isEmpty
 ]

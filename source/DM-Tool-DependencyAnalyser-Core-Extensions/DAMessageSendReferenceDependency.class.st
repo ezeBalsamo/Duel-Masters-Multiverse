@@ -36,12 +36,6 @@ DAMessageSendReferenceDependency >> initializeFrom: aSourceDAPackage to: aTarget
 	method := aRGMethodDefinition
 ]
 
-{ #category : #testing }
-DAMessageSendReferenceDependency >> isMessageSendReferenceDependency [
-
-	^ true
-]
-
 { #category : #accessing }
 DAMessageSendReferenceDependency >> method [
 
