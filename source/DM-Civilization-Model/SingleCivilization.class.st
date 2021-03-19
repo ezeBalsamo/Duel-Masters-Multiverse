@@ -38,7 +38,7 @@ SingleCivilization >> initializeNamed: aCivilizationName [
 	name := aCivilizationName
 ]
 
-{ #category : #'private - testing' }
+{ #category : #testing }
 SingleCivilization >> isNamed: aPotentialName [
 
 	^ self name = aPotentialName
