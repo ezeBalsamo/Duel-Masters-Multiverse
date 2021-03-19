@@ -50,7 +50,7 @@ PackageIntegrityTest >> analyzeMissingMethodsWithPotentialMatchWith: aDAMessageS
 
 			ownedPackageNames
 				ifNotEmpty: [ self
-						recordOn: aStream
+						logOn: aStream
 						that: selector
 						from: aDAMessageSendAnalyzer packageName
 						isMissingMethodPotentiallyImplementedBy: ownedPackageNames
@@ -172,15 +172,16 @@ PackageIntegrityTest >> compareBaselineDependenciesOf: aPackageName
 	missing := current difference: defined.
 
 	extra isNotEmpty
-		ifTrue: [ self record: extra asExtraDependenciesOf: aPackageName on: aStream ].
+		ifTrue: [ self log: extra asExtraDependenciesOf: aPackageName on: aStream ].
 
 	missing isNotEmpty
-		ifTrue: [ self record: missing asMissingDependenciesOf: aPackageName on: aStream ]
+		ifTrue: [ self log: missing asMissingDependenciesOf: aPackageName on: aStream ]
 ]
 
-{ #category : #'private - evaluating' }
+{ #category : #'private - logging' }
 PackageIntegrityTest >> considerOpeningFailureLog [
 
+	<ignoreForCoverage>
 	| failureLog |
 
 	failureLog := self failureLog.
@@ -250,9 +251,10 @@ PackageIntegrityTest >> externalDependencyNamesFrom: calculatedDependencyNames
 		reject: [ :aDependencyName | self is: aDependencyName requiredBy: anInternalDependencyNamesCollection ]
 ]
 
-{ #category : #'private - evaluating' }
+{ #category : #'private - logging' }
 PackageIntegrityTest >> failureExplanationWithTestNameDueTo: aFailureExplanation [
 
+	<ignoreForCoverage>
 	^ String
 		streamContents: [ :aStream | 
 			92 timesRepeat: [ aStream nextPutAll: '-' ].
@@ -264,9 +266,10 @@ PackageIntegrityTest >> failureExplanationWithTestNameDueTo: aFailureExplanation
 			]
 ]
 
-{ #category : #'private - evaluating' }
+{ #category : #'private - logging' }
 PackageIntegrityTest >> format: aCollection [
 
+	<ignoreForCoverage>
 	^ ( CollectionFormatter separatingWith: ', ' andLastWith: ' and ' ) format: aCollection
 ]
 
@@ -311,11 +314,12 @@ PackageIntegrityTest >> isInternalDependency: aPackageName [
 	^ aPackageName beginsWith: 'DM'
 ]
 
-{ #category : #running }
+{ #category : #'private - logging' }
 PackageIntegrityTest >> isLogging [
 
 	"Overriding this method so failures are log on Trascript"
 
+	<ignoreForCoverage>
 	^ true
 ]
 
@@ -323,6 +327,51 @@ PackageIntegrityTest >> isLogging [
 PackageIntegrityTest >> isMainRepository: anIceLibgitRepository [
 
 	^ anIceLibgitRepository name = 'Duel-Masters-Multiverse'
+]
+
+{ #category : #'private - logging' }
+PackageIntegrityTest >> log: anExtraDependencyNameCollection asExtraDependenciesOf: aPackageName on: aStream [
+
+	<ignoreForCoverage>
+	self
+		log: anExtraDependencyNameCollection
+		dueTo: ( '<1s> has the extra following dependencies: ' expandMacrosWith: aPackageName )
+		on: aStream
+]
+
+{ #category : #'private - logging' }
+PackageIntegrityTest >> log: aMissingDependencyNameCollection asMissingDependenciesOf: aPackageName on: aStream [
+
+	<ignoreForCoverage>
+	self
+		log: aMissingDependencyNameCollection
+		dueTo: ( '<1s> is missing the following dependencies: ' expandMacrosWith: aPackageName )
+		on: aStream
+]
+
+{ #category : #'private - logging' }
+PackageIntegrityTest >> log: aDependencyNameCollection dueTo: anExplanation on: aStream [
+
+	| dependencies |
+
+	aStream nextPutAll: anExplanation.
+	dependencies := self format: aDependencyNameCollection.
+	aStream
+		nextPutAll: dependencies;
+		cr
+]
+
+{ #category : #'private - logging' }
+PackageIntegrityTest >> logOn: aStream that: aSelector from: aPackageName isMissingMethodPotentiallyImplementedBy: anOwnedPackageNameCollection [
+
+	<ignoreForCoverage>
+	aStream
+		nextPutAll:
+			( '<1s> from <2s> is a missing method potentially implemented by this own packages: <3s>.'
+				expandMacrosWith: aSelector
+				with: aPackageName
+				with: ( self format: anOwnedPackageNameCollection ) );
+		cr
 ]
 
 { #category : #'private - accessing' }
@@ -377,56 +426,14 @@ PackageIntegrityTest >> pharoVersioningPackageNamesUsed [
 	^ OrderedCollection with: 'Metacello-Base' with: 'Metacello-Core' with: 'Iceberg'
 ]
 
-{ #category : #'private - evaluating' }
-PackageIntegrityTest >> record: anExtraDependencyNameCollection asExtraDependenciesOf: aPackageName on: aStream [
-
-	self
-		record: anExtraDependencyNameCollection
-		dueTo: ( '<1s> has the extra following dependencies: ' expandMacrosWith: aPackageName )
-		on: aStream
-]
-
-{ #category : #'private - evaluating' }
-PackageIntegrityTest >> record: aMissingDependencyNameCollection asMissingDependenciesOf: aPackageName on: aStream [
-
-	self
-		record: aMissingDependencyNameCollection
-		dueTo: ( '<1s> is missing the following dependencies: ' expandMacrosWith: aPackageName )
-		on: aStream
-]
-
-{ #category : #'private - evaluating' }
-PackageIntegrityTest >> record: aDependencyNameCollection dueTo: anExplanation on: aStream [
-
-	| dependencies |
-
-	aStream nextPutAll: anExplanation.
-	dependencies := self format: aDependencyNameCollection.
-	aStream
-		nextPutAll: dependencies;
-		cr
-]
-
-{ #category : #'private - evaluating' }
-PackageIntegrityTest >> recordOn: aStream that: aSelector from: aPackageName isMissingMethodPotentiallyImplementedBy: anOwnedPackageNameCollection [
-
-	aStream
-		nextPutAll:
-			( '<1s> from <2s> is a missing method potentially implemented by this own packages: <3s>.'
-				expandMacrosWith: aSelector
-				with: aPackageName
-				with: ( self format: anOwnedPackageNameCollection ) );
-		cr
-]
-
 { #category : #'private - accessing' }
 PackageIntegrityTest >> requirementNamesOf: aPackageRepresentation [
 
 	^ aPackageRepresentation at: #requirementNames
 ]
 
-{ #category : #'private - evaluating' }
-PackageIntegrityTest >> runRecordingFailuresOn: aBlockClosure [
+{ #category : #'private - logging' }
+PackageIntegrityTest >> runLoggingFailuresOn: aBlockClosure [
 
 	| failureDetails |
 
@@ -492,7 +499,7 @@ PackageIntegrityTest >> test02AllOwnedPackagesAreIncludedInRepository [
 PackageIntegrityTest >> test03PackageRequirements [
 
 	self
-		runRecordingFailuresOn: [ :aStream | 
+		runLoggingFailuresOn: [ :aStream | 
 			| relationGraph |
 
 			relationGraph := self calculatePackageRelationGraph.
@@ -511,7 +518,7 @@ PackageIntegrityTest >> test03PackageRequirements [
 PackageIntegrityTest >> test04NoOwnedPackageHasMissingMethodsThatSendsMessagesPotentiallyImplementedByAnOwnedPackage [
 
 	self
-		runRecordingFailuresOn: [ :aStream | 
+		runLoggingFailuresOn: [ :aStream | 
 			self
 				withOwnedPackageNamesDo: [ :aPackageName | 
 					| messageSendAnalyzer |
