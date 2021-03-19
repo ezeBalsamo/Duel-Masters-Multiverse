@@ -352,6 +352,7 @@ PackageIntegrityTest >> log: aMissingDependencyNameCollection asMissingDependenc
 { #category : #'private - logging' }
 PackageIntegrityTest >> log: aDependencyNameCollection dueTo: anExplanation on: aStream [
 
+	<ignoreForCoverage>
 	| dependencies |
 
 	aStream nextPutAll: anExplanation.
