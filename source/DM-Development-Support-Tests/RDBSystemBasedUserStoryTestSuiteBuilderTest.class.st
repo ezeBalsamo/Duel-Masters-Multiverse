@@ -39,7 +39,7 @@ RDBSystemBasedUserStoryTestSuiteBuilderTest >> test03BuildingSuiteForAllPersiste
 	| testClass rdbSuite rdbSuiteTests expectedTests |
 
 	testClass := PersistentSystemBasedUserStoryTest.
-	rdbSuite := RDBSystemBasedUserStoryTestSuiteBuilder forAllPersistentUserStoryTests.
+	rdbSuite := RDBSystemBasedUserStoryTestSuiteBuilder suite.
 	rdbSuiteTests := rdbSuite allTests.
 
 	expectedTests := testClass suite allTests.
