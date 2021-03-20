@@ -8,6 +8,7 @@ SmalltalkCISpec {
       #onConflict : #useLoaded
     }
   ],
+  #preTesting : 'scripts/setUpRDBSuite.st',
   #testing : {
     #coverage : {
       #packages : [ 'DM*' ],

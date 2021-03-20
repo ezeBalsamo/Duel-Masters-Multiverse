@@ -1,0 +1,14 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'DuelMasters',
+      #directory : 'source',
+      #load : [ 'Tools' ],
+      #platforms : [  #pharo ],
+      #onConflict : #useLoaded
+    }
+  ],
+  #testing : {
+    #failOnZeroTests : false
+  }
+}

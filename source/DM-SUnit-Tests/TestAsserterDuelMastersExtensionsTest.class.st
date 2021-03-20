@@ -240,3 +240,15 @@ TestAsserterDuelMastersExtensionsTest >> test11AssertAllTestsFromATestSuiteWithA
 
 	self assertTheOnlyOneIn: testSuite allTests is: testCase
 ]
+
+{ #category : #tests }
+TestAsserterDuelMastersExtensionsTest >> test12EmptySuite [
+
+	| testSuite |
+
+	testSuite := TestCase emptySuite.
+
+	self
+		assert: testSuite tests isEmpty;
+		assert: testSuite name equals: TestCase name asString
+]

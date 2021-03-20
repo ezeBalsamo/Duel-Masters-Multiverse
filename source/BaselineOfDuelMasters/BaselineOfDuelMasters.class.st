@@ -191,8 +191,7 @@ BaselineOfDuelMasters >> dependencyTo: aBaselineName hostedIn: aRepository loadi
 { #category : #'private - groups set up' }
 BaselineOfDuelMasters >> dependentSUnitExtensionsPackageNames [
 
-	^ self dependentSUnitExtensionsPackages
-		collect: [ :modelPackage | self packageNameOf: modelPackage ]
+	^ self packageNamesFrom: self dependentSUnitExtensionsPackages
 ]
 
 { #category : #'private - dependent sunit packages accessing' }
@@ -217,16 +216,45 @@ BaselineOfDuelMasters >> dependentSUnitTestsPackage [
 	^ self testsPackageNamed: dependentSUnitPackageName requiring: dependentSUnitPackageName
 ]
 
+{ #category : #'private - groups set up' }
+BaselineOfDuelMasters >> developmentSupportPackageNames [
+
+	^ self packageNamesFrom: self developmentSupportPackages
+]
+
+{ #category : #'private - development support packages accessing' }
+BaselineOfDuelMasters >> developmentSupportPackages [
+
+	^ OrderedCollection
+		with:
+			( self
+				packageNamed: 'DM-Development-Support'
+				requiringAll:
+					( Array
+						with: ( self testsPackageNameFor: ( self modelPackageNameFor: 'DM-Repository-Provider-System' ) )
+						with: ( self modelPackageNameFor: 'DM-Exception' ) ) )
+]
+
 { #category : #'private - test packages accessing' }
-BaselineOfDuelMasters >> developmentTestsPackage [
+BaselineOfDuelMasters >> developmentSupportTestsPackage [
+
+	| transitiveRequirements |
+
+	transitiveRequirements := Array
+		with: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) )
+		with: ( self modelPackageNameFor: 'DM-Exception' ).
 
 	^ self
-		testsPackageNamed: 'DM-Development'
+		testsPackageNamed: 'DM-Development-Support'
 		requiringAll:
-			( Array
-				with: ( self extensionPackageNameFor: 'DM-Transcript-Core-Base' )
-				with: ( self extensionPackageNameFor: 'DM-Transcript-NonInteractive-Base' )
-				with: self keplerDependencyName )
+			( OrderedCollection new
+				add: 'DM-Development-Support';
+				add: 'DM-SUnit';
+				add: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Civilization-Management' ) );
+				add: ( self extensionPackageNameFor: 'DM-Transcript-Core-Base' );
+				add: ( self extensionPackageNameFor: 'DM-Transcript-NonInteractive-Base' );
+				addAll: transitiveRequirements;
+				yourself )
 ]
 
 { #category : #'private - model package accessing' }
@@ -269,7 +297,7 @@ BaselineOfDuelMasters >> extensionPackageNamed: anExtensionPackageName requiring
 { #category : #'private - groups set up' }
 BaselineOfDuelMasters >> extensionPackageNames [
 
-	^ self extensionPackages collect: [ :modelPackage | self packageNameOf: modelPackage ]
+	^ self packageNamesFrom: self extensionPackages
 ]
 
 { #category : #'private - extensions package accessing' }
@@ -384,7 +412,7 @@ BaselineOfDuelMasters >> modelPackageNamed: aModelPackageName requiringAll: aReq
 { #category : #'private - groups set up' }
 BaselineOfDuelMasters >> modelPackageNames [
 
-	^ self modelPackages collect: [ :modelPackage | self packageNameOf: modelPackage ]
+	^ self packageNamesFrom: self modelPackages
 ]
 
 { #category : #'private - model package accessing' }
@@ -442,12 +470,20 @@ BaselineOfDuelMasters >> packageNamed: aPackageName requiringAll: aRequirementNa
 		yourself
 ]
 
+{ #category : #'private - groups set up' }
+BaselineOfDuelMasters >> packageNamesFrom: aPackageRepresentationCollection [
+
+	^ aPackageRepresentationCollection
+		collect: [ :aPackageRepresentation | self packageNameOf: aPackageRepresentation ]
+]
+
 { #category : #'private - packages set up' }
 BaselineOfDuelMasters >> packages [
 
 	^ OrderedCollection new
 		addAll: self modelPackages;
 		addAll: self extensionPackages;
+		addAll: self developmentSupportPackages;
 		addAll: self dependentSUnitExtensionsPackages;
 		addAll: self testPackages;
 		yourself
@@ -587,9 +623,10 @@ BaselineOfDuelMasters >> setUpGroupsIn: aSpec [
 	aSpec
 		group: 'Deployment' with: self modelAndExtensionPackageNames;
 		group: 'Tests' with: self testPackageNames;
+		group: 'Tools' with: self developmentSupportPackageNames;
 		group: 'Dependent-SUnit-Extensions' with: self dependentSUnitExtensionsPackageNames;
 		group: 'CI' with: 'Tests';
-		group: 'Development' with: 'Tests'
+		group: 'Development' with: #('Tools' 'Tests')
 ]
 
 { #category : #'private - packages set up' }
@@ -636,7 +673,7 @@ BaselineOfDuelMasters >> systemModelPackageNamed: aSystemModelPackageName requir
 { #category : #'private - groups set up' }
 BaselineOfDuelMasters >> testPackageNames [
 
-	^ self testPackages collect: [ :modelPackage | self packageNameOf: modelPackage ]
+	^ self packageNamesFrom: self testPackages
 ]
 
 { #category : #'private - test packages accessing' }
@@ -659,7 +696,7 @@ BaselineOfDuelMasters >> testPackages [
 		add: self dependentSUnitTestsPackage;
 		add: self saganExtensionsTestsPackage;
 		add: self toolDependencyAnalyserCoreExtensionsTestsPackage;
-		add: self developmentTestsPackage;
+		add: self developmentSupportTestsPackage;
 		yourself
 ]
 

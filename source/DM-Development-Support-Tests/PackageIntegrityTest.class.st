@@ -7,7 +7,7 @@ Class {
 		'baselineDependencies',
 		'knownPharoPackageNames'
 	],
-	#category : #'DM-Development-Tests'
+	#category : #'DM-Development-Support-Tests'
 }
 
 { #category : #accessing }

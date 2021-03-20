@@ -7,36 +7,18 @@ Class {
 	#category : #'DM-Repository-Provider-System-Model-Tests'
 }
 
-{ #category : #'private - building' }
+{ #category : #building }
 PersistentSystemBasedUserStoryTest class >> buildRDBSuiteForCI [
 
-	| suite |
-
-	suite := self buildSuiteForCI.
-	suite allTests do: #useRelationalDatabaseRepositories.
-	^ suite
+	^ self suite allTests
+		inject: self emptySuite
+		into: [ :suite :testCase | suite addTest: testCase useRelationalDatabaseRepositories ]
 ]
 
-{ #category : #'private - building' }
-PersistentSystemBasedUserStoryTest class >> buildSuiteForCI [
+{ #category : #testing }
+PersistentSystemBasedUserStoryTest class >> isAbstract [
 
-	| suite |
-
-	suite := self suiteClass named: self name asString.
-	self allSubclasses
-		do: [ :testClass | 
-			testClass isAbstract
-				ifFalse: [ suite addTest: testClass buildSuiteFromSelectors ]
-			].
-	^ suite
-]
-
-{ #category : #'instance creation' }
-PersistentSystemBasedUserStoryTest class >> suite [
-
-	"This method is implemented to run a RDB Test Suite, both from Pharo System Browser and from SmalltalkCI.- ebalsamo"
-
-	^ self buildRDBSuiteForCI
+	^ self = PersistentSystemBasedUserStoryTest
 ]
 
 { #category : #initialization }
@@ -44,6 +26,12 @@ PersistentSystemBasedUserStoryTest >> initialize [
 
 	super initialize.
 	self useInMemoryRepositories
+]
+
+{ #category : #testing }
+PersistentSystemBasedUserStoryTest >> isUsingRelationalDatabaseRepositories [
+
+	^ repositoryProviderModuleType = RDBRepositoryProviderModule
 ]
 
 { #category : #'private - configuring' }
