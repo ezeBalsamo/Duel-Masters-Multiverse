@@ -8,8 +8,8 @@ SmalltalkCISpec {
       #onConflict : #useLoaded
     }
   ],
+  #preTesting : 'scripts/setUpRDBSuite.st',
   #testing : {
-    #preTesting : 'scripts/setUpRDBSuite.st',
     #coverage : {
       #packages : [ 'DM*' ],
       #format: #lcov
