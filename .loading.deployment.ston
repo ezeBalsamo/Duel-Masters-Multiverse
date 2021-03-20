@@ -10,4 +10,5 @@ SmalltalkCISpec {
   ],
   #testing : {
     #failOnZeroTests : false
+  }
 }
