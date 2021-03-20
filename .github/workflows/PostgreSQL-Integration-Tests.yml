@@ -9,8 +9,9 @@ jobs:
       fail-fast: false
       matrix:
         smalltalk: [ Pharo64-8.0, Pharo64-7.0, Pharo32-7.0 ]
+        load-spec: [ deployment, tests, dependent-sunit-extensions, CI, development]
         rdbms: [ PostgreSQLv9.4, PostgreSQLv9.5, PostgreSQLv9.6, PostgreSQLv10, PostgreSQLv11, PostgreSQLv12 ]
-    name: ${{ matrix.smalltalk }} + ${{ matrix.rdbms }}
+    name: ${{ matrix.smalltalk }} + ${{ matrix.load-spec }} + ${{ matrix.rdbms }}
     steps:
       - uses: actions/checkout@v2
       - uses: hpi-swa/setup-smalltalkCI@v1
@@ -21,7 +22,7 @@ jobs:
         env:
           RDBMS: ${{ matrix.rdbms }}
       - name: Load Image and Run Tests
-        run: smalltalkci -s ${{ matrix.smalltalk }}
+        run: smalltalkci -s ${{ matrix.smalltalk }} .loading.${{ matrix.load-spec }}.ston
         timeout-minutes: 15
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
