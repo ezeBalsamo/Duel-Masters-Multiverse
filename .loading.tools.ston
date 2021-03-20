@@ -3,15 +3,12 @@ SmalltalkCISpec {
     SCIMetacelloLoadSpec {
       #baseline : 'DuelMasters',
       #directory : 'source',
-      #load : [ 'Development' ],
+      #load : [ 'Tools' ],
       #platforms : [  #pharo ],
       #onConflict : #useLoaded
     }
   ],
   #testing : {
-    #coverage : {
-      #packages : [ 'DM*' ],
-      #format: #lcov
-    }
+    #failOnZeroTests : false
   }
 }
