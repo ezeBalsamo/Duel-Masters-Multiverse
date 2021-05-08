@@ -65,6 +65,12 @@ DevelopmentTest >> log: aFailureDescription on: aStream [
 ]
 
 { #category : #'private - accessing' }
+DevelopmentTest >> ownedClasses [
+
+	^ self ownedPackages flatCollect: #definedClasses
+]
+
+{ #category : #'private - accessing' }
 DevelopmentTest >> ownedPackages [
 
 	^ RPackageOrganizer default packages select: [ :package | package name beginsWith: 'DM' ]
@@ -78,4 +84,10 @@ DevelopmentTest >> runLoggingFailuresOn: aBlockClosure [
 	failureDetails := String streamContents: aBlockClosure.
 
 	self assert: failureDetails isEmpty description: failureDetails
+]
+
+{ #category : #'private - accessing' }
+DevelopmentTest >> withAllOwnedClassesDo: aBlockClosure [
+
+	self ownedClasses do: aBlockClosure
 ]

@@ -39,7 +39,7 @@ ClassIntegrityTest >> assert: aClass orItsMetaclassDefinesProtocolLoggingFailure
 { #category : #'private - testing' }
 ClassIntegrityTest >> definesProtocol: aClass [
 
-	^ aClass hasMethods or: [ aClass class hasMethods ]
+	^ aClass hasMethods or: [ aClass classSide hasMethods ]
 ]
 
 { #category : #'private - logging' }
@@ -60,12 +60,6 @@ ClassIntegrityTest >> log: aSelectorsCollection asUncategorizedSelectorsOf: aCla
 			[ :selector | self log: ( '<1p>>>#<2s> is uncategorized.' expandMacrosWith: aClass with: selector ) on: aStream ]
 ]
 
-{ #category : #'private - accessing' }
-ClassIntegrityTest >> ownedClasses [
-
-	^ self ownedPackages flatCollect: #definedClasses
-]
-
 { #category : #tests }
 ClassIntegrityTest >> test01ClassesDoNotHaveUncategorizedMethods [
 
@@ -73,8 +67,9 @@ ClassIntegrityTest >> test01ClassesDoNotHaveUncategorizedMethods [
 		runLoggingFailuresOn: [ :stream | 
 			self
 				withAllOwnedClassesDo: [ :class | 
-					self assert: class dontHaveUncategorizedMethodsLoggingFailuresOn: stream.
-					self assert: class class dontHaveUncategorizedMethodsLoggingFailuresOn: stream
+					self
+						assert: class dontHaveUncategorizedMethodsLoggingFailuresOn: stream;
+						assert: class classSide dontHaveUncategorizedMethodsLoggingFailuresOn: stream
 					]
 			]
 ]
@@ -86,8 +81,9 @@ ClassIntegrityTest >> test02ClassesDoNotHaveEmptyCategories [
 		runLoggingFailuresOn: [ :stream | 
 			self
 				withAllOwnedClassesDo: [ :class | 
-					self assert: class dontHaveEmptyCategoriesLoggingFailuresOn: stream.
-					self assert: class class dontHaveEmptyCategoriesLoggingFailuresOn: stream
+					self
+						assert: class dontHaveEmptyCategoriesLoggingFailuresOn: stream;
+						assert: class classSide dontHaveEmptyCategoriesLoggingFailuresOn: stream
 					]
 			]
 ]
@@ -109,16 +105,11 @@ ClassIntegrityTest >> test04ClassesAreWellCompiled [
 		runLoggingFailuresOn: [ :stream | 
 			self
 				withAllOwnedClassesDo: [ :class | 
-					self assert: class isWellCompiledLoggingFailuresOn: stream.
-					self assert: class class isWellCompiledLoggingFailuresOn: stream
+					self
+						assert: class isWellCompiledLoggingFailuresOn: stream;
+						assert: class classSide isWellCompiledLoggingFailuresOn: stream
 					]
 			]
-]
-
-{ #category : #'private - accessing' }
-ClassIntegrityTest >> withAllOwnedClassesDo: aBlockClosure [
-
-	self ownedClasses do: aBlockClosure
 ]
 
 { #category : #'private - accessing' }
