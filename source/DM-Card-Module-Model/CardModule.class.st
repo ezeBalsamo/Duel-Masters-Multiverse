@@ -19,7 +19,7 @@ CardModule >> initializeToInstallOn: aCompositeSystem [
 	rootSystem := aCompositeSystem
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 CardModule >> name [
 
 	^ 'Cards Management'
@@ -43,13 +43,13 @@ CardModule >> registerRaceManagementSystemForInstallationIn: systems [
 	^ self register: [ RaceManagementSystem new ] in: systems
 ]
 
-{ #category : #private }
+{ #category : #'private - accessing' }
 CardModule >> rootSystem [
 
 	^ rootSystem
 ]
 
-{ #category : #private }
+{ #category : #accessing }
 CardModule >> systemInterfacesToInstall [
 
 	^ #(#CivilizationManagementSystemInterface #RaceManagementSystemInterface #CardManagementSystemInterface)
