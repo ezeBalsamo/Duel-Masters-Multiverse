@@ -13,7 +13,7 @@ jobs:
     name: ${{ matrix.smalltalk }} + ${{ matrix.rdbms }}
     steps:
       - uses: actions/checkout@v2.3.4
-      - uses: hpi-swa/setup-smalltalkCI@1.1.0
+      - uses: hpi-swa/setup-smalltalkCI@v1
         with:
           smalltalk-version: ${{ matrix.smalltalk }}
       - name: Set up PostgreSQL
