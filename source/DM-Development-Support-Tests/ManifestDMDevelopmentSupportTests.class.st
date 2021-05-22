@@ -9,5 +9,6 @@ Class {
 
 { #category : #'meta-data - dependency analyser' }
 ManifestDMDevelopmentSupportTests class >> manuallyResolvedDependencies [
-	^ #(#'DM-Transcript-Core-Base-Extensions' #'DM-Transcript-NonInteractive-Base-Extensions' #'DM-Kernel-Classes-Extensions')
+
+	^ #(#'DM-Transcript-Core-Base-Extensions' #'DM-Transcript-NonInteractive-Base-Extensions')
 ]

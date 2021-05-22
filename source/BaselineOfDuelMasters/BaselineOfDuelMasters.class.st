@@ -253,7 +253,6 @@ BaselineOfDuelMasters >> developmentSupportTestsPackage [
 				add: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Civilization-Management' ) );
 				add: ( self extensionPackageNameFor: 'DM-Transcript-Core-Base' );
 				add: ( self extensionPackageNameFor: 'DM-Transcript-NonInteractive-Base' );
-				add: ( self extensionPackageNameFor: 'DM-Kernel-Classes' );
 				addAll: transitiveRequirements;
 				yourself )
 ]
@@ -310,8 +309,6 @@ BaselineOfDuelMasters >> extensionPackages [
 		add: self toolDependencyAnalyserCoreExtensionsPackage;
 		add: self saganExtensionsPackage;
 		add: self kernelBasicObjectsExtensionsPackage;
-		add: self kernelClassesExtensionsPackage;
-		add: self kernelProtocolsExtensionsPackage;
 		add: self transcriptCoreBaseExtensionsPackage;
 		add: self transcriptNonInteractiveBaseExtensionsPackage;
 		yourself
@@ -362,20 +359,6 @@ BaselineOfDuelMasters >> keplerDependencyName [
 BaselineOfDuelMasters >> kernelBasicObjectsExtensionsPackage [
 
 	^ self extensionPackageNamed: 'DM-Kernel-BasicObjects' requiringAll: #()
-]
-
-{ #category : #'private - extensions package accessing' }
-BaselineOfDuelMasters >> kernelClassesExtensionsPackage [
-
-	^ self
-		extensionPackageNamed: 'DM-Kernel-Classes'
-		requiring: ( self extensionPackageNameFor: 'DM-Kernel-Protocols' )
-]
-
-{ #category : #'private - extensions package accessing' }
-BaselineOfDuelMasters >> kernelProtocolsExtensionsPackage [
-
-	^ self extensionPackageNamed: 'DM-Kernel-Protocols' requiringAll: #()
 ]
 
 { #category : #'private - model package accessing' }

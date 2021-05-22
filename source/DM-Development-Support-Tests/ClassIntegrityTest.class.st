@@ -7,7 +7,10 @@ Class {
 { #category : #'private - asserting' }
 ClassIntegrityTest >> assert: aClass dontHaveEmptyCategoriesLoggingFailuresOn: aStream [
 
-	aClass emptyCategories
+	"For some reason, when I extend ClassDescription, ClassOrganization and ProtocolOrganizer, then code coverages fails.
+	Since I only need this behaviour in this test, I implemented here."
+
+	( self emptyCategoriesOf: aClass )
 		ifNotEmpty: [ :categories | self log: categories asEmptyCategoriesOf: aClass on: aStream ]
 ]
 
@@ -21,7 +24,10 @@ ClassIntegrityTest >> assert: aClass dontHaveUncategorizedMethodsLoggingFailures
 { #category : #'private - asserting' }
 ClassIntegrityTest >> assert: aClass isWellCompiledLoggingFailuresOn: aStream [
 
-	[ aClass recompile ]
+	"I can't send #recompile because #recompile:from: doesn't warn which selector failed to recompile, so I copy the implementation here.
+	This way, I don't need to modify the original implementation."
+
+	[ aClass localSelectors do: [ :selector | aClass recompile: selector from: aClass ] ]
 		on: Error
 		do: [ :signal | 
 			self log: signal messageText on: aStream.
@@ -40,6 +46,15 @@ ClassIntegrityTest >> assert: aClass orItsMetaclassDefinesProtocolLoggingFailure
 ClassIntegrityTest >> definesProtocol: aClass [
 
 	^ aClass hasMethods or: [ aClass classSide hasMethods ]
+]
+
+{ #category : #'private - accessing' }
+ClassIntegrityTest >> emptyCategoriesOf: aClass [
+
+	| protocolOrganizer |
+
+	protocolOrganizer := aClass organization protocolOrganizer.
+	^ protocolOrganizer protocols select: #canBeRemoved thenCollect: #name
 ]
 
 { #category : #'private - logging' }
