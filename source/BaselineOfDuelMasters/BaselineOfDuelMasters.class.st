@@ -23,6 +23,12 @@ BaselineOfDuelMasters >> baselineNameOf: aDependencyRepresentation [
 	^ aDependencyRepresentation at: #baselineName
 ]
 
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> buoyMetaprogrammingExtensionsPackage [
+
+	^ self extensionPackageNamed: 'DM-Buoy-Metaprogramming' requiring: self keplerDependencyName
+]
+
 { #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> cardManagementSystemModelPackage [
 
@@ -253,6 +259,7 @@ BaselineOfDuelMasters >> developmentSupportTestsPackage [
 				add: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Civilization-Management' ) );
 				add: ( self extensionPackageNameFor: 'DM-Transcript-Core-Base' );
 				add: ( self extensionPackageNameFor: 'DM-Transcript-NonInteractive-Base' );
+				add: ( self extensionPackageNameFor: 'DM-Buoy-Metaprogramming' );
 				addAll: transitiveRequirements;
 				yourself )
 ]
@@ -304,6 +311,7 @@ BaselineOfDuelMasters >> extensionPackageNames [
 BaselineOfDuelMasters >> extensionPackages [
 
 	^ OrderedCollection new
+		add: self buoyMetaprogrammingExtensionsPackage;
 		add: self collectionsStringsBaseExtensionsPackage;
 		add: self collectionsAbstractBaseExtensionsPackage;
 		add: self toolDependencyAnalyserCoreExtensionsPackage;
