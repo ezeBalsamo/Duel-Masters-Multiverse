@@ -24,15 +24,10 @@ ClassIntegrityTest >> assert: aClass dontHaveUncategorizedMethodsLoggingFailures
 { #category : #'private - asserting' }
 ClassIntegrityTest >> assert: aClass isWellCompiledLoggingFailuresOn: aStream [
 
-	"I can't send #recompile because #recompile:from: doesn't warn which selector failed to recompile, so I copy the implementation here.
-	This way, I don't need to modify the original implementation."
+	"I can't send #recompile because it breaks coverage, so I copy the implementation here."
 
-	[ aClass localSelectors do: [ :selector | aClass recompile: selector from: aClass ] ]
-		on: Error
-		do: [ :signal | 
-			self log: signal messageText on: aStream.
-			signal pass
-			]
+	aClass localSelectors
+		do: [ :selector | self recompile: selector from: aClass loggingFailuresOn: aStream ]
 ]
 
 { #category : #'private - asserting' }
@@ -42,7 +37,7 @@ ClassIntegrityTest >> assert: aClass orItsMetaclassDefinesProtocolLoggingFailure
 		ifFalse: [ self log: ( '<1p> does not define protocol.' expandMacrosWith: aClass ) on: aStream ]
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'private - testing' }
 ClassIntegrityTest >> definesProtocol: aClass [
 
 	^ aClass hasMethods or: [ aClass classSide hasMethods ]
@@ -73,6 +68,28 @@ ClassIntegrityTest >> log: aSelectorsCollection asUncategorizedSelectorsOf: aCla
 	aSelectorsCollection
 		do:
 			[ :selector | self log: ( '<1p>>>#<2s> is uncategorized.' expandMacrosWith: aClass with: selector ) on: aStream ]
+]
+
+{ #category : #'private - evaluating' }
+ClassIntegrityTest >> recompile: aSelector from: aClass loggingFailuresOn: aStream [
+
+	| failureLoggingBlock methodDefinition newMethodDefinition |
+
+	failureLoggingBlock := [ self
+		log: ( '<1p> has changed after recompiling, so it''s bad compiled.' expandMacrosWith: aSelector )
+		on: aStream
+	].
+
+	methodDefinition := aClass compiledMethodAt: aSelector.
+	newMethodDefinition := aClass compiler
+		source: ( aClass sourceCodeAt: aSelector );
+		class: aClass;
+		failBlock: failureLoggingBlock;
+		compiledMethodTrailer: methodDefinition trailer;
+		compile.
+
+	methodDefinition = newMethodDefinition
+		ifFalse: failureLoggingBlock
 ]
 
 { #category : #tests }
