@@ -21,6 +21,19 @@ ClassIntegrityTest >> assert: aClass dontHaveUncategorizedMethodsLoggingFailures
 		ifNotEmpty: [ :selectors | self log: selectors asUncategorizedSelectorsOf: aClass on: aStream ]
 ]
 
+{ #category : #'private - asserting' }
+ClassIntegrityTest >> assert: aClass orItsMetaclassDefinesProtocolLoggingFailuresOn: aStream [
+
+	( self definesProtocol: aClass )
+		ifFalse: [ self log: ( '<1p> does not define protocol.' expandMacrosWith: aClass ) on: aStream ]
+]
+
+{ #category : #'private - accessing' }
+ClassIntegrityTest >> definesProtocol: aClass [
+
+	^ aClass hasMethods or: [ aClass classSide hasMethods ]
+]
+
 { #category : #'private - accessing' }
 ClassIntegrityTest >> emptyCategoriesOf: aClass [
 
@@ -74,4 +87,20 @@ ClassIntegrityTest >> test02ClassesDoNotHaveEmptyCategories [
 						assert: class classSide dontHaveEmptyCategoriesLoggingFailuresOn: stream
 					]
 			]
+]
+
+{ #category : #tests }
+ClassIntegrityTest >> test03ClassesMustDefineProtocol [
+
+	self
+		runLoggingFailuresOn: [ :stream | 
+			self
+				withAllOwnedClassesWithoutExceptionsDo: [ :class | self assert: class orItsMetaclassDefinesProtocolLoggingFailuresOn: stream ]
+			]
+]
+
+{ #category : #'private - accessing' }
+ClassIntegrityTest >> withAllOwnedClassesWithoutExceptionsDo: aBlockClosure [
+
+	self ownedClasses reject: [ :class | class isA: Exception class ] thenDo: aBlockClosure
 ]
