@@ -12,7 +12,7 @@ jobs:
         rdbms: [ PostgreSQLv9.4, PostgreSQLv9.5, PostgreSQLv9.6, PostgreSQLv10, PostgreSQLv11, PostgreSQLv12 ]
     name: ${{ matrix.smalltalk }} + ${{ matrix.rdbms }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.4
       - uses: hpi-swa/setup-smalltalkCI@v1
         with:
           smalltalk-version: ${{ matrix.smalltalk }}
@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RDBMS: ${{ matrix.rdbms }}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v1.5.0
         with:
           name: ${{matrix.rdbms}}-${{matrix.smalltalk}}
           token: ${{ secrets.CODECOV_TOKEN }}

@@ -1,6 +1,6 @@
 Class {
 	#name : #PackageIntegrityTest,
-	#superclass : #TestCase,
+	#superclass : #DevelopmentTest,
 	#instVars : [
 		'baselinePackages',
 		'dependencyNamesByPackageName',
@@ -58,17 +58,6 @@ PackageIntegrityTest >> analyzeMissingMethodsWithPotentialMatchWith: aDAMessageS
 			]
 ]
 
-{ #category : #asserting }
-PackageIntegrityTest >> assert: aBoolean description: aFailureExplanation [
-
-	super
-		assert: aBoolean
-		description: [ self
-				considerOpeningFailureLog;
-				failureExplanationWithTestNameDueTo: aFailureExplanation
-			]
-]
-
 { #category : #'private - accessing' }
 PackageIntegrityTest >> assertIsNotOwnProject: aRepositoryName [
 
@@ -115,11 +104,7 @@ PackageIntegrityTest >> baselineDependencyNameFrom: aBaselineDependencyNameColle
 				baselineDependencyNameFrom: aBaselineDependencyNameCollection
 				loadingRepositoryNamed: loaderRepositoryName
 			]
-		ifNone: [ self
-				fail:
-					( 'No baseline defined dependencies requires repository named <1s>.'
-						expandMacrosWith: aRepositoryName )
-			]
+		ifNone: [ self fail ]
 ]
 
 { #category : #'private - accessing' }
@@ -158,10 +143,7 @@ PackageIntegrityTest >> calculatePackageRelationGraph [
 ]
 
 { #category : #'private - evaluating' }
-PackageIntegrityTest >> compareBaselineDependenciesOf: aPackageName
-	withThoseCalculatedWith: relationGraph
-	recordingFailuresOn: aStream [
-
+PackageIntegrityTest >> compareBaselineDependenciesOf: aPackageName withThoseCalculatedWith: relationGraph recordingFailuresOn: aStream [
 
 	| defined current missing extra |
 
@@ -171,21 +153,9 @@ PackageIntegrityTest >> compareBaselineDependenciesOf: aPackageName
 	extra := defined difference: current.
 	missing := current difference: defined.
 
-	extra isNotEmpty
-		ifTrue: [ self log: extra asExtraDependenciesOf: aPackageName on: aStream ].
+	extra ifNotEmpty: [ self log: extra asExtraDependenciesOf: aPackageName on: aStream ].
 
-	missing isNotEmpty
-		ifTrue: [ self log: missing asMissingDependenciesOf: aPackageName on: aStream ]
-]
-
-{ #category : #'private - logging' }
-PackageIntegrityTest >> considerOpeningFailureLog [
-
-	<ignoreForCoverage>
-	| failureLog |
-
-	failureLog := self failureLog.
-	( failureLog isInteractive and: [ failureLog dependents isEmpty ] ) then: [ failureLog open ]
+	missing ifNotEmpty: [ self log: missing asMissingDependenciesOf: aPackageName on: aStream ]
 ]
 
 { #category : #'private - accessing' }
@@ -252,21 +222,6 @@ PackageIntegrityTest >> externalDependencyNamesFrom: calculatedDependencyNames
 ]
 
 { #category : #'private - logging' }
-PackageIntegrityTest >> failureExplanationWithTestNameDueTo: aFailureExplanation [
-
-	<ignoreForCoverage>
-	^ String
-		streamContents: [ :aStream | 
-			92 timesRepeat: [ aStream nextPutAll: '-' ].
-			aStream
-				cr;
-				print: self;
-				cr;
-				nextPutAll: aFailureExplanation
-			]
-]
-
-{ #category : #'private - logging' }
 PackageIntegrityTest >> format: aCollection [
 
 	<ignoreForCoverage>
@@ -312,15 +267,6 @@ PackageIntegrityTest >> isFromPharo: aPackageName [
 PackageIntegrityTest >> isInternalDependency: aPackageName [
 
 	^ aPackageName beginsWith: 'DM'
-]
-
-{ #category : #'private - logging' }
-PackageIntegrityTest >> isLogging [
-
-	"Overriding this method so failures are log on Trascript"
-
-	<ignoreForCoverage>
-	^ true
 ]
 
 { #category : #'private - testing' }
@@ -384,9 +330,7 @@ PackageIntegrityTest >> ownBaselineName [
 { #category : #'private - accessing' }
 PackageIntegrityTest >> ownedPackageNames [
 
-	^ RPackageOrganizer default packages
-		select: [ :package | package name beginsWith: 'DM' ]
-		thenCollect: #name
+	^ self ownedPackages collect: #name
 ]
 
 { #category : #'private - accessing' }
@@ -433,16 +377,6 @@ PackageIntegrityTest >> requirementNamesOf: aPackageRepresentation [
 	^ aPackageRepresentation at: #requirementNames
 ]
 
-{ #category : #'private - logging' }
-PackageIntegrityTest >> runLoggingFailuresOn: aBlockClosure [
-
-	| failureDetails |
-
-	failureDetails := String streamContents: aBlockClosure.
-
-	self assert: failureDetails isEmpty description: failureDetails
-]
-
 { #category : #running }
 PackageIntegrityTest >> setUp [
 
@@ -462,11 +396,14 @@ PackageIntegrityTest >> setUpKnownPharoPackageNames [
 	knownPharoPackageNames := OrderedCollection new
 		add: 'Kernel';
 		add: 'SUnit-Core';
+		add: 'OpalCompiler-Core';
 		addAll: self pharoTranscriptPackageNamesUsed;
 		addAll: self pharoCollectionPackageNamesUsed;
 		addAll: self pharoPackageOrganizerPackageNamesUsed;
 		addAll: self pharoVersioningPackageNamesUsed;
-		yourself
+		add: 'TraitsV2';
+		"this one is added due to the absence of RGBehavior>>#localSelectors in Pharo 7"
+			yourself
 ]
 
 { #category : #tests }

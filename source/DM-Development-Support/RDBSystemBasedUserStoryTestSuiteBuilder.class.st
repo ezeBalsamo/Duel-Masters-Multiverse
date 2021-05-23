@@ -17,7 +17,7 @@ RDBSystemBasedUserStoryTestSuiteBuilder class >> assertIsPersistent: aPotentiall
 		raising: ProgrammingError
 ]
 
-{ #category : #'private - building' }
+{ #category : #'instance creation' }
 RDBSystemBasedUserStoryTestSuiteBuilder class >> for: aPotentiallyPersistentSystemBasedUserStoryTest [
 
 	self assertIsPersistent: aPotentiallyPersistentSystemBasedUserStoryTest.

@@ -24,10 +24,10 @@ RDBSystemBasedUserStoryTestSuiteBuilderTest >> test02CantBuildSuiteForANonPersis
 
 	| testClass |
 
-	testClass := PackageIntegrityTest.
+	testClass := Object.
 
 	self
-		should: [ RDBSystemBasedUserStoryTestSuiteBuilder for: PackageIntegrityTest ]
+		should: [ RDBSystemBasedUserStoryTestSuiteBuilder for: testClass ]
 		raise: ProgrammingError
 		withMessageText:
 			( '<1p> must be <2p> subclass.' expandMacrosWith: testClass with: PersistentSystemBasedUserStoryTest )
