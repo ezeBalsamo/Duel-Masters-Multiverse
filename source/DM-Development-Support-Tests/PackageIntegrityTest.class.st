@@ -401,7 +401,9 @@ PackageIntegrityTest >> setUpKnownPharoPackageNames [
 		addAll: self pharoCollectionPackageNamesUsed;
 		addAll: self pharoPackageOrganizerPackageNamesUsed;
 		addAll: self pharoVersioningPackageNamesUsed;
-		yourself
+		add: 'TraitsV2';
+		"this one is added due to the absence of RGBehavior>>#localSelectors in Pharo 7"
+			yourself
 ]
 
 { #category : #tests }
