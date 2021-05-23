@@ -68,6 +68,7 @@ SystemInterfaceIntegrityTest >> expectedInterfacesSelectorsOf: aSystemImplementa
 { #category : #'private - logging' }
 SystemInterfaceIntegrityTest >> log: aSelectorsCollection asNotDeclaredByAnyOfTheDeclaredInterfacesOf: aSystemImplementationClass on: aStream [
 
+	<ignoreForCoverage>
 	| formattedSelectors |
 
 	formattedSelectors := ( CollectionFormatter separatingWith: ', ' ) format: aSelectorsCollection.
