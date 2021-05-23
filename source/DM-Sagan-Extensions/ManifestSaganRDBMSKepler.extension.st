@@ -3,6 +3,8 @@ Extension { #name : #ManifestSaganRDBMSKepler }
 { #category : #'*DM-Sagan-Extensions' }
 ManifestSaganRDBMSKepler class >> initialize [
 
+	self removeRepositoryProviderSystemInterface.
+	
 	Kepler
 		registerInterfaceAt: #RepositoryProviderSystem 
 		named: 'Repository Provider System Interface'
@@ -12,4 +14,10 @@ ManifestSaganRDBMSKepler class >> initialize [
 			register:as:		
 			prepareForInitialPersistence
 			destroyRepositories)
+]
+
+{ #category : #'*DM-Sagan-Extensions' }
+ManifestSaganRDBMSKepler class >> removeRepositoryProviderSystemInterface [
+
+	( Kepler bindingOf: #SystemInterfaces ) value removeBindingFor: #RepositoryProviderSystem
 ]
