@@ -22,6 +22,20 @@ ClassIntegrityTest >> assert: aClass dontHaveUncategorizedMethodsLoggingFailures
 ]
 
 { #category : #'private - asserting' }
+ClassIntegrityTest >> assert: aClass isWellCompiledLoggingFailuresOn: aStream [
+
+	"I can't send #recompile because #recompile:from: doesn't warn which selector failed to recompile, so I copy the implementation here.
+	This way, I don't need to modify the original implementation."
+
+	[ aClass localSelectors do: [ :selector | aClass recompile: selector from: aClass ] ]
+		on: Error
+		do: [ :signal | 
+			self log: signal messageText on: aStream.
+			signal pass
+			]
+]
+
+{ #category : #'private - asserting' }
 ClassIntegrityTest >> assert: aClass orItsMetaclassDefinesProtocolLoggingFailuresOn: aStream [
 
 	( self definesProtocol: aClass )
@@ -96,6 +110,20 @@ ClassIntegrityTest >> test03ClassesMustDefineProtocol [
 		runLoggingFailuresOn: [ :stream | 
 			self
 				withAllOwnedClassesWithoutExceptionsDo: [ :class | self assert: class orItsMetaclassDefinesProtocolLoggingFailuresOn: stream ]
+			]
+]
+
+{ #category : #tests }
+ClassIntegrityTest >> test04ClassesAreWellCompiled [
+
+	self
+		runLoggingFailuresOn: [ :stream | 
+			self
+				withAllOwnedClassesDo: [ :class | 
+					self
+						assert: class isWellCompiledLoggingFailuresOn: stream;
+						assert: class classSide isWellCompiledLoggingFailuresOn: stream
+					]
 			]
 ]
 
