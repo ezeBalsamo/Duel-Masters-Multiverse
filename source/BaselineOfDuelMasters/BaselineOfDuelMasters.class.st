@@ -370,6 +370,31 @@ BaselineOfDuelMasters >> kernelBasicObjectsExtensionsPackage [
 ]
 
 { #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> matchModelPackage [
+
+	^ self
+		modelPackageNamed: 'DM-Match'
+		requiringAll: ( Array with: ( self modelPackageNameFor: 'DM-Exception' ) with: self keplerDependencyName )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> matchModelTestsPackage [
+
+	| matchModelPackageName |
+
+	matchModelPackageName := self modelPackageNameFor: 'DM-Match'.
+	^ self
+		testsPackageNamed: matchModelPackageName
+		requiringAll:
+			( Array
+				with: matchModelPackageName
+				with: ( self modelPackageNameFor: 'DM-Race' )
+				with: ( self modelPackageNameFor: 'DM-Civilization' )
+				with: ( self modelPackageNameFor: 'DM-Card' )
+				with: ( self modelPackageNameFor: 'DM-Exception' ) )
+]
+
+{ #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> metaprogrammingModelPackage [
 
 	^ self
@@ -430,6 +455,7 @@ BaselineOfDuelMasters >> modelPackages [
 		add: self civilizationModelPackage;
 		add: self raceModelPackage;
 		add: self cardModelPackage;
+		add: self matchModelPackage;
 		add: self repositoryProviderSystemModelPackage;
 		add: self civilizationManagementSystemModelPackage;
 		add: self raceManagementSystemModelPackage;
@@ -691,6 +717,7 @@ BaselineOfDuelMasters >> testPackages [
 		add: self civilizationModelTestsPackage;
 		add: self raceModelTestsPackage;
 		add: self cardModelTestsPackage;
+		add: self matchModelTestsPackage;
 		add: self repositoryProviderSystemModelTestsPackage;
 		add: self civilizationManagementSystemModelTestsPackage;
 		add: self raceManagementSystemModelTestsPackage;
