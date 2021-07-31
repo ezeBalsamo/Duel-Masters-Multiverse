@@ -46,6 +46,18 @@ MatchUserStoryTest >> calendar2016Name [
 	^ '2016 Calendar'
 ]
 
+{ #category : #'private - processing' }
+MatchUserStoryTest >> chargeManaOf: aPlayer withAll: aCardCollection [
+
+	aCardCollection
+		do: [ :aCard | 
+			match
+				chargeManaOf: aPlayer with: aCard;
+				endTurn;
+				endTurn
+			]
+]
+
 { #category : #'private - accessing' }
 MatchUserStoryTest >> fireCivilization [
 
@@ -174,7 +186,7 @@ MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutChargedMana [
 	tulkTheOracle := self tulkTheOracle.
 
 	self
-		assert: ( match numberOfManaChargedBy: shobu ) equals: self zeroMana;
+		assert: ( match numberOfManaOf: shobu ) equals: self zeroMana;
 		assert: ( tulkTheOracle costs: self oneMana );
 		should: [ match summon: tulkTheOracle of: shobu ]
 			raise: IllegalPlay
@@ -187,11 +199,11 @@ MatchUserStoryTest >> test01PlayerChargesMana [
 	| immortalBaronVorg |
 
 	immortalBaronVorg := self immortalBaronVorg.
-	self assert: ( match manaChargedBy: shobu ) isEmpty.
+	self assert: ( match manaOf: shobu ) isEmpty.
 	match chargeManaOf: shobu with: immortalBaronVorg.
 	self
-		assertTheOnlyElementIn: ( match manaChargedBy: shobu ) is: immortalBaronVorg;
-		assert: ( match numberOfManaChargedBy: shobu ) equals: self oneMana
+		assertTheOnlyElementIn: ( match manaOf: shobu ) is: immortalBaronVorg;
+		assert: ( match numberOfManaOf: shobu ) equals: self oneMana
 ]
 
 { #category : #'tests - drawing cards' }
@@ -228,11 +240,11 @@ MatchUserStoryTest >> test02PlayerCantChargeManaOnOpponentsTurn [
 	immortalBaronVorg := self immortalBaronVorg.
 	self
 		assert: ( match isTurnOf: shobu );
-		assert: ( match manaChargedBy: knight ) isEmpty;
+		assert: ( match manaOf: knight ) isEmpty;
 		should: [ match chargeManaOf: knight with: immortalBaronVorg ]
 			raise: IllegalPlay
 			withMessageText: 'Knight: You can''t charge mana on your opponent''s turn.';
-		assert: ( match manaChargedBy: knight ) isEmpty
+		assert: ( match manaOf: knight ) isEmpty
 ]
 
 { #category : #'tests - drawing cards' }
@@ -266,11 +278,11 @@ MatchUserStoryTest >> test02PlayerCantSummonCreatureWhenChargedManaIsNotFromTheS
 	immortalBaronVorg := self immortalBaronVorg.
 	tulkTheOracle := self tulkTheOracle.
 
-	self assert: ( match manaChargedBy: shobu ) isEmpty.
+	self assert: ( match manaOf: shobu ) isEmpty.
 	match chargeManaOf: shobu with: immortalBaronVorg.
 
 	self
-		assert: ( match numberOfManaChargedBy: shobu ) equals: self oneMana;
+		assert: ( match numberOfManaOf: shobu ) equals: self oneMana;
 		assert: ( tulkTheOracle costs: self oneMana );
 		should: [ match summon: tulkTheOracle of: shobu ]
 			raise: IllegalPlay
@@ -292,14 +304,14 @@ MatchUserStoryTest >> test03PlayerCantChargeManaMoreThanOnceInTheSameTurn [
 
 	immortalBaronVorg := self immortalBaronVorg.
 	anotherImmortalBaronVorg := self immortalBaronVorg.
-	self assert: ( match manaChargedBy: shobu ) isEmpty.
+	self assert: ( match manaOf: shobu ) isEmpty.
 	match chargeManaOf: shobu with: immortalBaronVorg.
 	self
-		assertTheOnlyElementIn: ( match manaChargedBy: shobu ) is: immortalBaronVorg;
+		assertTheOnlyElementIn: ( match manaOf: shobu ) is: immortalBaronVorg;
 		should: [ match chargeManaOf: shobu with: anotherImmortalBaronVorg ]
 			raise: IllegalPlay
 			withMessageText: 'Shobu: Mana can only be charged once per turn.';
-		assertTheOnlyElementIn: ( match manaChargedBy: shobu ) is: immortalBaronVorg
+		assertTheOnlyElementIn: ( match manaOf: shobu ) is: immortalBaronVorg
 ]
 
 { #category : #'tests - drawing cards' }
@@ -336,26 +348,26 @@ MatchUserStoryTest >> test03PlayerSummonCreatureWithUnitaryManaCostAndOneManaCha
 	march := self march.
 	tulkTheOracle := self tulkTheOracle.
 
-	self assert: ( match manaChargedBy: shobu ) isEmpty.
+	self assert: ( match manaOf: shobu ) isEmpty.
 	match chargeManaOf: shobu with: march.
 
 	self
-		assert: ( match numberOfManaChargedBy: shobu ) equals: self oneMana;
+		assert: ( match numberOfManaOf: shobu ) equals: self oneMana;
 		assert: ( tulkTheOracle costs: self oneMana ).
 
-	self assert: ( match creaturesSummonedBy: shobu ) isEmpty.
+	self assert: ( match creaturesSummonedOf: shobu ) isEmpty.
 	match summon: tulkTheOracle of: shobu.
-	self assertTheOnlyElementIn: ( match creaturesSummonedBy: shobu ) is: tulkTheOracle
+	self assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
 ]
 
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test03PlayersBeginTheMatchWithoutChargedMana [
 
 	self
-		assert: ( match manaChargedBy: shobu ) isEmpty;
-		assert: ( match numberOfManaChargedBy: shobu ) equals: self zeroMana;
-		assert: ( match manaChargedBy: knight ) isEmpty;
-		assert: ( match numberOfManaChargedBy: knight ) equals: self zeroMana
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match numberOfManaOf: shobu ) equals: self zeroMana;
+		assert: ( match manaOf: knight ) isEmpty;
+		assert: ( match numberOfManaOf: knight ) equals: self zeroMana
 ]
 
 { #category : #'tests - mana charge' }
@@ -365,10 +377,10 @@ MatchUserStoryTest >> test04PlayerCanChargeManaEveryTurn [
 
 	immortalBaronVorg := self immortalBaronVorg.
 	anotherImmortalBaronVorg := self immortalBaronVorg.
-	self assert: ( match manaChargedBy: shobu ) isEmpty.
+	self assert: ( match manaOf: shobu ) isEmpty.
 
 	match chargeManaOf: shobu with: immortalBaronVorg.
-	self assertTheOnlyElementIn: ( match manaChargedBy: shobu ) is: immortalBaronVorg.
+	self assertTheOnlyElementIn: ( match manaOf: shobu ) is: immortalBaronVorg.
 
 	match
 		endTurn;
@@ -376,7 +388,7 @@ MatchUserStoryTest >> test04PlayerCanChargeManaEveryTurn [
 		chargeManaOf: shobu with: anotherImmortalBaronVorg.
 
 	expectedChargedMana := Array with: immortalBaronVorg with: anotherImmortalBaronVorg.
-	self assertCollection: ( match manaChargedBy: shobu ) hasSameElements: expectedChargedMana
+	self assertCollection: ( match manaOf: shobu ) hasSameElements: expectedChargedMana
 ]
 
 { #category : #'tests - drawing cards' }
@@ -394,19 +406,6 @@ MatchUserStoryTest >> test04PlayerCanDrawCardEveryTurn [
 	self assert: ( match cardsInHandOf: shobu ) size equals: 7
 ]
 
-{ #category : #'tests - field setup' }
-MatchUserStoryTest >> test04PlayerNotBelongingToMatchCantHaveCardsInHand [
-
-	| intruder |
-
-	intruder := self intruder.
-
-	self
-		should: [ match cardsInHandOf: intruder ]
-		raise: Error
-		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
 { #category : #'tests - turn order' }
 MatchUserStoryTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
 
@@ -418,6 +417,37 @@ MatchUserStoryTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
 		should: [ match isTurnOf: intruder ]
 		raise: Error
 		withMessageText: 'Intruder is not a valid player in this match.'
+]
+
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test04PlayerSummonCreatureWithUnitaryManaCostAndManyManaChargedFromDifferentCivilizations [
+
+	| tulkTheOracle expectedManaChargedCivilizations |
+
+	tulkTheOracle := self tulkTheOracle.
+
+	self assert: ( match manaOf: shobu ) isEmpty.
+	self chargeManaOf: shobu withAll: ( Array with: self march with: self vocalMegahit ).
+
+	expectedManaChargedCivilizations := Array with: self fireCivilization with: self lightCivilization.
+
+	self
+		assert: ( match numberOfManaOf: shobu ) equals: self twoManas;
+		assertCollection: ( match civilizationsOfManaOf: shobu )
+			hasSameElements: expectedManaChargedCivilizations;
+		assert: ( tulkTheOracle costs: self oneMana ).
+
+	self assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+	match summon: tulkTheOracle of: shobu.
+	self assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
+]
+
+{ #category : #'tests - field setup' }
+MatchUserStoryTest >> test04layersBeginTheMatchWithoutSummonedCreatures [
+
+	self
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: knight ) isEmpty
 ]
 
 { #category : #'tests - mana charge' }
@@ -448,7 +478,43 @@ MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantDrawCard [
 ]
 
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantHaveShields [
+MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantHaveCardsInHand [
+
+	| intruder |
+
+	intruder := self intruder.
+
+	self
+		should: [ match cardsInHandOf: intruder ]
+		raise: Error
+		withMessageText: 'Intruder is not a valid player in this match.'
+]
+
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test05PlayerSummonCreatureWithManyManaCostAndManyManaChargedFromDifferentCivilizations [
+
+	| immortalBaronVorg expectedManaChargedCivilizations |
+
+	immortalBaronVorg := self immortalBaronVorg.
+
+	self assert: ( match manaOf: shobu ) isEmpty.
+	self chargeManaOf: shobu withAll: ( Array with: self march with: self vocalMegahit ).
+
+	expectedManaChargedCivilizations := Array with: self fireCivilization with: self lightCivilization.
+
+	self
+		assert: ( match numberOfManaOf: shobu ) equals: self twoManas;
+		assertCollection: ( match civilizationsOfManaOf: shobu )
+			hasSameElements: expectedManaChargedCivilizations;
+		assert: ( immortalBaronVorg costs: self twoManas ).
+
+	self assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+	match summon: immortalBaronVorg of: shobu.
+	self assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: immortalBaronVorg
+]
+
+{ #category : #'tests - field setup' }
+MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveShields [
 
 	| intruder |
 
@@ -460,28 +526,56 @@ MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantHaveShields [
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test06WhenPlayerSummonsCreatureThenRequiredChargedManaIsTapped [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	self
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match tappedManaOf: shobu ) isEmpty.
+
+	match chargeManaOf: shobu with: march.
+
+	self
+		assertTheOnlyElementIn: ( match manaOf: shobu ) is: march;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match numberOfManaOf: shobu ) equals: self oneMana;
+		assert: ( tulkTheOracle costs: self oneMana ).
+
+	self assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+	match summon: tulkTheOracle of: shobu tapping: march.
+	self
+		assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
+		assertTheOnlyElementIn: ( match manaOf: shobu ) is: march;
+		assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: march
+]
+
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveChargedMana [
+MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveChargedMana [
 
 	| intruder |
 
 	intruder := self intruder.
 
 	self
-		should: [ match manaChargedBy: intruder ]
+		should: [ match manaOf: intruder ]
 		raise: Error
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveNumberOfChargedMana [
+MatchUserStoryTest >> test08PlayerNotBelongingToMatchCantHaveNumberOfChargedMana [
 
 	| intruder |
 
 	intruder := self intruder.
 
 	self
-		should: [ match numberOfManaChargedBy: intruder ]
+		should: [ match numberOfManaOf: intruder ]
 		raise: Error
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
@@ -496,6 +590,12 @@ MatchUserStoryTest >> tulkTheOracle [
 		costing: self oneMana
 		providing: self oneMana
 		with: ( self power with: 500 )
+]
+
+{ #category : #'private - accessing' }
+MatchUserStoryTest >> twoManas [
+
+	^ self mana with: 2
 ]
 
 { #category : #'private - accessing' }

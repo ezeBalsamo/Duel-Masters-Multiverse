@@ -5,12 +5,13 @@ Class {
 		'firstPlayer',
 		'secondPlayer',
 		'cardsInHandByPlayer',
-		'manaChargedByPlayer',
 		'shieldsByPlayer',
 		'playersTurn',
 		'canManaBeCharged',
 		'canCardBeDrawn',
-		'creaturesSummonedByPlayer'
+		'creaturesSummonedByPlayer',
+		'manaByPlayer',
+		'tappedManaByPlayer'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -29,16 +30,16 @@ Match >> assertCardHasNotBeenDrawnYet [
 ]
 
 { #category : #'private - preconditions' }
-Match >> assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaChargedBy: aPotentialPlayer [
+Match >> assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaOf: aPotentialPlayer [
 
-	( ( self civilizationsOfManaChargedBy: aPotentialPlayer ) includes: aCreatureCard civilization )
-		ifFalse: [ IllegalPlay
-				from: aPotentialPlayer
-				because:
-					( 'You don''t have mana from <1p> to summon <2p>.'
-						expandMacrosWith: aCreatureCard civilization
-						with: aCreatureCard )
-			]
+	[ IllegalPlay
+		from: aPotentialPlayer
+		because:
+			( 'You don''t have mana from <1p> to summon <2p>.'
+				expandMacrosWith: aCreatureCard civilization
+				with: aCreatureCard )
+	]
+		unless: ( ( self civilizationsOfManaOf: aPotentialPlayer ) includes: aCreatureCard civilization )
 ]
 
 { #category : #'private - preconditions' }
@@ -49,13 +50,12 @@ Match >> assertIsValidPlayer: aPotentialPlayer [
 ]
 
 { #category : #'private - preconditions' }
-Match >> assertManaCostOf: aCreatureCard isLowerOrEqualThanNumberOfManaChargedBy: aPotentialPlayer [
+Match >> assertManaCostOf: aCreatureCard isLowerOrEqualThanNumberOfManaOf: aPotentialPlayer [
 
-	aCreatureCard manaCost > ( self numberOfManaChargedBy: aPotentialPlayer )
-		ifTrue: [ IllegalPlay
-				from: aPotentialPlayer
-				because: ( 'You don''t have enough mana to summon <1p>.' expandMacrosWith: aCreatureCard )
-			]
+	[ IllegalPlay
+		from: aPotentialPlayer
+		because: ( 'You don''t have enough mana to summon <1p>.' expandMacrosWith: aCreatureCard )
+	] unless: aCreatureCard manaCost <= ( self numberOfManaOf: aPotentialPlayer )
 ]
 
 { #category : #'private - preconditions' }
@@ -81,18 +81,18 @@ Match >> chargeManaOf: aPotentialPlayer with: aCard [
 		ifIsNotTurnOf: aPotentialPlayer warnThat: 'You can''t charge mana on your opponent''s turn.';
 		assertManaHasNotBeenChargedYet.
 
-	( self manaChargedBy: aPotentialPlayer ) add: aCard.
+	( self manaOf: aPotentialPlayer ) add: aCard.
 	canManaBeCharged := false
 ]
 
 { #category : #'private - accessing' }
-Match >> civilizationsOfManaChargedBy: aPotentialPlayer [
+Match >> civilizationsOfManaOf: aPotentialPlayer [
 
-	^ ( self manaChargedBy: aPotentialPlayer ) collect: [ :aCard | aCard civilization ] as: Set
+	^ ( self manaOf: aPotentialPlayer ) collect: [ :aCard | aCard civilization ] as: Set
 ]
 
 { #category : #accessing }
-Match >> creaturesSummonedBy: aPlayer [
+Match >> creaturesSummonedOf: aPlayer [
 
 	^ creaturesSummonedByPlayer at: aPlayer
 ]
@@ -149,7 +149,7 @@ Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 	self
 		initializeCardsInHandByPlayer;
 		initializeShieldsByPlayer;
-		initializeManaChargedByPlayer;
+		initializeManaByPlayer;
 		initializeCreaturesSummonedByPlayer
 ]
 
@@ -186,9 +186,13 @@ Match >> initializeCreaturesSummonedByPlayer [
 ]
 
 { #category : #initialization }
-Match >> initializeManaChargedByPlayer [
+Match >> initializeManaByPlayer [
 
-	manaChargedByPlayer := Dictionary
+	manaByPlayer := Dictionary
+		with: firstPlayer -> OrderedCollection new
+		with: secondPlayer -> OrderedCollection new.
+
+	tappedManaByPlayer := Dictionary
 		with: firstPlayer -> OrderedCollection new
 		with: secondPlayer -> OrderedCollection new
 ]
@@ -231,19 +235,19 @@ Match >> mana [
 ]
 
 { #category : #accessing }
-Match >> manaChargedBy: aPotentialPlayer [
+Match >> manaOf: aPotentialPlayer [
 
-	^ manaChargedByPlayer
+	^ manaByPlayer
 		at: aPotentialPlayer
 		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
 ]
 
 { #category : #accessing }
-Match >> numberOfManaChargedBy: aPotentialPlayer [
+Match >> numberOfManaOf: aPotentialPlayer [
 
-	^ ( self manaChargedBy: aPotentialPlayer )
+	^ ( self manaOf: aPotentialPlayer )
 		inject: self zeroMana
-		into: [ :numberOfManaCharged :aCard | numberOfManaCharged + aCard manaNumberToProvide ]
+		into: [ :totalNumberOfMana :aCard | totalNumberOfMana + aCard manaNumberToProvide ]
 ]
 
 { #category : #accessing }
@@ -262,10 +266,26 @@ Match >> signalIsNotValidPlayer: aNotValidPlayer [
 Match >> summon: aCreatureCard of: aPotentialPlayer [
 
 	self
-		assertManaCostOf: aCreatureCard isLowerOrEqualThanNumberOfManaChargedBy: aPotentialPlayer;
-		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaChargedBy: aPotentialPlayer.
+		assertManaCostOf: aCreatureCard isLowerOrEqualThanNumberOfManaOf: aPotentialPlayer;
+		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaOf: aPotentialPlayer.
 
-	( self creaturesSummonedBy: aPotentialPlayer ) add: aCreatureCard
+	( self creaturesSummonedOf: aPotentialPlayer ) add: aCreatureCard
+]
+
+{ #category : #processing }
+Match >> summon: aCreatureCard of: aPotentialPlayer tapping: aCard [
+
+	self summon: aCreatureCard of: aPotentialPlayer.
+
+	( self tappedManaOf: aPotentialPlayer ) add: aCard
+]
+
+{ #category : #accessing }
+Match >> tappedManaOf: aPotentialPlayer [
+
+	^ tappedManaByPlayer
+		at: aPotentialPlayer
+		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
 ]
 
 { #category : #'private - accessing' }
