@@ -183,7 +183,9 @@ Match >> endTurnOf: aPotentialPlayer [
 	canCardBeDrawn := true.
 	hasFirstTurnEnded
 		ifFalse: [ hasFirstTurnEnded := true ].
-	playersTurn next
+	playersTurn next.
+
+	( self tappedManaOf: self currentPlayer ) removeAll
 ]
 
 { #category : #'private - preconditions' }
