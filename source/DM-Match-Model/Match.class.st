@@ -340,12 +340,6 @@ Match >> signalIsNotValidPlayer: aNotValidPlayer [
 ]
 
 { #category : #processing }
-Match >> summon: aCreatureCard of: aPotentialPlayer tapping: aCard [
-
-	self summon: aCreatureCard of: aPotentialPlayer tappingAll: {aCard}
-]
-
-{ #category : #processing }
 Match >> summon: aCreatureCard of: aPotentialPlayer tappingAll: aCardCollection [
 
 	aCardCollection

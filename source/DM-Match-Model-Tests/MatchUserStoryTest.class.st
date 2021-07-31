@@ -184,6 +184,12 @@ MatchUserStoryTest >> startManagingCivilizations [
 		storeCivilization: ( SingleCivilization named: 'Light' )
 ]
 
+{ #category : #processing }
+MatchUserStoryTest >> summon: aCreatureCard of: aPotentialPlayer tapping: aCard [
+
+	match summon: aCreatureCard of: aPotentialPlayer tappingAll: {aCard}
+]
+
 { #category : #'tests - summoning creatures' }
 MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutChargedMana [
 
@@ -294,7 +300,7 @@ MatchUserStoryTest >> test02PlayerCantSummonCreatureWhenChargedManaIsNotFromTheS
 		assert: ( match numberOfManaOf: shobu ) equals: self oneMana;
 		assert: ( tulkTheOracle costs: self oneMana );
 		deny: ( match canBeSummoned: tulkTheOracle of: shobu );
-		should: [ match summon: tulkTheOracle of: shobu tapping: immortalBaronVorg ]
+		should: [ self summon: tulkTheOracle of: shobu tapping: immortalBaronVorg ]
 			raise: IllegalPlay
 			withMessageText: 'Shobu: You don''t have mana from Light civilization to summon Tulk, the Oracle.'
 ]
@@ -356,7 +362,7 @@ MatchUserStoryTest >> test03PlayerCantSummonCreatureWhenTheChargedManaIsNotEnoug
 		assert: ( match numberOfManaOf: shobu ) equals: self oneMana;
 		assert: ( immortalBaronVorg costs: self twoManas );
 		deny: ( match canBeSummoned: immortalBaronVorg of: shobu );
-		should: [ match summon: immortalBaronVorg of: shobu tapping: vocalMegahit ]
+		should: [ self summon: immortalBaronVorg of: shobu tapping: vocalMegahit ]
 			raise: IllegalPlay
 			withMessageText: 'Shobu: You don''t have enough mana to summon Immortal Baron, Vorg.'
 ]
@@ -453,7 +459,8 @@ MatchUserStoryTest >> test04PlayerSummonCreatureWithUnitaryManaCostAndOneManaCha
 		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
 		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
 
-	match summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
+
 	self assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
 ]
 
@@ -524,7 +531,8 @@ MatchUserStoryTest >> test05PlayerSummonCreatureWithUnitaryManaCostAndManyManaCh
 		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
 		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
 
-	match summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
+
 	self assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
 ]
 
@@ -612,10 +620,11 @@ MatchUserStoryTest >> test07WhenPlayerSummonsCreatureWithUnitaryManaCostThenRequ
 	self
 		assertTheOnlyElementIn: ( match manaOf: shobu ) is: march;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match canBeSummoned: tulkTheOracle of: shobu ).
+		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
 
-	self assert: ( match creaturesSummonedOf: shobu ) isEmpty.
-	match summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
+
 	self
 		assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
 		assertTheOnlyElementIn: ( match manaOf: shobu ) is: march;
@@ -687,7 +696,7 @@ MatchUserStoryTest >> test09PlayerCantSummonCreatureWhenTheRequiredManaHasNotBee
 
 	self
 		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
-		should: [ match summon: tulkTheOracle of: shobu tapping: march ]
+		should: [ self summon: tulkTheOracle of: shobu tapping: march ]
 			raise: IllegalPlay
 			withMessageText: 'Shobu: You can''t tap March because it isn''t in your mana zone.'
 ]
@@ -714,14 +723,14 @@ MatchUserStoryTest >> test10PlayerCantSummonCreatureWithUnitaryManaCostAndOneMan
 		assert: ( match tappedManaOf: shobu ) isEmpty;
 		assert: ( match canBeSummoned: tulkTheOracle of: shobu ).
 
-	match summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
 
 	self
 		assertTheOnlyElementIn: ( match manaOf: shobu ) is: march;
 		assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: march;
 		assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
 		deny: ( match canBeSummoned: anotherTulkTheOracle of: shobu );
-		should: [ match summon: anotherTulkTheOracle of: shobu tapping: march ]
+		should: [ self summon: anotherTulkTheOracle of: shobu tapping: march ]
 			raise: IllegalPlay
 			withMessageText: 'Shobu: You can''t tap March because it is already tapped.'
 ]
@@ -744,7 +753,7 @@ MatchUserStoryTest >> test11PlayerCantSummonCreatureWithUnitaryManaCostAndManyMa
 		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
 		assert: ( match canBeSummoned: anotherTulkTheOracle of: shobu ).
 
-	match summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
 
 	self
 		assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: march;
