@@ -10,6 +10,15 @@ BaselineOfDuelMasters >> aconcaguaCoreExtensionsPackage [
 	^ self extensionPackageNamed: 'DM-Aconcagua-Core' requiring: self keplerDependencyName
 ]
 
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> aconcaguaCoreExtensionsTestsPackage [
+
+	| aconcaguaCoreExtensionsPackageName |
+
+	aconcaguaCoreExtensionsPackageName := self extensionPackageNameFor: 'DM-Aconcagua-Core'.
+	^ self testsPackageNamed: aconcaguaCoreExtensionsPackageName requiring: aconcaguaCoreExtensionsPackageName
+]
+
 { #category : #accessing }
 BaselineOfDuelMasters >> baseline: aSpec [
 
@@ -743,6 +752,7 @@ BaselineOfDuelMasters >> testPackages [
 		add: self wikitextParsingModelTestsPackage;
 		add: self dependentSUnitTestsPackage;
 		add: self saganExtensionsTestsPackage;
+		add: self aconcaguaCoreExtensionsTestsPackage;
 		add: self toolDependencyAnalyserCoreExtensionsTestsPackage;
 		add: self developmentSupportTestsPackage;
 		yourself
