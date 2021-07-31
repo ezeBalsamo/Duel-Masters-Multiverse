@@ -53,14 +53,14 @@ MatchUserStoryTest >> cardsInHandOf: aPlayer [
 ]
 
 { #category : #'private - processing' }
-MatchUserStoryTest >> chargeManaOf: aPlayer withAll: aCardCollection [
+MatchUserStoryTest >> chargeShobuManaWithAll: aCardCollection [
 
 	aCardCollection
 		do: [ :aCard | 
 			match
-				chargeManaOf: aPlayer with: aCard;
-				endTurn;
-				endTurn
+				chargeManaOf: shobu with: aCard;
+				endTurnOf: shobu;
+				endTurnOf: knight
 			]
 ]
 
@@ -216,9 +216,11 @@ MatchUserStoryTest >> test01PlayerChargesMana [
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test01PlayerDrawsCard [
 
-	self assert: ( self cardsInHandOf: shobu ) size equals: 5.
-	match drawCardFor: shobu.
-	self assert: ( self cardsInHandOf: shobu ) size equals: 6
+	self assert: ( self cardsInHandOf: knight ) size equals: 5.
+	match
+		endTurnOf: shobu;
+		drawCardFor: knight.
+	self assert: ( self cardsInHandOf: knight ) size equals: 6
 ]
 
 { #category : #'tests - field setup' }
@@ -325,14 +327,18 @@ MatchUserStoryTest >> test03PlayerCantChargeManaMoreThanOnceInTheSameTurn [
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test03PlayerCantDrawMoreThanOneCardInTheSameTurn [
 
-	self assert: ( self cardsInHandOf: shobu ) size equals: 5.
-	match drawCardFor: shobu.
+	self assert: ( self cardsInHandOf: knight ) size equals: 5.
+
+	match
+		endTurnOf: shobu;
+		drawCardFor: knight.
+
 	self
-		assert: ( self cardsInHandOf: shobu ) size equals: 6;
-		should: [ match drawCardFor: shobu ]
+		assert: ( self cardsInHandOf: knight ) size equals: 6;
+		should: [ match drawCardFor: knight ]
 			raise: IllegalPlay
-			withMessageText: 'Shobu: Only one card can be drawn per turn.';
-		assert: ( self cardsInHandOf: shobu ) size equals: 6
+			withMessageText: 'Knight: Only one card can be drawn per turn.';
+		assert: ( self cardsInHandOf: knight ) size equals: 6
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -391,8 +397,8 @@ MatchUserStoryTest >> test04PlayerCanChargeManaEveryTurn [
 	self assertTheOnlyElementIn: ( match manaOf: shobu ) is: immortalBaronVorg.
 
 	match
-		endTurn;
-		endTurn;
+		endTurnOf: shobu;
+		endTurnOf: knight;
 		chargeManaOf: shobu with: anotherImmortalBaronVorg.
 
 	expectedChargedMana := Array with: immortalBaronVorg with: anotherImmortalBaronVorg.
@@ -403,12 +409,17 @@ MatchUserStoryTest >> test04PlayerCanChargeManaEveryTurn [
 MatchUserStoryTest >> test04PlayerCanDrawCardEveryTurn [
 
 	self assert: ( self cardsInHandOf: shobu ) size equals: 5.
-	match drawCardFor: shobu.
+
+	match
+		endTurnOf: shobu;
+		endTurnOf: knight;
+		drawCardFor: shobu.
+
 	self assert: ( self cardsInHandOf: shobu ) size equals: 6.
 
 	match
-		endTurn;
-		endTurn;
+		endTurnOf: shobu;
+		endTurnOf: knight;
 		drawCardFor: shobu.
 
 	self assert: ( self cardsInHandOf: shobu ) size equals: 7
@@ -503,7 +514,7 @@ MatchUserStoryTest >> test05PlayerSummonCreatureWithUnitaryManaCostAndManyManaCh
 	march := self march.
 
 	self assert: ( match manaOf: shobu ) isEmpty.
-	self chargeManaOf: shobu withAll: ( Array with: march with: self vocalMegahit ).
+	self chargeShobuManaWithAll: ( Array with: march with: self vocalMegahit ).
 
 	expectedManaChargedCivilizations := Array with: self fireCivilization with: self lightCivilization.
 
@@ -515,6 +526,24 @@ MatchUserStoryTest >> test05PlayerSummonCreatureWithUnitaryManaCostAndManyManaCh
 
 	match summon: tulkTheOracle of: shobu tapping: march.
 	self assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
+]
+
+{ #category : #'tests - drawing cards' }
+MatchUserStoryTest >> test06InitialPlayerCantDrawCardInTheFirstTurn [
+
+	self
+		assert: ( self cardsInHandOf: shobu ) size equals: 5;
+		should: [ match drawCardFor: shobu ]
+			raise: IllegalPlay
+			withMessageText: 'Shobu: You can''t draw card in your first turn.';
+		assert: ( self cardsInHandOf: shobu ) size equals: 5.
+
+	match
+		endTurnOf: shobu;
+		endTurnOf: knight;
+		drawCardFor: shobu.
+
+	self assert: ( self cardsInHandOf: shobu ) size equals: 6
 ]
 
 { #category : #'tests - field setup' }
@@ -539,7 +568,7 @@ MatchUserStoryTest >> test06PlayerSummonCreatureWithManyManaCostAndManyManaCharg
 	expectedMana := Array with: self march with: self vocalMegahit.
 
 	self assert: ( match manaOf: shobu ) isEmpty.
-	self chargeManaOf: shobu withAll: expectedMana.
+	self chargeShobuManaWithAll: expectedMana.
 
 	expectedManaChargedCivilizations := Array with: self fireCivilization with: self lightCivilization.
 
@@ -617,7 +646,7 @@ MatchUserStoryTest >> test08WhenPlayerSummonsCreatureWithManyManaCostThenRequire
 
 	expectedMana := Array with: vocalMegahit with: tulkTheOracle.
 
-	self chargeManaOf: shobu withAll: expectedMana.
+	self chargeShobuManaWithAll: expectedMana.
 
 	self
 		assert: ( match tappedManaOf: shobu ) isEmpty;
@@ -707,7 +736,7 @@ MatchUserStoryTest >> test11PlayerCantSummonCreatureWithUnitaryManaCostAndManyMa
 	anotherTulkTheOracle := self tulkTheOracle.
 	immortalBaronVorg := self immortalBaronVorg.
 
-	self chargeManaOf: shobu withAll: ( Array with: march with: immortalBaronVorg ).
+	self chargeShobuManaWithAll: ( Array with: march with: immortalBaronVorg ).
 
 	self
 		assert: ( match tappedManaOf: shobu ) isEmpty;

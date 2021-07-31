@@ -11,7 +11,8 @@ Class {
 		'canCardBeDrawn',
 		'creaturesSummonedByPlayer',
 		'manaByPlayer',
-		'tappedManaByPlayer'
+		'tappedManaByPlayer',
+		'hasFirstTurnEnded'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -50,6 +51,15 @@ Match >> assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaOf: 
 				expandMacrosWith: aCreatureCard civilization
 				with: aCreatureCard )
 		unless: ( ( self civilizationsOfManaOf: aPotentialPlayer ) includes: aCreatureCard civilization )
+]
+
+{ #category : #'private - preconditions' }
+Match >> assertIsNotFirstTurn [
+
+	self
+		signalIllegalPlayFrom: self currentPlayer
+		because: 'You can''t draw card in your first turn.'
+		unless: hasFirstTurnEnded
 ]
 
 { #category : #'private - preconditions' }
@@ -157,26 +167,23 @@ Match >> drawCardFor: aPotentialPlayer [
 
 	self
 		ifIsNotTurnOf: aPotentialPlayer warnThat: 'You can''t draw a card on your opponent''s turn.';
+		assertIsNotFirstTurn;
 		assertCardHasNotBeenDrawnYet.
 
 	( self cardsInHandOf: aPotentialPlayer ) add: 'bla-bla'.
 	canCardBeDrawn := false
 ]
 
-{ #category : #'private - processing' }
-Match >> endTurn [
-
-	canManaBeCharged := true.
-	canCardBeDrawn := true.
-	playersTurn next
-]
-
 { #category : #processing }
 Match >> endTurnOf: aPotentialPlayer [
 
-	self
-		ifIsNotTurnOf: aPotentialPlayer warnThat: 'You can''t end your opponent''s turn.';
-		endTurn
+	self ifIsNotTurnOf: aPotentialPlayer warnThat: 'You can''t end your opponent''s turn.'.
+
+	canManaBeCharged := true.
+	canCardBeDrawn := true.
+	hasFirstTurnEnded
+		ifFalse: [ hasFirstTurnEnded := true ].
+	playersTurn next
 ]
 
 { #category : #'private - preconditions' }
@@ -195,7 +202,8 @@ Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 	firstPlayer := aFirstPlayer.
 	secondPlayer := aSecondPlayer.
 	canManaBeCharged := true.
-	canCardBeDrawn := true.
+	canCardBeDrawn := false.
+	hasFirstTurnEnded := false.
 
 	self
 		initializeCardsInHandByPlayer;
