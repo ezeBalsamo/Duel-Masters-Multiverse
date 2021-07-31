@@ -9,7 +9,8 @@ Class {
 		'shieldsByPlayer',
 		'playersTurn',
 		'canManaBeCharged',
-		'canCardBeDrawn'
+		'canCardBeDrawn',
+		'creaturesSummonedByPlayer'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -28,10 +29,33 @@ Match >> assertCardHasNotBeenDrawnYet [
 ]
 
 { #category : #'private - preconditions' }
+Match >> assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaChargedBy: aPotentialPlayer [
+
+	( ( self civilizationsOfManaChargedBy: aPotentialPlayer ) includes: aCreatureCard civilization )
+		ifFalse: [ IllegalPlay
+				from: aPotentialPlayer
+				because:
+					( 'You don''t have mana from <1p> to summon <2p>.'
+						expandMacrosWith: aCreatureCard civilization
+						with: aCreatureCard )
+			]
+]
+
+{ #category : #'private - preconditions' }
 Match >> assertIsValidPlayer: aPotentialPlayer [
 
 	^ [ self signalIsNotValidPlayer: aPotentialPlayer ]
 		unless: ( playersTurn includes: aPotentialPlayer )
+]
+
+{ #category : #'private - preconditions' }
+Match >> assertManaCostOf: aCreatureCard isLowerOrEqualThanNumberOfManaChargedBy: aPotentialPlayer [
+
+	aCreatureCard manaCost > ( self numberOfManaChargedBy: aPotentialPlayer )
+		ifTrue: [ IllegalPlay
+				from: aPotentialPlayer
+				because: ( 'You don''t have enough mana to summon <1p>.' expandMacrosWith: aCreatureCard )
+			]
 ]
 
 { #category : #'private - preconditions' }
@@ -59,6 +83,18 @@ Match >> chargeManaOf: aPotentialPlayer with: aCard [
 
 	( self manaChargedBy: aPotentialPlayer ) add: aCard.
 	canManaBeCharged := false
+]
+
+{ #category : #'private - accessing' }
+Match >> civilizationsOfManaChargedBy: aPotentialPlayer [
+
+	^ ( self manaChargedBy: aPotentialPlayer ) collect: [ :aCard | aCard civilization ] as: Set
+]
+
+{ #category : #accessing }
+Match >> creaturesSummonedBy: aPlayer [
+
+	^ creaturesSummonedByPlayer at: aPlayer
 ]
 
 { #category : #'private - accessing' }
@@ -113,7 +149,8 @@ Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 	self
 		initializeCardsInHandByPlayer;
 		initializeShieldsByPlayer;
-		initializeManaChargedByPlayer
+		initializeManaChargedByPlayer;
+		initializeCreaturesSummonedByPlayer
 ]
 
 { #category : #initialization }
@@ -138,6 +175,14 @@ Match >> initializeCardsInHandByPlayer [
 						with: 'blih'
 						with: 'bloh'
 						with: 'bluh' )
+]
+
+{ #category : #initialization }
+Match >> initializeCreaturesSummonedByPlayer [
+
+	creaturesSummonedByPlayer := Dictionary
+		with: firstPlayer -> OrderedCollection new
+		with: secondPlayer -> OrderedCollection new
 ]
 
 { #category : #initialization }
@@ -179,12 +224,26 @@ Match >> isTurnOf: aPotentialPlayer [
 	^ self currentPlayer = aPotentialPlayer
 ]
 
+{ #category : #'private - accessing' }
+Match >> mana [
+
+	^ BaseUnit named: 'mana'
+]
+
 { #category : #accessing }
 Match >> manaChargedBy: aPotentialPlayer [
 
 	^ manaChargedByPlayer
 		at: aPotentialPlayer
 		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+]
+
+{ #category : #accessing }
+Match >> numberOfManaChargedBy: aPotentialPlayer [
+
+	^ ( self manaChargedBy: aPotentialPlayer )
+		inject: self zeroMana
+		into: [ :numberOfManaCharged :aCard | numberOfManaCharged + aCard manaNumberToProvide ]
 ]
 
 { #category : #accessing }
@@ -197,4 +256,18 @@ Match >> shieldsOf: aPotentialPlayer [
 Match >> signalIsNotValidPlayer: aNotValidPlayer [
 
 	Error signal: ( '<1s> is not a valid player in this match.' expandMacrosWith: aNotValidPlayer )
+]
+
+{ #category : #processing }
+Match >> summon: aCreatureCard of: aPotentialPlayer [
+
+	self
+		assertManaCostOf: aCreatureCard isLowerOrEqualThanNumberOfManaChargedBy: aPotentialPlayer;
+		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaChargedBy: aPotentialPlayer
+]
+
+{ #category : #'private - accessing' }
+Match >> zeroMana [
+
+	^ self mana nullMeasure
 ]

@@ -2,18 +2,20 @@
 A MatchTest is a test class for testing the behavior of Match
 "
 Class {
-	#name : #MatchTest,
-	#superclass : #TestCase,
+	#name : #MatchUserStoryTest,
+	#superclass : #PersistentSystemBasedUserStoryTest,
 	#instVars : [
 		'shobu',
 		'knight',
-		'match'
+		'match',
+		'mana',
+		'power'
 	],
 	#category : #'DM-Match-Model-Tests'
 }
 
 { #category : #asserting }
-MatchTest >> assertTheOnlyElementIn: aCollection is: anExpectedObject [
+MatchUserStoryTest >> assertTheOnlyElementIn: aCollection is: anExpectedObject [
 
 	self
 		withTheOnlyOneIn: aCollection
@@ -21,31 +23,49 @@ MatchTest >> assertTheOnlyElementIn: aCollection is: anExpectedObject [
 ]
 
 { #category : #accessing }
-MatchTest >> fireCivilization [
+MatchUserStoryTest >> beatJockey [
 
-	^ SingleCivilization named: self fireCivilizationName
+	^ SingleRace ofTypeNamed: self beatJockeyName
 ]
 
 { #category : #accessing }
-MatchTest >> fireCivilizationName [
+MatchUserStoryTest >> beatJockeyName [
 
-	^ 'Fire'
+	^ 'Beat Jockey'
 ]
 
 { #category : #accessing }
-MatchTest >> humanRace [
+MatchUserStoryTest >> calendar2016 [
+
+	^ SingleRace ofTypeNamed: self calendar2016Name
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> calendar2016Name [
+
+	^ '2016 Calendar'
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> fireCivilization [
+
+	^ ( rootSystem >> #CivilizationManagementSystemInterface ) fireCivilization
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> humanRace [
 
 	^ SingleRace ofTypeNamed: self humanRaceTypeName
 ]
 
 { #category : #accessing }
-MatchTest >> humanRaceTypeName [
+MatchUserStoryTest >> humanRaceTypeName [
 
 	^ 'Human'
 ]
 
 { #category : #accessing }
-MatchTest >> immortalBaronVorg [
+MatchUserStoryTest >> immortalBaronVorg [
 
 	^ CreatureCard
 		named: 'Immortal Baron, Vorg'
@@ -57,46 +77,125 @@ MatchTest >> immortalBaronVorg [
 ]
 
 { #category : #accessing }
-MatchTest >> intruder [
+MatchUserStoryTest >> intruder [
 
 	^ 'Intruder'
 ]
 
 { #category : #accessing }
-MatchTest >> mana [
+MatchUserStoryTest >> lightBringerRace [
 
-	^ BaseUnit named: 'mana'
+	^ SingleRace ofTypeNamed: self lightBringerRaceName
 ]
 
 { #category : #accessing }
-MatchTest >> power [
+MatchUserStoryTest >> lightBringerRaceName [
 
-	^ BaseUnit named: 'power'
+	^ 'Light Bringer'
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> lightCivilization [
+
+	^ ( rootSystem >> #CivilizationManagementSystemInterface ) lightCivilization
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> mana [
+
+	^ mana
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> march [
+
+	^ CreatureCard
+		named: 'March'
+		from: self lightCivilization
+		and: self calendar2016
+		costing: ( self mana with: 3 )
+		providing: ( self mana with: 1 )
+		with: ( self power with: 3000 )
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> oneMana [
+
+	^ self mana with: 1
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> power [
+
+	^ power
 ]
 
 { #category : #running }
-MatchTest >> setUp [
+MatchUserStoryTest >> setUp [
 
 	super setUp.
 
 	shobu := 'Shobu'.
 	knight := 'Knight'.
-	match := Match between: shobu and: knight
+	match := Match between: shobu and: knight.
+
+	self
+		setUpUnits;
+		startManagingCivilizations
+]
+
+{ #category : #'private - running' }
+MatchUserStoryTest >> setUpRequirements [
+
+	super setUpRequirements.
+	self registerSubsystem: CivilizationManagementSystem new
+]
+
+{ #category : #running }
+MatchUserStoryTest >> setUpUnits [
+
+	mana := BaseUnit named: 'mana'.
+	power := BaseUnit named: 'power'
+]
+
+{ #category : #running }
+MatchUserStoryTest >> startManagingCivilizations [
+
+	( rootSystem >> #CivilizationManagementSystemInterface )
+		storeCivilization: ( SingleCivilization named: 'Fire' );
+		storeCivilization: ( SingleCivilization named: 'Light' )
+]
+
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutChargedMana [
+
+	| tulkTheOracle |
+
+	tulkTheOracle := self tulkTheOracle.
+
+	self
+		assert: ( match numberOfManaChargedBy: shobu ) equals: self zeroMana;
+		assert: ( tulkTheOracle costs: self oneMana );
+		should: [ match summon: tulkTheOracle of: shobu ]
+			raise: IllegalPlay
+			withMessageText: 'Shobu: You don''t have enough mana to summon Tulk, the Oracle.'
 ]
 
 { #category : #'tests - mana charge' }
-MatchTest >> test01PlayerChargesMana [
+MatchUserStoryTest >> test01PlayerChargesMana [
 
 	| immortalBaronVorg |
 
 	immortalBaronVorg := self immortalBaronVorg.
 	self assert: ( match manaChargedBy: shobu ) isEmpty.
 	match chargeManaOf: shobu with: immortalBaronVorg.
-	self assertTheOnlyElementIn: ( match manaChargedBy: shobu ) is: immortalBaronVorg
+	self
+		assertTheOnlyElementIn: ( match manaChargedBy: shobu ) is: immortalBaronVorg;
+		assert: ( match numberOfManaChargedBy: shobu ) equals: self oneMana
 ]
 
 { #category : #'tests - drawing cards' }
-MatchTest >> test01PlayerDrawsCard [
+MatchUserStoryTest >> test01PlayerDrawsCard [
 
 	self assert: ( match cardsInHandOf: shobu ) size equals: 5.
 	match drawCardFor: shobu.
@@ -104,7 +203,7 @@ MatchTest >> test01PlayerDrawsCard [
 ]
 
 { #category : #'tests - field setup' }
-MatchTest >> test01PlayersBeginTheMatchWithFiveCardsInHand [
+MatchUserStoryTest >> test01PlayersBeginTheMatchWithFiveCardsInHand [
 
 	self
 		assert: ( match cardsInHandOf: shobu ) size equals: 5;
@@ -112,7 +211,7 @@ MatchTest >> test01PlayersBeginTheMatchWithFiveCardsInHand [
 ]
 
 { #category : #'tests - turn order' }
-MatchTest >> test01PlayersTurnOrderIsCircular [
+MatchUserStoryTest >> test01PlayersTurnOrderIsCircular [
 
 	self assert: ( match isTurnOf: shobu ).
 	match endTurnOf: shobu.
@@ -122,7 +221,7 @@ MatchTest >> test01PlayersTurnOrderIsCircular [
 ]
 
 { #category : #'tests - mana charge' }
-MatchTest >> test02PlayerCantChargeManaOnOpponentsTurn [
+MatchUserStoryTest >> test02PlayerCantChargeManaOnOpponentsTurn [
 
 	| immortalBaronVorg |
 
@@ -137,7 +236,7 @@ MatchTest >> test02PlayerCantChargeManaOnOpponentsTurn [
 ]
 
 { #category : #'tests - drawing cards' }
-MatchTest >> test02PlayerCantDrawCardOnOpponentsTurn [
+MatchUserStoryTest >> test02PlayerCantDrawCardOnOpponentsTurn [
 
 	self
 		assert: ( match isTurnOf: shobu );
@@ -149,7 +248,7 @@ MatchTest >> test02PlayerCantDrawCardOnOpponentsTurn [
 ]
 
 { #category : #'tests - turn order' }
-MatchTest >> test02PlayerCantEndOpponentsTurn [
+MatchUserStoryTest >> test02PlayerCantEndOpponentsTurn [
 
 	self
 		assert: ( match isTurnOf: shobu );
@@ -159,8 +258,27 @@ MatchTest >> test02PlayerCantEndOpponentsTurn [
 		assert: ( match isTurnOf: shobu )
 ]
 
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test02PlayerCantSummonCreatureWhenChargedManaIsNotFromTheSameCivilization [
+
+	| immortalBaronVorg tulkTheOracle |
+
+	immortalBaronVorg := self immortalBaronVorg.
+	tulkTheOracle := self tulkTheOracle.
+
+	self assert: ( match manaChargedBy: shobu ) isEmpty.
+	match chargeManaOf: shobu with: immortalBaronVorg.
+
+	self
+		assert: ( match numberOfManaChargedBy: shobu ) equals: self oneMana;
+		assert: ( tulkTheOracle costs: self oneMana );
+		should: [ match summon: tulkTheOracle of: shobu ]
+			raise: IllegalPlay
+			withMessageText: 'Shobu: You don''t have mana from Light civilization to summon Tulk, the Oracle.'
+]
+
 { #category : #'tests - field setup' }
-MatchTest >> test02PlayersBeginTheMatchWithFiveShields [
+MatchUserStoryTest >> test02PlayersBeginTheMatchWithFiveShields [
 
 	self
 		assert: ( match shieldsOf: shobu ) size equals: 5;
@@ -168,7 +286,7 @@ MatchTest >> test02PlayersBeginTheMatchWithFiveShields [
 ]
 
 { #category : #'tests - mana charge' }
-MatchTest >> test03PlayerCantChargeManaMoreThanOnceInTheSameTurn [
+MatchUserStoryTest >> test03PlayerCantChargeManaMoreThanOnceInTheSameTurn [
 
 	| immortalBaronVorg anotherImmortalBaronVorg |
 
@@ -185,7 +303,7 @@ MatchTest >> test03PlayerCantChargeManaMoreThanOnceInTheSameTurn [
 ]
 
 { #category : #'tests - drawing cards' }
-MatchTest >> test03PlayerCantDrawMoreThanOneCardInTheSameTurn [
+MatchUserStoryTest >> test03PlayerCantDrawMoreThanOneCardInTheSameTurn [
 
 	self assert: ( match cardsInHandOf: shobu ) size equals: 5.
 	match drawCardFor: shobu.
@@ -198,7 +316,7 @@ MatchTest >> test03PlayerCantDrawMoreThanOneCardInTheSameTurn [
 ]
 
 { #category : #'tests - turn order' }
-MatchTest >> test03PlayerNotBelongingToMatchCantEndOpponentsTurn [
+MatchUserStoryTest >> test03PlayerNotBelongingToMatchCantEndOpponentsTurn [
 
 	| intruder |
 
@@ -211,15 +329,17 @@ MatchTest >> test03PlayerNotBelongingToMatchCantEndOpponentsTurn [
 ]
 
 { #category : #'tests - field setup' }
-MatchTest >> test03PlayersBeginTheMatchWithoutChargedMana [
+MatchUserStoryTest >> test03PlayersBeginTheMatchWithoutChargedMana [
 
 	self
 		assert: ( match manaChargedBy: shobu ) isEmpty;
-		assert: ( match manaChargedBy: knight ) isEmpty
+		assert: ( match numberOfManaChargedBy: shobu ) equals: self zeroMana;
+		assert: ( match manaChargedBy: knight ) isEmpty;
+		assert: ( match numberOfManaChargedBy: knight ) equals: self zeroMana
 ]
 
 { #category : #'tests - mana charge' }
-MatchTest >> test04PlayerCanChargeManaEveryTurn [
+MatchUserStoryTest >> test04PlayerCanChargeManaEveryTurn [
 
 	| immortalBaronVorg anotherImmortalBaronVorg expectedChargedMana |
 
@@ -240,7 +360,7 @@ MatchTest >> test04PlayerCanChargeManaEveryTurn [
 ]
 
 { #category : #'tests - drawing cards' }
-MatchTest >> test04PlayerCanDrawCardEveryTurn [
+MatchUserStoryTest >> test04PlayerCanDrawCardEveryTurn [
 
 	self assert: ( match cardsInHandOf: shobu ) size equals: 5.
 	match drawCardFor: shobu.
@@ -255,7 +375,7 @@ MatchTest >> test04PlayerCanDrawCardEveryTurn [
 ]
 
 { #category : #'tests - field setup' }
-MatchTest >> test04PlayerNotBelongingToMatchCantHaveCardsInHand [
+MatchUserStoryTest >> test04PlayerNotBelongingToMatchCantHaveCardsInHand [
 
 	| intruder |
 
@@ -268,7 +388,7 @@ MatchTest >> test04PlayerNotBelongingToMatchCantHaveCardsInHand [
 ]
 
 { #category : #'tests - turn order' }
-MatchTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
+MatchUserStoryTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
 
 	| intruder |
 
@@ -281,7 +401,7 @@ MatchTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
 ]
 
 { #category : #'tests - mana charge' }
-MatchTest >> test05PlayerNotBelongingToMatchCantChargeMana [
+MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantChargeMana [
 
 	| intruder immortalBaronVorg |
 
@@ -295,7 +415,7 @@ MatchTest >> test05PlayerNotBelongingToMatchCantChargeMana [
 ]
 
 { #category : #'tests - drawing cards' }
-MatchTest >> test05PlayerNotBelongingToMatchCantDrawCard [
+MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantDrawCard [
 
 	| intruder |
 
@@ -308,7 +428,7 @@ MatchTest >> test05PlayerNotBelongingToMatchCantDrawCard [
 ]
 
 { #category : #'tests - field setup' }
-MatchTest >> test05PlayerNotBelongingToMatchCantHaveShields [
+MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantHaveShields [
 
 	| intruder |
 
@@ -321,7 +441,7 @@ MatchTest >> test05PlayerNotBelongingToMatchCantHaveShields [
 ]
 
 { #category : #'tests - field setup' }
-MatchTest >> test06PlayerNotBelongingToMatchCantHaveChargedMana [
+MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveChargedMana [
 
 	| intruder |
 
@@ -331,4 +451,47 @@ MatchTest >> test06PlayerNotBelongingToMatchCantHaveChargedMana [
 		should: [ match manaChargedBy: intruder ]
 		raise: Error
 		withMessageText: 'Intruder is not a valid player in this match.'
+]
+
+{ #category : #'tests - field setup' }
+MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveNumberOfChargedMana [
+
+	| intruder |
+
+	intruder := self intruder.
+
+	self
+		should: [ match numberOfManaChargedBy: intruder ]
+		raise: Error
+		withMessageText: 'Intruder is not a valid player in this match.'
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> tulkTheOracle [
+
+	^ CreatureCard
+		named: 'Tulk, the Oracle'
+		from: self lightCivilization
+		and: self lightBringerRace
+		costing: self oneMana
+		providing: self oneMana
+		with: ( self power with: 500 )
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> vocalMegahit [
+
+	^ CreatureCard
+		named: 'Vocal Megahit'
+		from: self fireCivilization
+		and: self beatJockey
+		costing: ( self mana with: 5 )
+		providing: ( self mana with: 1 )
+		with: ( self power with: 5000 )
+]
+
+{ #category : #accessing }
+MatchUserStoryTest >> zeroMana [
+
+	^ self mana nullMeasure
 ]

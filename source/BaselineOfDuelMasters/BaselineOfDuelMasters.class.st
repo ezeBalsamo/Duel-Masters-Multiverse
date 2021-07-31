@@ -4,6 +4,12 @@ Class {
 	#category : #BaselineOfDuelMasters
 }
 
+{ #category : #'private - extensions package accessing' }
+BaselineOfDuelMasters >> aconcaguaCoreExtensionsPackage [
+
+	^ self extensionPackageNamed: 'DM-Aconcagua-Core' requiring: self keplerDependencyName
+]
+
 { #category : #accessing }
 BaselineOfDuelMasters >> baseline: aSpec [
 
@@ -312,6 +318,7 @@ BaselineOfDuelMasters >> extensionPackages [
 
 	^ OrderedCollection new
 		add: self buoyMetaprogrammingExtensionsPackage;
+		add: self aconcaguaCoreExtensionsPackage;
 		add: self collectionsStringsBaseExtensionsPackage;
 		add: self collectionsAbstractBaseExtensionsPackage;
 		add: self toolDependencyAnalyserCoreExtensionsPackage;
@@ -374,7 +381,10 @@ BaselineOfDuelMasters >> matchModelPackage [
 
 	^ self
 		modelPackageNamed: 'DM-Match'
-		requiringAll: ( Array with: ( self modelPackageNameFor: 'DM-Exception' ) with: self keplerDependencyName )
+		requiringAll:
+			( Array
+				with: ( self modelPackageNameFor: 'DM-Exception' )
+				with: ( self modelPackageNameFor: 'DM-Card' ) )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -386,12 +396,15 @@ BaselineOfDuelMasters >> matchModelTestsPackage [
 	^ self
 		testsPackageNamed: matchModelPackageName
 		requiringAll:
-			( Array
-				with: matchModelPackageName
-				with: ( self modelPackageNameFor: 'DM-Race' )
-				with: ( self modelPackageNameFor: 'DM-Civilization' )
-				with: ( self modelPackageNameFor: 'DM-Card' )
-				with: ( self modelPackageNameFor: 'DM-Exception' ) )
+			( OrderedCollection new
+				add: matchModelPackageName;
+				add: ( self modelPackageNameFor: 'DM-Race' );
+				add: ( self modelPackageNameFor: 'DM-Civilization' );
+				add: ( self modelPackageNameFor: 'DM-Card' );
+				add: ( self modelPackageNameFor: 'DM-Exception' );
+				add: ( self systemModelPackageNameFor: 'DM-Civilization-Management' );
+				add: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) );
+				yourself )
 ]
 
 { #category : #'private - model package accessing' }

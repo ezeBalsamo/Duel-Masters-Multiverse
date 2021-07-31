@@ -45,14 +45,10 @@ CreatureCard class >> assertIsValidManaNumber: aPotentialManaNumber [
 { #category : #'private - preconditions' }
 CreatureCard class >> assertIsValidPower: aPotentialPower [
 
-	^ AssertionCheckerBuilder new
-		raising: InstanceCreationFailed;
-		checking: [ :checker | 
-			checker
-				enforce: [ aPotentialPower amount isInteger ]
-				because: 'A creature card''s power must be an integer.'
-			];
-		buildAndCheck
+	AssertionChecker
+		enforce: [ aPotentialPower amount isInteger ]
+		because: 'A creature card''s power must be an integer.'
+		raising: InstanceCreationFailed
 ]
 
 { #category : #'private - preconditions' }
@@ -89,6 +85,12 @@ CreatureCard class >> named: aName from: aCivilization and: aRace costing: aMana
 		costing: aManaCost
 		providing: aManaNumber
 		with: aPower
+]
+
+{ #category : #accessing }
+CreatureCard >> civilization [
+
+	^ civilization
 ]
 
 { #category : #testing }
@@ -130,6 +132,24 @@ CreatureCard >> isFromTheRaceOfTypeNamed: aPotentialRaceTypeName [
 CreatureCard >> isNamed: aPotentialName [
 
 	^ name = aPotentialName
+]
+
+{ #category : #accessing }
+CreatureCard >> manaCost [
+
+	^ manaCost
+]
+
+{ #category : #accessing }
+CreatureCard >> manaNumberToProvide [
+
+	^ manaNumberToProvide
+]
+
+{ #category : #accessing }
+CreatureCard >> printOn: aStream [
+
+	^ aStream nextPutAll: name
 ]
 
 { #category : #testing }

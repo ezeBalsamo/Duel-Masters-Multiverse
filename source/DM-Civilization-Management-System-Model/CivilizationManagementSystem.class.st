@@ -13,16 +13,37 @@ CivilizationManagementSystem >> allCivilizations [
 	^ civilizations findAll
 ]
 
+{ #category : #'private - querying' }
+CivilizationManagementSystem >> civilizationNamed: aCivilizationName [
+
+	^ self
+		withCivilizationNamed: aCivilizationName
+		do: #yourself
+		else: [ Error signal: ( 'There is no civilization named <1s>.' expandMacrosWith: aCivilizationName ) ]
+]
+
 { #category : #installing }
 CivilizationManagementSystem >> dependencies [
 
 	^ #()
 ]
 
+{ #category : #querying }
+CivilizationManagementSystem >> fireCivilization [
+
+	^ self civilizationNamed: 'Fire'
+]
+
 { #category : #installing }
 CivilizationManagementSystem >> implementedInterfaces [
 
 	^ #(#CivilizationManagementSystemInterface)
+]
+
+{ #category : #querying }
+CivilizationManagementSystem >> lightCivilization [
+
+	^ self civilizationNamed: 'Light'
 ]
 
 { #category : #accessing }
