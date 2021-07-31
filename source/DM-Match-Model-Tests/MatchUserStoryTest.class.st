@@ -14,7 +14,7 @@ Class {
 	#category : #'DM-Match-Model-Tests'
 }
 
-{ #category : #asserting }
+{ #category : #'private - asserting' }
 MatchUserStoryTest >> assertTheOnlyElementIn: aCollection is: anExpectedObject [
 
 	self
@@ -22,49 +22,49 @@ MatchUserStoryTest >> assertTheOnlyElementIn: aCollection is: anExpectedObject [
 		do: [ :anObject | self assert: anObject equals: anExpectedObject ]
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> beatJockey [
 
 	^ SingleRace ofTypeNamed: self beatJockeyName
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> beatJockeyName [
 
 	^ 'Beat Jockey'
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> calendar2016 [
 
 	^ SingleRace ofTypeNamed: self calendar2016Name
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> calendar2016Name [
 
 	^ '2016 Calendar'
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> fireCivilization [
 
 	^ ( rootSystem >> #CivilizationManagementSystemInterface ) fireCivilization
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> humanRace [
 
 	^ SingleRace ofTypeNamed: self humanRaceTypeName
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> humanRaceTypeName [
 
 	^ 'Human'
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> immortalBaronVorg [
 
 	^ CreatureCard
@@ -76,37 +76,37 @@ MatchUserStoryTest >> immortalBaronVorg [
 		with: ( self power with: 2000 )
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> intruder [
 
 	^ 'Intruder'
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> lightBringerRace [
 
 	^ SingleRace ofTypeNamed: self lightBringerRaceName
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> lightBringerRaceName [
 
 	^ 'Light Bringer'
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> lightCivilization [
 
 	^ ( rootSystem >> #CivilizationManagementSystemInterface ) lightCivilization
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> mana [
 
 	^ mana
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> march [
 
 	^ CreatureCard
@@ -118,13 +118,13 @@ MatchUserStoryTest >> march [
 		with: ( self power with: 3000 )
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> oneMana [
 
 	^ self mana with: 1
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> power [
 
 	^ power
@@ -151,14 +151,14 @@ MatchUserStoryTest >> setUpRequirements [
 	self registerSubsystem: CivilizationManagementSystem new
 ]
 
-{ #category : #running }
+{ #category : #'private - running' }
 MatchUserStoryTest >> setUpUnits [
 
 	mana := BaseUnit named: 'mana'.
 	power := BaseUnit named: 'power'
 ]
 
-{ #category : #running }
+{ #category : #'private - running' }
 MatchUserStoryTest >> startManagingCivilizations [
 
 	( rootSystem >> #CivilizationManagementSystemInterface )
@@ -328,6 +328,26 @@ MatchUserStoryTest >> test03PlayerNotBelongingToMatchCantEndOpponentsTurn [
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test03PlayerSummonCreatureWithUnitaryManaCostAndOneManaCharged [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	self assert: ( match manaChargedBy: shobu ) isEmpty.
+	match chargeManaOf: shobu with: march.
+
+	self
+		assert: ( match numberOfManaChargedBy: shobu ) equals: self oneMana;
+		assert: ( tulkTheOracle costs: self oneMana ).
+
+	self assert: ( match creaturesSummonedBy: shobu ) isEmpty.
+	match summon: tulkTheOracle of: shobu.
+	self assertTheOnlyElementIn: ( match creaturesSummonedBy: shobu ) is: tulkTheOracle
+]
+
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test03PlayersBeginTheMatchWithoutChargedMana [
 
@@ -466,7 +486,7 @@ MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveNumberOfChargedMana
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> tulkTheOracle [
 
 	^ CreatureCard
@@ -478,7 +498,7 @@ MatchUserStoryTest >> tulkTheOracle [
 		with: ( self power with: 500 )
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> vocalMegahit [
 
 	^ CreatureCard
@@ -490,7 +510,7 @@ MatchUserStoryTest >> vocalMegahit [
 		with: ( self power with: 5000 )
 ]
 
-{ #category : #accessing }
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> zeroMana [
 
 	^ self mana nullMeasure

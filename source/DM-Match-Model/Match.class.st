@@ -263,7 +263,9 @@ Match >> summon: aCreatureCard of: aPotentialPlayer [
 
 	self
 		assertManaCostOf: aCreatureCard isLowerOrEqualThanNumberOfManaChargedBy: aPotentialPlayer;
-		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaChargedBy: aPotentialPlayer
+		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaChargedBy: aPotentialPlayer.
+
+	( self creaturesSummonedBy: aPotentialPlayer ) add: aCreatureCard
 ]
 
 { #category : #'private - accessing' }
