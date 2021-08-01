@@ -7,19 +7,21 @@ Class {
 	#category : #'DM-Civilization-Management-System-Model'
 }
 
-{ #category : #querying }
-CivilizationManagementSystem >> allCivilizations [
-
-	^ civilizations findAll
-]
-
 { #category : #'private - querying' }
 CivilizationManagementSystem >> civilizationNamed: aCivilizationName [
 
 	^ self
 		withCivilizationNamed: aCivilizationName
 		do: #yourself
-		else: [ Error signal: ( 'There is no civilization named <1s>.' expandMacrosWith: aCivilizationName ) ]
+		else: [ ObjectNotFound
+				signal: ( 'There is no civilization named <1s>.' expandMacrosWith: aCivilizationName )
+			]
+]
+
+{ #category : #querying }
+CivilizationManagementSystem >> civilizations [
+
+	^ civilizations findAll
 ]
 
 { #category : #querying }

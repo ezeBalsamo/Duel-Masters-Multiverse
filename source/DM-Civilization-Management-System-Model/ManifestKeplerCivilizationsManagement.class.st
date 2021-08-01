@@ -12,5 +12,5 @@ ManifestKeplerCivilizationsManagement class >> initialize [
 		registerInterfaceAt: #CivilizationManagementSystemInterface
 		named: 'Civilization Management System Interface'
 		declaring:
-			#(#purgeCivilization: #storeCivilization: #updateCivilization:with: #allCivilizations #withCivilizationNamed:do:else: #fireCivilization #lightCivilization #natureCivilization #waterCivilization #darknessCivilization)
+			#(#purgeCivilization: #storeCivilization: #updateCivilization:with: #civilizations #withCivilizationNamed:do:else: #fireCivilization #lightCivilization #natureCivilization #waterCivilization #darknessCivilization)
 ]

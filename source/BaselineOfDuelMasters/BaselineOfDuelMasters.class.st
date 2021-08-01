@@ -130,6 +130,7 @@ BaselineOfDuelMasters >> civilizationManagementSystemModelTestsPackage [
 		testsPackageNamed: civillizationMagenementSystemModelPackageName
 		requiringAll:
 			( Array
+				with: 'DM-SUnit'
 				with: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) )
 				with: civillizationMagenementSystemModelPackageName
 				with: ( self modelPackageNameFor: 'DM-Civilization' ) )

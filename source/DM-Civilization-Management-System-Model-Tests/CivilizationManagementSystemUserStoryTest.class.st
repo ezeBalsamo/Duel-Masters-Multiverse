@@ -7,16 +7,28 @@ Class {
 	#category : #'DM-Civilization-Management-System-Model-Tests'
 }
 
-{ #category : #'private - querying' }
-CivilizationManagementSystemUserStoryTest >> allCivilizations [
-
-	^ civilizationManagementSystem allCivilizations
-]
-
 { #category : #'private - system accessing' }
 CivilizationManagementSystemUserStoryTest >> civilizationManagementSystem [
 
 	^ rootSystem >> #CivilizationManagementSystemInterface
+]
+
+{ #category : #'private - querying' }
+CivilizationManagementSystemUserStoryTest >> civilizations [
+
+	^ civilizationManagementSystem civilizations
+]
+
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> darknessCivilization [
+
+	^ Civilization named: self darknessCivilizationName
+]
+
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> darknessCivilizationName [
+
+	^ 'Darkness'
 ]
 
 { #category : #'private - accessing' }
@@ -29,6 +41,30 @@ CivilizationManagementSystemUserStoryTest >> fireCivilization [
 CivilizationManagementSystemUserStoryTest >> fireCivilizationName [
 
 	^ 'Fire'
+]
+
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> lightCivilization [
+
+	^ Civilization named: self lightCivilizationName
+]
+
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> lightCivilizationName [
+
+	^ 'Light'
+]
+
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> natureCivilization [
+
+	^ Civilization named: self natureCivilizationName
+]
+
+{ #category : #'private - accessing' }
+CivilizationManagementSystemUserStoryTest >> natureCivilizationName [
+
+	^ 'Nature'
 ]
 
 { #category : #'private - support' }
@@ -64,13 +100,10 @@ CivilizationManagementSystemUserStoryTest >> test01StoringACivilization [
 
 	fireCivilization := self fireCivilization.
 
-	self assert: self allCivilizations isEmpty.
-
-	self store: fireCivilization.
-
 	self
-		withCivilizationNamed: self fireCivilizationName
-		do: [ :storedCivilization | self assert: fireCivilization equals: storedCivilization ]
+		assert: self civilizations isEmpty;
+		store: fireCivilization;
+		assertTheOnlyOneIn: self civilizations is: fireCivilization
 ]
 
 { #category : #tests }
@@ -81,21 +114,18 @@ CivilizationManagementSystemUserStoryTest >> test02StoringManyCivilizations [
 	fireCivilization := self fireCivilization.
 	waterCivilization := self waterCivilization.
 
-	self assert: self allCivilizations isEmpty.
-
 	self
+		assert: self civilizations isEmpty;
 		store: fireCivilization;
 		store: waterCivilization.
 
-	self assert: self allCivilizations size equals: 2.
 
 	self
+		assert: self civilizations size equals: 2;
 		withCivilizationNamed: self fireCivilizationName
-		do: [ :storedCivilization | self assert: fireCivilization equals: storedCivilization ].
-
-	self
+			do: [ :storedCivilization | self assert: fireCivilization equals: storedCivilization ];
 		withCivilizationNamed: self waterCivilizationName
-		do: [ :storedCivilization | self assert: waterCivilization equals: storedCivilization ]
+			do: [ :storedCivilization | self assert: waterCivilization equals: storedCivilization ]
 ]
 
 { #category : #tests }
@@ -106,18 +136,17 @@ CivilizationManagementSystemUserStoryTest >> test03CantStoreACivilizationWhenIsA
 	fireCivilization := self fireCivilization.
 	anotherFireCivilization := self fireCivilization.
 
-	self assert: self allCivilizations isEmpty.
-
-	self store: fireCivilization.
-
 	self
-		withCivilizationNamed: self fireCivilizationName
-		do: [ :storedCivilization | self assert: fireCivilization equals: storedCivilization ].
+		assert: self civilizations isEmpty;
+		store: fireCivilization;
+		assertTheOnlyOneIn: self civilizations is: fireCivilization.
 
 	self
 		should: [ self store: anotherFireCivilization ]
 		raise: ConflictingObjectFound
-		withMessageText: ( 'Something is in conflict with <1p>' expandMacrosWith: anotherFireCivilization )
+		withMessageText: ( 'Something is in conflict with <1p>' expandMacrosWith: anotherFireCivilization ).
+
+	self assertTheOnlyOneIn: self civilizations is: fireCivilization
 ]
 
 { #category : #tests }
@@ -128,13 +157,14 @@ CivilizationManagementSystemUserStoryTest >> test04UpdatingACivilization [
 	civilizationToUpdate := self fireCivilization.
 	updatedCivilization := self waterCivilization.
 
-	self assert: self allCivilizations isEmpty.
-
-	self store: civilizationToUpdate.
-	self update: civilizationToUpdate with: updatedCivilization.
+	self assert: self civilizations isEmpty.
 
 	self
-		withTheOnlyOneIn: self allCivilizations
+		store: civilizationToUpdate;
+		update: civilizationToUpdate with: updatedCivilization.
+
+	self
+		withTheOnlyOneIn: self civilizations
 		do: [ :storedCivilization | 
 			self
 				assert: storedCivilization equals: civilizationToUpdate;
@@ -150,14 +180,14 @@ CivilizationManagementSystemUserStoryTest >> test05CantUpdateANotManagedCiviliza
 	fireCivilization := self fireCivilization.
 	waterCivilization := self waterCivilization.
 
-	self assert: self allCivilizations isEmpty.
+	self assert: self civilizations isEmpty.
 
 	self
 		should: [ self update: fireCivilization with: waterCivilization ]
 		raise: ObjectNotFound
 		withMessageText: ( '<1p> was not found.' expandMacrosWith: fireCivilization ).
 
-	self assert: self allCivilizations isEmpty
+	self assert: self civilizations isEmpty
 ]
 
 { #category : #tests }
@@ -168,11 +198,17 @@ CivilizationManagementSystemUserStoryTest >> test06CantUpdateACivilizationWhenAl
 	fireCivilization := self fireCivilization.
 	waterCivilization := self waterCivilization.
 
-	self assert: self allCivilizations isEmpty.
-
 	self
+		assert: self civilizations isEmpty;
 		store: fireCivilization;
 		store: waterCivilization.
+		
+	self
+		assert: self civilizations size equals: 2;
+		withCivilizationNamed: self fireCivilizationName
+			do: [ :storedCivilization | self assert: storedCivilization equals: fireCivilization ];
+		withCivilizationNamed: self waterCivilizationName
+			do: [ :storedCivilization | self assert: storedCivilization equals: waterCivilization ].
 
 	anotherWaterCivilization := self waterCivilization.
 
@@ -182,7 +218,7 @@ CivilizationManagementSystemUserStoryTest >> test06CantUpdateACivilizationWhenAl
 		withMessageText: ( 'Something is in conflict with <1p>' expandMacrosWith: anotherWaterCivilization ).
 
 	self
-		assert: self allCivilizations size equals: 2;
+		assert: self civilizations size equals: 2;
 		withCivilizationNamed: self fireCivilizationName
 			do: [ :storedCivilization | self assert: storedCivilization equals: fireCivilization ];
 		withCivilizationNamed: self waterCivilizationName
@@ -196,15 +232,15 @@ CivilizationManagementSystemUserStoryTest >> test07PurgingACivilization [
 
 	fireCivilization := self fireCivilization.
 
-	self assert: self allCivilizations isEmpty.
-
-	self store: fireCivilization.
+	self
+		assert: self civilizations isEmpty;
+		store: fireCivilization.
 
 	self
-		withTheOnlyOneIn: self allCivilizations
+		withTheOnlyOneIn: self civilizations
 		do: [ :storedCivilization | self purge: storedCivilization ].
 
-	self assert: self allCivilizations isEmpty
+	self assert: self civilizations isEmpty
 ]
 
 { #category : #tests }
@@ -214,14 +250,48 @@ CivilizationManagementSystemUserStoryTest >> test08CantPurgeANotManagedCivilizat
 
 	fireCivilization := self fireCivilization.
 
-	self assert: self allCivilizations isEmpty.
+	self assert: self civilizations isEmpty.
 
 	self
 		should: [ self purge: fireCivilization ]
 		raise: ObjectNotFound
 		withMessageText: ( '<1p> was not found.' expandMacrosWith: fireCivilization ).
 
-	self assert: self allCivilizations isEmpty
+	self assert: self civilizations isEmpty
+]
+
+{ #category : #tests }
+CivilizationManagementSystemUserStoryTest >> test09QueryingEachCivilization [
+
+	| civilizations |
+
+	civilizations := Array
+		with: self fireCivilization
+		with: self waterCivilization
+		with: self natureCivilization
+		with: self lightCivilization
+		with: self darknessCivilization.
+
+	self assert: self civilizations isEmpty.
+	civilizations do: [ :aCivilization | self store: aCivilization ].
+
+	self
+		assertCollection: self civilizations hasSameElements: civilizations;
+		assert: ( self civilizationManagementSystem fireCivilization isNamed: self fireCivilizationName );
+		assert: ( self civilizationManagementSystem waterCivilization isNamed: self waterCivilizationName );
+		assert: ( self civilizationManagementSystem natureCivilization isNamed: self natureCivilizationName );
+		assert: ( self civilizationManagementSystem lightCivilization isNamed: self lightCivilizationName );
+		assert: ( self civilizationManagementSystem darknessCivilization isNamed: self darknessCivilizationName )
+]
+
+{ #category : #tests }
+CivilizationManagementSystemUserStoryTest >> test10CantQueryCivilizationWhenNotPreviouslyStored [
+
+	self
+		assert: self civilizations isEmpty;
+		should: [ self civilizationManagementSystem civilizationNamed: self fireCivilizationName ]
+			raise: ObjectNotFound
+			withMessageText: 'There is no civilization named Fire.'
 ]
 
 { #category : #'private - support' }
