@@ -12,7 +12,8 @@ Class {
 		'creaturesSummonedByPlayer',
 		'manaByPlayer',
 		'tappedManaByPlayer',
-		'hasFirstTurnEnded'
+		'hasFirstTurnEnded',
+		'creaturesHavingSummonedSickness'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -87,6 +88,12 @@ Match >> chargeManaOf: aPlayer with: aCard [
 ]
 
 { #category : #accessing }
+Match >> creaturesHavingSummonedSickness [
+
+	^ creaturesHavingSummonedSickness
+]
+
+{ #category : #accessing }
 Match >> creaturesSummonedOf: aPlayer [
 
 	^ creaturesSummonedByPlayer at: aPlayer
@@ -133,7 +140,8 @@ Match >> endTurnOf: aPlayer [
 		ifFalse: [ hasFirstTurnEnded := true ].
 	playersTurn next.
 
-	( self tappedManaOf: self currentPlayer ) removeAll
+	( self tappedManaOf: self currentPlayer ) removeAll.
+	creaturesHavingSummonedSickness removeAll
 ]
 
 { #category : #'private - preconditions' }
@@ -191,7 +199,9 @@ Match >> initializeCreaturesSummonedByPlayer [
 
 	creaturesSummonedByPlayer := Dictionary
 		with: firstPlayer -> OrderedCollection new
-		with: secondPlayer -> OrderedCollection new
+		with: secondPlayer -> OrderedCollection new.
+
+	creaturesHavingSummonedSickness := OrderedCollection new
 ]
 
 { #category : #initialization }
@@ -272,8 +282,9 @@ Match >> summon: aCreatureCard of: aPlayer tappingAll: aCardCollection [
 		from: aPlayer
 		tappingAll: aCardCollection.
 
+	( self tappedManaOf: aPlayer ) addAll: aCardCollection.
 	( self creaturesSummonedOf: aPlayer ) add: aCreatureCard.
-	( self tappedManaOf: aPlayer ) addAll: aCardCollection
+	creaturesHavingSummonedSickness add: aCreatureCard
 ]
 
 { #category : #accessing }
