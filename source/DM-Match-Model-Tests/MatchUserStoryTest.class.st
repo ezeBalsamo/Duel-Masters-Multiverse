@@ -32,12 +32,6 @@ MatchUserStoryTest >> calendar2016 [
 	^ SingleRace ofTypeNamed: '2016 Calendar'
 ]
 
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> cardsInHandOf: aPlayer [
-
-	^ match cardsInHandOf: aPlayer requestedBy: aPlayer
-]
-
 { #category : #'private - processing' }
 MatchUserStoryTest >> chargeShobuManaWithAll: aCardCollection [
 
@@ -72,6 +66,12 @@ MatchUserStoryTest >> darknessLeohl [
 		costing: ( self mana with: 2 )
 		providing: self oneMana
 		with: ( self power with: 2000 )
+]
+
+{ #category : #'private - accessing' }
+MatchUserStoryTest >> handOf: aPlayer [
+
+	^ match handOf: aPlayer requestedBy: aPlayer
 ]
 
 { #category : #'private - accessing' }
@@ -216,19 +216,19 @@ MatchUserStoryTest >> test01PlayerChargesMana [
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test01PlayerDrawsCard [
 
-	self assert: ( self cardsInHandOf: knight ) size equals: 5.
+	self assert: ( self handOf: knight ) size equals: 5.
 	match
 		endTurnOf: shobu;
 		drawCardFor: knight.
-	self assert: ( self cardsInHandOf: knight ) size equals: 6
+	self assert: ( self handOf: knight ) size equals: 6
 ]
 
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test01PlayersBeginTheMatchWithFiveCardsInHand [
 
 	self
-		assert: ( self cardsInHandOf: shobu ) size equals: 5;
-		assert: ( self cardsInHandOf: knight ) size equals: 5
+		assert: ( self handOf: shobu ) size equals: 5;
+		assert: ( self handOf: knight ) size equals: 5
 ]
 
 { #category : #'tests - turn order' }
@@ -261,11 +261,11 @@ MatchUserStoryTest >> test02PlayerCantDrawCardOnOpponentsTurn [
 
 	self
 		assert: ( match isTurnOf: shobu );
-		assert: ( self cardsInHandOf: knight ) size equals: 5;
+		assert: ( self handOf: knight ) size equals: 5;
 		should: [ match drawCardFor: knight ]
 			raise: IllegalPlay
 			withMessageText: 'Knight: You can''t draw a card on your opponent''s turn.';
-		assert: ( self cardsInHandOf: knight ) size equals: 5
+		assert: ( self handOf: knight ) size equals: 5
 ]
 
 { #category : #'tests - turn order' }
@@ -331,18 +331,18 @@ MatchUserStoryTest >> test03PlayerCantChargeManaMoreThanOnceInTheSameTurn [
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test03PlayerCantDrawMoreThanOneCardInTheSameTurn [
 
-	self assert: ( self cardsInHandOf: knight ) size equals: 5.
+	self assert: ( self handOf: knight ) size equals: 5.
 
 	match
 		endTurnOf: shobu;
 		drawCardFor: knight.
 
 	self
-		assert: ( self cardsInHandOf: knight ) size equals: 6;
+		assert: ( self handOf: knight ) size equals: 6;
 		should: [ match drawCardFor: knight ]
 			raise: IllegalPlay
 			withMessageText: 'Knight: Only one card can be drawn per turn.';
-		assert: ( self cardsInHandOf: knight ) size equals: 6
+		assert: ( self handOf: knight ) size equals: 6
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -429,21 +429,21 @@ MatchUserStoryTest >> test04PlayerCanChargeManaEveryTurn [
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test04PlayerCanDrawCardEveryTurn [
 
-	self assert: ( self cardsInHandOf: shobu ) size equals: 5.
+	self assert: ( self handOf: shobu ) size equals: 5.
 
 	match
 		endTurnOf: shobu;
 		endTurnOf: knight;
 		drawCardFor: shobu.
 
-	self assert: ( self cardsInHandOf: shobu ) size equals: 6.
+	self assert: ( self handOf: shobu ) size equals: 6.
 
 	match
 		endTurnOf: shobu;
 		endTurnOf: knight;
 		drawCardFor: shobu.
 
-	self assert: ( self cardsInHandOf: shobu ) size equals: 7
+	self assert: ( self handOf: shobu ) size equals: 7
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -491,7 +491,7 @@ MatchUserStoryTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
 ]
 
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test04layersBeginTheMatchWithoutSummonedCreatures [
+MatchUserStoryTest >> test04PlayersBeginTheMatchWithoutSummonedCreatures [
 
 	self
 		assert: ( match creaturesSummonedOf: shobu ) isEmpty;
@@ -558,34 +558,29 @@ MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantDrawCard [
 ]
 
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantHaveCardsInHand [
-
-	| intruder |
-
-	intruder := self intruder.
+MatchUserStoryTest >> test05PlayersBeginTheMatchWithoutCardsInGraveyard [
 
 	self
-		should: [ self cardsInHandOf: intruder ]
-		raise: Error
-		withMessageText: 'Intruder is not a valid player in this match.'
+		assert: ( match graveyardOf: shobu ) isEmpty;
+		assert: ( match graveyardOf: knight ) isEmpty
 ]
 
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test06InitialPlayerCantDrawCardInTheFirstTurn [
 
 	self
-		assert: ( self cardsInHandOf: shobu ) size equals: 5;
+		assert: ( self handOf: shobu ) size equals: 5;
 		should: [ match drawCardFor: shobu ]
 			raise: IllegalPlay
 			withMessageText: 'Shobu: You can''t draw card in your first turn.';
-		assert: ( self cardsInHandOf: shobu ) size equals: 5.
+		assert: ( self handOf: shobu ) size equals: 5.
 
 	match
 		endTurnOf: shobu;
 		endTurnOf: knight;
 		drawCardFor: shobu.
 
-	self assert: ( self cardsInHandOf: shobu ) size equals: 6
+	self assert: ( self handOf: shobu ) size equals: 6
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -624,7 +619,20 @@ MatchUserStoryTest >> test06PlayerCantSummonMultipleCivilizationCreatureWhenNone
 ]
 
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveShields [
+MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveCardsInHand [
+
+	| intruder |
+
+	intruder := self intruder.
+
+	self
+		should: [ self handOf: intruder ]
+		raise: Error
+		withMessageText: 'Intruder is not a valid player in this match.'
+]
+
+{ #category : #'tests - field setup' }
+MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveShields [
 
 	| intruder |
 
@@ -632,19 +640,6 @@ MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveShields [
 
 	self
 		should: [ match shieldsOf: intruder ]
-		raise: Error
-		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
-{ #category : #'tests - field setup' }
-MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveChargedMana [
-
-	| intruder |
-
-	intruder := self intruder.
-
-	self
-		should: [ match manaOf: intruder ]
 		raise: Error
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
@@ -678,12 +673,16 @@ MatchUserStoryTest >> test07WhenPlayerSummonsSingleCivilizationCreatureThenCards
 ]
 
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test08PlayerCantSeeOpponentCardsInHand [
+MatchUserStoryTest >> test08PlayerNotBelongingToMatchCantHaveChargedMana [
+
+	| intruder |
+
+	intruder := self intruder.
 
 	self
-		should: [ match cardsInHandOf: shobu requestedBy: knight ]
-		raise: IllegalPlay
-		withMessageText: 'Knight: You can''t see the cards in your opponent''s hand.'
+		should: [ match manaOf: intruder ]
+		raise: Error
+		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -715,6 +714,15 @@ MatchUserStoryTest >> test08WhenPlayerSummonsMultipleCivilizationCreatureThenCar
 		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
 		assertCollection: ( match tappedManaOf: shobu ) hasSameElements: expectedMana;
 		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: vorgBrawlerOfHell
+]
+
+{ #category : #'tests - field setup' }
+MatchUserStoryTest >> test09PlayerCantSeeOpponentCardsInHand [
+
+	self
+		should: [ match handOf: shobu requestedBy: knight ]
+		raise: IllegalPlay
+		withMessageText: 'Knight: You can''t see the cards in your opponent''s hand.'
 ]
 
 { #category : #'tests - summoning creatures' }

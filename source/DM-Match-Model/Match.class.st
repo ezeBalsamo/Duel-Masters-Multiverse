@@ -13,7 +13,8 @@ Class {
 		'manaByPlayer',
 		'tappedManaByPlayer',
 		'hasFirstTurnEnded',
-		'creaturesHavingSummonedSickness'
+		'creaturesHavingSummonedSickness',
+		'graveyardByPlayer'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -56,24 +57,6 @@ Match >> assertManaHasNotBeenChargedYet [
 		signalIllegalPlayFrom: self currentPlayer
 		because: 'Mana can only be charged once per turn.'
 		unless: canManaBeCharged
-]
-
-{ #category : #'private - accessing' }
-Match >> cardsInHandOf: aPotentialPlayer [
-
-	^ cardsInHandByPlayer
-		at: aPotentialPlayer
-		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
-]
-
-{ #category : #accessing }
-Match >> cardsInHandOf: aPotentialPlayer requestedBy: aPetitioner [
-
-	^ self
-		signalIllegalPlayFrom: aPetitioner
-			because: 'You can''t see the cards in your opponent''s hand.'
-			unless: aPotentialPlayer = aPetitioner;
-		cardsInHandOf: aPotentialPlayer
 ]
 
 { #category : #processing }
@@ -125,7 +108,7 @@ Match >> drawCardFor: aPlayer [
 		assertIsNotFirstTurn;
 		assertCardHasNotBeenDrawnYet.
 
-	( self cardsInHandOf: aPlayer ) add: 'bla-bla'.
+	( self handOf: aPlayer ) add: 'bla-bla'.
 	canCardBeDrawn := false
 ]
 
@@ -142,6 +125,30 @@ Match >> endTurnOf: aPlayer [
 
 	( self tappedManaOf: self currentPlayer ) removeAll.
 	creaturesHavingSummonedSickness removeAll
+]
+
+{ #category : #accessing }
+Match >> graveyardOf: aPlayer [
+
+	^ graveyardByPlayer at: aPlayer
+]
+
+{ #category : #'private - accessing' }
+Match >> handOf: aPotentialPlayer [
+
+	^ cardsInHandByPlayer
+		at: aPotentialPlayer
+		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+]
+
+{ #category : #accessing }
+Match >> handOf: aPotentialPlayer requestedBy: aPetitioner [
+
+	^ self
+		signalIllegalPlayFrom: aPetitioner
+			because: 'You can''t see the cards in your opponent''s hand.'
+			unless: aPotentialPlayer = aPetitioner;
+		handOf: aPotentialPlayer
 ]
 
 { #category : #'private - preconditions' }
@@ -164,14 +171,33 @@ Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 	hasFirstTurnEnded := false.
 
 	self
-		initializeCardsInHandByPlayer;
+		initializeHandByPlayer;
 		initializeShieldsByPlayer;
 		initializeManaByPlayer;
-		initializeCreaturesSummonedByPlayer
+		initializeCreaturesSummonedByPlayer;
+		initializeGraveyardByPlayer
 ]
 
 { #category : #initialization }
-Match >> initializeCardsInHandByPlayer [
+Match >> initializeCreaturesSummonedByPlayer [
+
+	creaturesSummonedByPlayer := Dictionary
+		with: firstPlayer -> OrderedCollection new
+		with: secondPlayer -> OrderedCollection new.
+
+	creaturesHavingSummonedSickness := OrderedCollection new
+]
+
+{ #category : #initialization }
+Match >> initializeGraveyardByPlayer [
+
+	graveyardByPlayer := Dictionary
+		with: firstPlayer -> OrderedCollection new
+		with: secondPlayer -> OrderedCollection new
+]
+
+{ #category : #initialization }
+Match >> initializeHandByPlayer [
 
 	cardsInHandByPlayer := Dictionary
 		with:
@@ -192,16 +218,6 @@ Match >> initializeCardsInHandByPlayer [
 						with: 'blih'
 						with: 'bloh'
 						with: 'bluh' )
-]
-
-{ #category : #initialization }
-Match >> initializeCreaturesSummonedByPlayer [
-
-	creaturesSummonedByPlayer := Dictionary
-		with: firstPlayer -> OrderedCollection new
-		with: secondPlayer -> OrderedCollection new.
-
-	creaturesHavingSummonedSickness := OrderedCollection new
 ]
 
 { #category : #initialization }
