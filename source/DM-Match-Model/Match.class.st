@@ -251,7 +251,7 @@ Match >> shieldsOf: aPotentialPlayer [
 	^ shieldsByPlayer at: aPotentialPlayer ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
 ]
 
-{ #category : #'private - preconditions' }
+{ #category : #'private - signaling' }
 Match >> signalIllegalPlayFrom: aPotentialPlayer because: anErrorDescriptionOrBlock unless: aConditionToBeSatisfied [
 
 	[ IllegalPlay from: aPotentialPlayer because: anErrorDescriptionOrBlock value ]

@@ -18,7 +18,7 @@ CreatureSummonAssertion >> assert: aCard belongsToManaOf: aPlayer [
 
 	match
 		signalIllegalPlayFrom: aPlayer
-		because: ( 'You can''t tap <1p> because it isn''t in your mana zone.' expandMacrosWith: aCard )
+		because: [ 'You can''t tap <1p> because it isn''t in your mana zone.' expandMacrosWith: aCard ]
 		unless: ( match does: aCard belongToManaOf: aPlayer )
 ]
 
@@ -27,7 +27,7 @@ CreatureSummonAssertion >> assert: aCard belongsToUntappedManaOf: aPlayer [
 
 	match
 		signalIllegalPlayFrom: aPlayer
-		because: ( 'You can''t tap <1p> because it is already tapped.' expandMacrosWith: aCard )
+		because: [ 'You can''t tap <1p> because it is already tapped.' expandMacrosWith: aCard ]
 		unless: ( match does: aCard belongToUntappedManaOf: aPlayer )
 ]
 
@@ -68,9 +68,9 @@ CreatureSummonAssertion >> assertManaCostOf: aCreatureCard isLessThanOrEqualToTh
 
 	match
 		signalIllegalPlayFrom: aPlayer
-		because:
-			( 'You have to tap cards whose sum of mana number equals the mana cost of <1p>.'
-				expandMacrosWith: aCreatureCard )
+		because: [ 'You have to tap cards whose sum of mana number equals the mana cost of <1p>.'
+				expandMacrosWith: aCreatureCard
+			]
 		unless: aCreatureCard manaCost = ( self manaNumberToProvideByAll: aCardCollection )
 ]
 
