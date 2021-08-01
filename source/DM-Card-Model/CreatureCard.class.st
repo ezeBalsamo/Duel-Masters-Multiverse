@@ -65,7 +65,7 @@ CreatureCard class >> assertThereAreCivilizationsIn: aPotentialCivilizationColle
 
 	AssertionChecker
 		enforce: [ aPotentialCivilizationCollection notEmpty ]
-		because: 'A creature must have at least one civilization.'
+		because: 'A creature card must have at least one civilization.'
 		raising: InstanceCreationFailed
 ]
 

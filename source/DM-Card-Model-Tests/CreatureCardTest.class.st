@@ -96,7 +96,23 @@ CreatureCardTest >> test01CreatureCardNameMustNotBeEmpty [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test02CreatureCardManaCostMustBeAnInteger [
+CreatureCardTest >> test02CreatureCardCivilizationsMustNotBeEmpty [
+
+	self
+		should: [ CreatureCard
+				named: self defaultCardName
+				fromAll: #()
+				ofType: self defaultRace
+				costing: self defaultManaCost
+				providing: self defaultManaNumber
+				with: self defaultPower
+			]
+		raise: InstanceCreationFailed
+		withMessageText: 'A creature card must have at least one civilization.'
+]
+
+{ #category : #tests }
+CreatureCardTest >> test03CreatureCardManaCostMustBeAnInteger [
 
 	self
 		should: [ CreatureCard
@@ -112,7 +128,7 @@ CreatureCardTest >> test02CreatureCardManaCostMustBeAnInteger [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test03CreatureCardManaCostMustBeGreaterOrEqualThanOne [
+CreatureCardTest >> test04CreatureCardManaCostMustBeGreaterOrEqualThanOne [
 
 	self
 		should: [ CreatureCard
@@ -128,7 +144,7 @@ CreatureCardTest >> test03CreatureCardManaCostMustBeGreaterOrEqualThanOne [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test04CreatureCardManaNumberMustBeAnInteger [
+CreatureCardTest >> test05CreatureCardManaNumberMustBeAnInteger [
 
 	self
 		should: [ CreatureCard
@@ -144,7 +160,7 @@ CreatureCardTest >> test04CreatureCardManaNumberMustBeAnInteger [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test05CreatureCardManaNumberMustBePositive [
+CreatureCardTest >> test06CreatureCardManaNumberMustBePositive [
 
 	self
 		should: [ CreatureCard
@@ -160,7 +176,7 @@ CreatureCardTest >> test05CreatureCardManaNumberMustBePositive [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test06CreatureCardPowerMustBeAnInteger [
+CreatureCardTest >> test07CreatureCardPowerMustBeAnInteger [
 
 	self
 		should: [ CreatureCard
@@ -176,7 +192,7 @@ CreatureCardTest >> test06CreatureCardPowerMustBeAnInteger [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test07CreatureCardWithoutEffect [
+CreatureCardTest >> test08CreatureCardWithoutEffect [
 
 	| creatureName twoManas oneMana twoThousandsPower creatureCard |
 
@@ -200,4 +216,34 @@ CreatureCardTest >> test07CreatureCardWithoutEffect [
 		assert: ( creatureCard costs: twoManas );
 		assert: ( creatureCard provides: oneMana );
 		assert: ( creatureCard hasPowerEquivalentTo: twoThousandsPower )
+]
+
+{ #category : #tests }
+CreatureCardTest >> test09MultipleCivilizationCreatureCard [
+
+	| creatureCard |
+
+	creatureCard := CreatureCard
+		named: self defaultCardName
+		fromAll: ( Array with: self fireCivilization with: self waterCivilization )
+		ofType: self defaultRace
+		costing: self defaultManaCost
+		providing: self defaultManaNumber
+		with: self defaultPower.
+
+	self
+		assert: ( creatureCard isFromTheCivilizationNamed: self fireCivilizationName );
+		assert: ( creatureCard isFromTheCivilizationNamed: self waterCivilizationName )
+]
+
+{ #category : #'private - accessing' }
+CreatureCardTest >> waterCivilization [
+
+	^ Civilization named: self waterCivilizationName
+]
+
+{ #category : #'private - accessing' }
+CreatureCardTest >> waterCivilizationName [
+
+	^ 'Water'
 ]
