@@ -52,18 +52,7 @@ CivilizationTest >> test03PrintString [
 ]
 
 { #category : #tests }
-CivilizationTest >> test04CivilizationHavingSameNameThanAnotheCivilization [
-
-	| civilization anotherCivilization |
-
-	civilization := Civilization named: self fireCivilizationName.
-	anotherCivilization := Civilization named: self fireCivilizationName.
-
-	self assert: ( civilization hasSameNameThan: anotherCivilization )
-]
-
-{ #category : #tests }
-CivilizationTest >> test04SingleCivilizationHavingSameNameThanAnotherSingleCivilization [
+CivilizationTest >> test04CivilizationHavingSameNameThanAnotherCivilization [
 
 	| civilization anotherCivilization |
 
@@ -75,17 +64,6 @@ CivilizationTest >> test04SingleCivilizationHavingSameNameThanAnotherSingleCivil
 
 { #category : #tests }
 CivilizationTest >> test05CivilizationHavingDifferentNameThanAnotherCivilization [
-
-	| civilization anotherCivilization |
-
-	civilization := Civilization named: self fireCivilizationName.
-	anotherCivilization := Civilization named: self waterCivilizationName.
-
-	self deny: ( civilization hasSameNameThan: anotherCivilization )
-]
-
-{ #category : #tests }
-CivilizationTest >> test05SingleCivilizationHavingDifferentNameThanAnotherSingleCivilization [
 
 	| civilization anotherCivilization |
 
