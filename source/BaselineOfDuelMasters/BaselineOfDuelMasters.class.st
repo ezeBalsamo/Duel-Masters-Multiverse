@@ -407,6 +407,7 @@ BaselineOfDuelMasters >> matchModelTestsPackage [
 		requiringAll:
 			( OrderedCollection new
 				add: matchModelPackageName;
+				add: 'DM-SUnit';
 				add: ( self modelPackageNameFor: 'DM-Race' );
 				add: ( self modelPackageNameFor: 'DM-Civilization' );
 				add: ( self modelPackageNameFor: 'DM-Card' );

@@ -24,33 +24,12 @@ Match class >> between: aPlayer and: anotherPlayer [
 ]
 
 { #category : #'private - preconditions' }
-Match >> assert: aCard belongsToManaOf: aPotentialPlayer [
-
-	self
-		signalIllegalPlayFrom: aPotentialPlayer
-		because: 'You can''t tap March because it isn''t in your mana zone.'
-		unless: ( ( self manaOf: aPotentialPlayer ) includes: aCard )
-]
-
-{ #category : #'private - preconditions' }
 Match >> assertCardHasNotBeenDrawnYet [
 
 	self
 		signalIllegalPlayFrom: self currentPlayer
 		because: 'Only one card can be drawn per turn.'
 		unless: canCardBeDrawn
-]
-
-{ #category : #'private - preconditions' }
-Match >> assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaOf: aPotentialPlayer [
-
-	self
-		signalIllegalPlayFrom: aPotentialPlayer
-		because:
-			( 'You don''t have mana from <1p> to summon <2p>.'
-				expandMacrosWith: aCreatureCard civilization
-				with: aCreatureCard )
-		unless: ( ( self civilizationsOfManaOf: aPotentialPlayer ) includes: aCreatureCard civilization )
 ]
 
 { #category : #'private - preconditions' }
@@ -63,28 +42,10 @@ Match >> assertIsNotFirstTurn [
 ]
 
 { #category : #'private - preconditions' }
-Match >> assertIsUntapped: aCard of: aPotentialPlayer [
-
-	self
-		signalIllegalPlayFrom: aPotentialPlayer
-		because: 'You can''t tap March because it is already tapped.'
-		unless: ( ( self untappedManaOf: aPotentialPlayer ) includes: aCard )
-]
-
-{ #category : #'private - preconditions' }
 Match >> assertIsValidPlayer: aPotentialPlayer [
 
 	^ [ self signalIsNotValidPlayer: aPotentialPlayer ]
 		unless: ( playersTurn includes: aPotentialPlayer )
-]
-
-{ #category : #'private - preconditions' }
-Match >> assertManaCostOf: aCreatureCard isLowerOrEqualThanNumberOfManaOf: aPotentialPlayer [
-
-	self
-		signalIllegalPlayFrom: aPotentialPlayer
-		because: ( 'You don''t have enough mana to summon <1p>.' expandMacrosWith: aCreatureCard )
-		unless: aCreatureCard manaCost <= ( self numberOfManaOf: aPotentialPlayer )
 ]
 
 { #category : #'private - preconditions' }
@@ -94,13 +55,6 @@ Match >> assertManaHasNotBeenChargedYet [
 		signalIllegalPlayFrom: self currentPlayer
 		because: 'Mana can only be charged once per turn.'
 		unless: canManaBeCharged
-]
-
-{ #category : #testing }
-Match >> canBeSummoned: aCreatureCard of: aPotentialPlayer [
-
-	^ aCreatureCard manaCost <= ( self numberOfUntappedManaOf: aPotentialPlayer )
-		and: [ ( self civilizationsOfUntappedManaOf: aPotentialPlayer ) includes: aCreatureCard civilization ]
 ]
 
 { #category : #'private - accessing' }
@@ -122,32 +76,14 @@ Match >> cardsInHandOf: aPotentialPlayer requestedBy: aPetitioner [
 ]
 
 { #category : #processing }
-Match >> chargeManaOf: aPotentialPlayer with: aCard [
+Match >> chargeManaOf: aPlayer with: aCard [
 
 	self
-		ifIsNotTurnOf: aPotentialPlayer warnThat: 'You can''t charge mana on your opponent''s turn.';
+		ifIsNotTurnOf: aPlayer warnThat: 'You can''t charge mana on your opponent''s turn.';
 		assertManaHasNotBeenChargedYet.
 
-	( self manaOf: aPotentialPlayer ) add: aCard.
+	( self manaOf: aPlayer ) add: aCard.
 	canManaBeCharged := false
-]
-
-{ #category : #'private - accessing' }
-Match >> civilizationsIn: aCardCollection [
-
-	^ aCardCollection collect: [ :aCard | aCard civilization ] as: Set
-]
-
-{ #category : #'private - accessing' }
-Match >> civilizationsOfManaOf: aPotentialPlayer [
-
-	^ self civilizationsIn: ( self manaOf: aPotentialPlayer )
-]
-
-{ #category : #'private - accessing' }
-Match >> civilizationsOfUntappedManaOf: aPotentialPlayer [
-
-	^ self civilizationsIn: ( self untappedManaOf: aPotentialPlayer )
 ]
 
 { #category : #accessing }
@@ -162,22 +98,34 @@ Match >> currentPlayer [
 	^ playersTurn current
 ]
 
+{ #category : #testing }
+Match >> does: aCard belongToManaOf: aPlayer [
+
+	^ ( self manaOf: aPlayer ) includes: aCard
+]
+
+{ #category : #testing }
+Match >> does: aCard belongToUntappedManaOf: aPlayer [
+
+	^ ( self untappedManaOf: aPlayer ) includes: aCard
+]
+
 { #category : #processing }
-Match >> drawCardFor: aPotentialPlayer [
+Match >> drawCardFor: aPlayer [
 
 	self
-		ifIsNotTurnOf: aPotentialPlayer warnThat: 'You can''t draw a card on your opponent''s turn.';
+		ifIsNotTurnOf: aPlayer warnThat: 'You can''t draw a card on your opponent''s turn.';
 		assertIsNotFirstTurn;
 		assertCardHasNotBeenDrawnYet.
 
-	( self cardsInHandOf: aPotentialPlayer ) add: 'bla-bla'.
+	( self cardsInHandOf: aPlayer ) add: 'bla-bla'.
 	canCardBeDrawn := false
 ]
 
 { #category : #processing }
-Match >> endTurnOf: aPotentialPlayer [
+Match >> endTurnOf: aPlayer [
 
-	self ifIsNotTurnOf: aPotentialPlayer warnThat: 'You can''t end your opponent''s turn.'.
+	self ifIsNotTurnOf: aPlayer warnThat: 'You can''t end your opponent''s turn.'.
 
 	canManaBeCharged := true.
 	canCardBeDrawn := true.
@@ -289,38 +237,12 @@ Match >> isTurnOf: aPotentialPlayer [
 	^ self currentPlayer = aPotentialPlayer
 ]
 
-{ #category : #'private - accessing' }
-Match >> mana [
-
-	^ BaseUnit named: 'mana'
-]
-
-{ #category : #'private - accessing' }
-Match >> manaNumberToProvideIn: aCardCollection [
-
-	^ aCardCollection
-		inject: self zeroMana
-		into: [ :totalNumberOfMana :aCard | totalNumberOfMana + aCard manaNumberToProvide ]
-]
-
 { #category : #accessing }
 Match >> manaOf: aPotentialPlayer [
 
 	^ manaByPlayer
 		at: aPotentialPlayer
 		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
-]
-
-{ #category : #'private - accessing' }
-Match >> numberOfManaOf: aPotentialPlayer [
-
-	^ self manaNumberToProvideIn: ( self manaOf: aPotentialPlayer )
-]
-
-{ #category : #'private - accessing' }
-Match >> numberOfUntappedManaOf: aPotentialPlayer [
-
-	^ self manaNumberToProvideIn: ( self untappedManaOf: aPotentialPlayer )
 ]
 
 { #category : #accessing }
@@ -330,9 +252,10 @@ Match >> shieldsOf: aPotentialPlayer [
 ]
 
 { #category : #'private - preconditions' }
-Match >> signalIllegalPlayFrom: aPotentialPlayer because: anErrorDescription unless: aConditionToBeSatisfied [
+Match >> signalIllegalPlayFrom: aPotentialPlayer because: anErrorDescriptionOrBlock unless: aConditionToBeSatisfied [
 
-	[ IllegalPlay from: aPotentialPlayer because: anErrorDescription ] unless: aConditionToBeSatisfied
+	[ IllegalPlay from: aPotentialPlayer because: anErrorDescriptionOrBlock value ]
+		unless: aConditionToBeSatisfied
 ]
 
 { #category : #'private - signaling' }
@@ -342,14 +265,15 @@ Match >> signalIsNotValidPlayer: aNotValidPlayer [
 ]
 
 { #category : #processing }
-Match >> summon: aCreatureCard of: aPotentialPlayer tappingAll: aCardCollection [
+Match >> summon: aCreatureCard of: aPlayer tappingAll: aCardCollection [
 
-	aCardCollection
-		do: [ :aCard | self validate: aCard canBeUsedForSummoningCreatureOf: aPotentialPlayer ].
-	self validateCanBeSummoned: aCreatureCard of: aPotentialPlayer.
+	( CreatureSummonAssertion workingWith: self )
+		validateSummoningOf: aCreatureCard
+		from: aPlayer
+		tappingAll: aCardCollection.
 
-	( self creaturesSummonedOf: aPotentialPlayer ) add: aCreatureCard.
-	( self tappedManaOf: aPotentialPlayer ) addAll: aCardCollection
+	( self creaturesSummonedOf: aPlayer ) add: aCreatureCard.
+	( self tappedManaOf: aPlayer ) addAll: aCardCollection
 ]
 
 { #category : #accessing }
@@ -361,29 +285,7 @@ Match >> tappedManaOf: aPotentialPlayer [
 ]
 
 { #category : #'private - accessing' }
-Match >> untappedManaOf: aPotentialPlayer [
+Match >> untappedManaOf: aPlayer [
 
-	^ ( self manaOf: aPotentialPlayer ) difference: ( self tappedManaOf: aPotentialPlayer )
-]
-
-{ #category : #'private - preconditions' }
-Match >> validate: aCard canBeUsedForSummoningCreatureOf: aPotentialPlayer [
-
-	self
-		assert: aCard belongsToManaOf: aPotentialPlayer;
-		assertIsUntapped: aCard of: aPotentialPlayer
-]
-
-{ #category : #'private - preconditions' }
-Match >> validateCanBeSummoned: aCreatureCard of: aPotentialPlayer [
-
-	self
-		assertManaCostOf: aCreatureCard isLowerOrEqualThanNumberOfManaOf: aPotentialPlayer;
-		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfManaOf: aPotentialPlayer
-]
-
-{ #category : #'private - accessing' }
-Match >> zeroMana [
-
-	^ self mana nullMeasure
+	^ ( self manaOf: aPlayer ) difference: ( self tappedManaOf: aPlayer )
 ]

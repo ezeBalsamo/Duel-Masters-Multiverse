@@ -14,36 +14,22 @@ Class {
 	#category : #'DM-Match-Model-Tests'
 }
 
-{ #category : #'private - asserting' }
-MatchUserStoryTest >> assertTheOnlyElementIn: aCollection is: anExpectedObject [
+{ #category : #'private - accessing' }
+MatchUserStoryTest >> alien [
 
-	self
-		withTheOnlyOneIn: aCollection
-		do: [ :anObject | self assert: anObject equals: anExpectedObject ]
+	^ SingleRace ofTypeNamed: 'Alien'
 ]
 
 { #category : #'private - accessing' }
 MatchUserStoryTest >> beatJockey [
 
-	^ SingleRace ofTypeNamed: self beatJockeyName
-]
-
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> beatJockeyName [
-
-	^ 'Beat Jockey'
+	^ SingleRace ofTypeNamed: 'Beat Jockey'
 ]
 
 { #category : #'private - accessing' }
 MatchUserStoryTest >> calendar2016 [
 
-	^ SingleRace ofTypeNamed: self calendar2016Name
-]
-
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> calendar2016Name [
-
-	^ '2016 Calendar'
+	^ SingleRace ofTypeNamed: '2016 Calendar'
 ]
 
 { #category : #'private - accessing' }
@@ -64,33 +50,45 @@ MatchUserStoryTest >> chargeShobuManaWithAll: aCardCollection [
 			]
 ]
 
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> fireCivilization [
+{ #category : #'private - system accessing' }
+MatchUserStoryTest >> civilizationManagementSystem [
 
-	^ ( rootSystem >> #CivilizationManagementSystemInterface ) fireCivilization
+	^ rootSystem >> #CivilizationManagementSystemInterface
 ]
 
 { #category : #'private - accessing' }
-MatchUserStoryTest >> humanRace [
+MatchUserStoryTest >> darkMonster [
 
-	^ SingleRace ofTypeNamed: self humanRaceTypeName
+	^ SingleRace ofTypeNamed: 'Dark Monster'
+]
+
+{ #category : #'private - creature accessing' }
+MatchUserStoryTest >> darknessLeohl [
+
+	^ CreatureCard
+		named: 'Darkness Leohl'
+		from: self civilizationManagementSystem darknessCivilization
+		ofType: self darkMonster
+		costing: ( self mana with: 2 )
+		providing: self oneMana
+		with: ( self power with: 2000 )
 ]
 
 { #category : #'private - accessing' }
-MatchUserStoryTest >> humanRaceTypeName [
+MatchUserStoryTest >> human [
 
-	^ 'Human'
+	^ SingleRace ofTypeNamed: 'Human'
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'private - creature accessing' }
 MatchUserStoryTest >> immortalBaronVorg [
 
 	^ CreatureCard
 		named: 'Immortal Baron, Vorg'
-		from: self fireCivilization
-		and: self humanRace
+		from: self civilizationManagementSystem fireCivilization
+		ofType: self human
 		costing: ( self mana with: 2 )
-		providing: ( self mana with: 1 )
+		providing: self oneMana
 		with: ( self power with: 2000 )
 ]
 
@@ -101,21 +99,9 @@ MatchUserStoryTest >> intruder [
 ]
 
 { #category : #'private - accessing' }
-MatchUserStoryTest >> lightBringerRace [
+MatchUserStoryTest >> lightBringer [
 
-	^ SingleRace ofTypeNamed: self lightBringerRaceName
-]
-
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> lightBringerRaceName [
-
-	^ 'Light Bringer'
-]
-
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> lightCivilization [
-
-	^ ( rootSystem >> #CivilizationManagementSystemInterface ) lightCivilization
+	^ SingleRace ofTypeNamed: 'Light Bringer'
 ]
 
 { #category : #'private - accessing' }
@@ -124,15 +110,15 @@ MatchUserStoryTest >> mana [
 	^ mana
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'private - creature accessing' }
 MatchUserStoryTest >> march [
 
 	^ CreatureCard
 		named: 'March'
-		from: self lightCivilization
-		and: self calendar2016
+		from: self civilizationManagementSystem lightCivilization
+		ofType: self calendar2016
 		costing: ( self mana with: 3 )
-		providing: ( self mana with: 1 )
+		providing: self oneMana
 		with: ( self power with: 3000 )
 ]
 
@@ -180,30 +166,40 @@ MatchUserStoryTest >> setUpUnits [
 MatchUserStoryTest >> startManagingCivilizations [
 
 	( rootSystem >> #CivilizationManagementSystemInterface )
-		storeCivilization: ( SingleCivilization named: 'Fire' );
-		storeCivilization: ( SingleCivilization named: 'Light' )
+		storeCivilization: ( Civilization named: 'Fire' );
+		storeCivilization: ( Civilization named: 'Water' );
+		storeCivilization: ( Civilization named: 'Nature' );
+		storeCivilization: ( Civilization named: 'Light' );
+		storeCivilization: ( Civilization named: 'Darkness' )
 ]
 
-{ #category : #processing }
+{ #category : #'private - processing' }
 MatchUserStoryTest >> summon: aCreatureCard of: aPotentialPlayer tapping: aCard [
 
 	match summon: aCreatureCard of: aPotentialPlayer tappingAll: {aCard}
 ]
 
 { #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutChargedMana [
+MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutTappingMana [
 
 	| tulkTheOracle |
 
 	tulkTheOracle := self tulkTheOracle.
 
 	self
-		assert: ( match numberOfManaOf: shobu ) equals: self zeroMana;
-		assert: ( tulkTheOracle costs: self oneMana );
-		deny: ( match canBeSummoned: tulkTheOracle of: shobu );
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	self
 		should: [ match summon: tulkTheOracle of: shobu tappingAll: #() ]
-			raise: IllegalPlay
-			withMessageText: 'Shobu: You don''t have enough mana to summon Tulk, the Oracle.'
+		raise: IllegalPlay
+		withMessageText: 'Shobu: You haven''t selected cards to tap.'.
+
+	self
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - mana charge' }
@@ -214,9 +210,7 @@ MatchUserStoryTest >> test01PlayerChargesMana [
 	immortalBaronVorg := self immortalBaronVorg.
 	self assert: ( match manaOf: shobu ) isEmpty.
 	match chargeManaOf: shobu with: immortalBaronVorg.
-	self
-		assertTheOnlyElementIn: ( match manaOf: shobu ) is: immortalBaronVorg;
-		assert: ( match numberOfManaOf: shobu ) equals: self oneMana
+	self assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg
 ]
 
 { #category : #'tests - drawing cards' }
@@ -286,23 +280,27 @@ MatchUserStoryTest >> test02PlayerCantEndOpponentsTurn [
 ]
 
 { #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test02PlayerCantSummonCreatureWhenChargedManaIsNotFromTheSameCivilization [
+MatchUserStoryTest >> test02PlayerCantSummonCreatureWhenAtLeastOneCardToTapDoesNotBelongToPlayerMana [
 
-	| immortalBaronVorg tulkTheOracle |
+	| march tulkTheOracle |
 
-	immortalBaronVorg := self immortalBaronVorg.
+	march := self march.
 	tulkTheOracle := self tulkTheOracle.
 
-	self assert: ( match manaOf: shobu ) isEmpty.
-	match chargeManaOf: shobu with: immortalBaronVorg.
+	self
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
 
 	self
-		assert: ( match numberOfManaOf: shobu ) equals: self oneMana;
-		assert: ( tulkTheOracle costs: self oneMana );
-		deny: ( match canBeSummoned: tulkTheOracle of: shobu );
-		should: [ self summon: tulkTheOracle of: shobu tapping: immortalBaronVorg ]
-			raise: IllegalPlay
-			withMessageText: 'Shobu: You don''t have mana from Light civilization to summon Tulk, the Oracle.'
+		should: [ self summon: tulkTheOracle of: shobu tapping: march ]
+		raise: IllegalPlay
+		withMessageText: 'Shobu: You can''t tap March because it isn''t in your mana zone.'.
+
+	self
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - field setup' }
@@ -323,11 +321,11 @@ MatchUserStoryTest >> test03PlayerCantChargeManaMoreThanOnceInTheSameTurn [
 	self assert: ( match manaOf: shobu ) isEmpty.
 	match chargeManaOf: shobu with: immortalBaronVorg.
 	self
-		assertTheOnlyElementIn: ( match manaOf: shobu ) is: immortalBaronVorg;
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg;
 		should: [ match chargeManaOf: shobu with: anotherImmortalBaronVorg ]
 			raise: IllegalPlay
 			withMessageText: 'Shobu: Mana can only be charged once per turn.';
-		assertTheOnlyElementIn: ( match manaOf: shobu ) is: immortalBaronVorg
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg
 ]
 
 { #category : #'tests - drawing cards' }
@@ -348,23 +346,42 @@ MatchUserStoryTest >> test03PlayerCantDrawMoreThanOneCardInTheSameTurn [
 ]
 
 { #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test03PlayerCantSummonCreatureWhenTheChargedManaIsNotEnoughEvenThoughIsFromTheSameCivilization [
+MatchUserStoryTest >> test03PlayerCantSummonCreatureWhenAtLeastOneCardToTapIsAlreadyTapped [
 
-	| immortalBaronVorg vocalMegahit |
+	| march tulkTheOracle anotherTulkTheOracle |
 
-	immortalBaronVorg := self immortalBaronVorg.
-	vocalMegahit := self vocalMegahit.
-
-	self assert: ( match manaOf: shobu ) isEmpty.
-	match chargeManaOf: shobu with: vocalMegahit.
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+	anotherTulkTheOracle := self tulkTheOracle.
 
 	self
-		assert: ( match numberOfManaOf: shobu ) equals: self oneMana;
-		assert: ( immortalBaronVorg costs: self twoManas );
-		deny: ( match canBeSummoned: immortalBaronVorg of: shobu );
-		should: [ self summon: immortalBaronVorg of: shobu tapping: vocalMegahit ]
-			raise: IllegalPlay
-			withMessageText: 'Shobu: You don''t have enough mana to summon Immortal Baron, Vorg.'
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	match chargeManaOf: shobu with: march.
+
+	self
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	self summon: tulkTheOracle of: shobu tapping: march.
+
+	self
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
+		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
+		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle.
+
+	self
+		should: [ self summon: anotherTulkTheOracle of: shobu tapping: march ]
+		raise: IllegalPlay
+		withMessageText: 'Shobu: You can''t tap March because it is already tapped.'.
+
+	self
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
+		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
+		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
 ]
 
 { #category : #'tests - turn order' }
@@ -385,9 +402,7 @@ MatchUserStoryTest >> test03PlayersBeginTheMatchWithoutChargedMana [
 
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match numberOfManaOf: shobu ) equals: self zeroMana;
-		assert: ( match manaOf: knight ) isEmpty;
-		assert: ( match numberOfManaOf: knight ) equals: self zeroMana
+		assert: ( match manaOf: knight ) isEmpty
 ]
 
 { #category : #'tests - mana charge' }
@@ -400,7 +415,7 @@ MatchUserStoryTest >> test04PlayerCanChargeManaEveryTurn [
 	self assert: ( match manaOf: shobu ) isEmpty.
 
 	match chargeManaOf: shobu with: immortalBaronVorg.
-	self assertTheOnlyElementIn: ( match manaOf: shobu ) is: immortalBaronVorg.
+	self assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg.
 
 	match
 		endTurnOf: shobu;
@@ -431,6 +446,37 @@ MatchUserStoryTest >> test04PlayerCanDrawCardEveryTurn [
 	self assert: ( self cardsInHandOf: shobu ) size equals: 7
 ]
 
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test04PlayerCantSummonSingleCivilizationCreatureWhenAtLeastOneCardToTapIsNotFromThatSameCivilization [
+
+	| immortalBaronVorg tulkTheOracle |
+
+	immortalBaronVorg := self immortalBaronVorg.
+	tulkTheOracle := self tulkTheOracle.
+
+	self
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	match chargeManaOf: shobu with: immortalBaronVorg.
+
+	self
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	self
+		should: [ self summon: tulkTheOracle of: shobu tapping: immortalBaronVorg ]
+		raise: IllegalPlay
+		withMessageText: 'Shobu: You don''t have Light civilization mana to summon Tulk, the Oracle.'.
+
+	self
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty
+]
+
 { #category : #'tests - turn order' }
 MatchUserStoryTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
 
@@ -444,32 +490,44 @@ MatchUserStoryTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test04PlayerSummonCreatureWithUnitaryManaCostAndOneManaChargedFromTheRequiredCivilization [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	self assert: ( match manaOf: shobu ) isEmpty.
-	match chargeManaOf: shobu with: march.
-
-	self
-		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
-
-	self summon: tulkTheOracle of: shobu tapping: march.
-
-	self assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
-]
-
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test04layersBeginTheMatchWithoutSummonedCreatures [
 
 	self
 		assert: ( match creaturesSummonedOf: shobu ) isEmpty;
 		assert: ( match creaturesSummonedOf: knight ) isEmpty
+]
+
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test05PlayerCantSummonCreatureWhenTheManaNumberOfCardsToTapIsLessThanCreatureManaCost [
+
+	| immortalBaronVorg vocalMegahit |
+
+	immortalBaronVorg := self immortalBaronVorg.
+	vocalMegahit := self vocalMegahit.
+
+	self
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	match chargeManaOf: shobu with: vocalMegahit.
+
+	self
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: vocalMegahit;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	self
+		should: [ self summon: immortalBaronVorg of: shobu tapping: vocalMegahit ]
+		raise: IllegalPlay
+		withMessageText:
+			'Shobu: You have to tap cards whose sum of mana number equals the mana cost of Immortal Baron, Vorg.'.
+
+	self
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: vocalMegahit;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - mana charge' }
@@ -512,30 +570,6 @@ MatchUserStoryTest >> test05PlayerNotBelongingToMatchCantHaveCardsInHand [
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test05PlayerSummonCreatureWithUnitaryManaCostAndManyManaChargedFromDifferentCivilizations [
-
-	| tulkTheOracle march expectedManaChargedCivilizations |
-
-	tulkTheOracle := self tulkTheOracle.
-	march := self march.
-
-	self assert: ( match manaOf: shobu ) isEmpty.
-	self chargeShobuManaWithAll: ( Array with: march with: self vocalMegahit ).
-
-	expectedManaChargedCivilizations := Array with: self fireCivilization with: self lightCivilization.
-
-	self
-		assertCollection: ( match civilizationsOfManaOf: shobu )
-			hasSameElements: expectedManaChargedCivilizations;
-		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
-
-	self summon: tulkTheOracle of: shobu tapping: march.
-
-	self assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
-]
-
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test06InitialPlayerCantDrawCardInTheFirstTurn [
 
@@ -554,6 +588,41 @@ MatchUserStoryTest >> test06InitialPlayerCantDrawCardInTheFirstTurn [
 	self assert: ( self cardsInHandOf: shobu ) size equals: 6
 ]
 
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test06PlayerCantSummonMultipleCivilizationCreatureWhenNoneCardsToTapAreFromTheRequiredCivilization [
+
+	| march tulkTheOracle vorgBrawlerOfHell expectedMana |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+	vorgBrawlerOfHell := self vorgBrawlerOfHell.
+
+	self
+		assert: ( match manaOf: shobu ) isEmpty;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	expectedMana := Array with: march with: tulkTheOracle.
+
+	self chargeShobuManaWithAll: expectedMana.
+
+	self
+		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	self
+		should: [ match summon: vorgBrawlerOfHell of: shobu tappingAll: expectedMana ]
+		raise: IllegalPlay
+		withMessageText:
+			'Shobu: You don''t have Fire civilization and Darkness civilization mana to summon Vorg, Brawler of Hell.'.
+
+	self
+		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty
+]
+
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveShields [
 
@@ -565,29 +634,6 @@ MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveShields [
 		should: [ match shieldsOf: intruder ]
 		raise: Error
 		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test06PlayerSummonCreatureWithManyManaCostAndManyManaChargedFromDifferentCivilizations [
-
-	| immortalBaronVorg expectedMana expectedManaChargedCivilizations |
-
-	immortalBaronVorg := self immortalBaronVorg.
-	expectedMana := Array with: self march with: self vocalMegahit.
-
-	self assert: ( match manaOf: shobu ) isEmpty.
-	self chargeShobuManaWithAll: expectedMana.
-
-	expectedManaChargedCivilizations := Array with: self fireCivilization with: self lightCivilization.
-
-	self
-		assertCollection: ( match civilizationsOfManaOf: shobu )
-			hasSameElements: expectedManaChargedCivilizations;
-		assert: ( match canBeSummoned: immortalBaronVorg of: shobu );
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
-
-	match summon: immortalBaronVorg of: shobu tappingAll: expectedMana.
-	self assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: immortalBaronVorg
 ]
 
 { #category : #'tests - field setup' }
@@ -604,7 +650,7 @@ MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveChargedMana [
 ]
 
 { #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test07WhenPlayerSummonsCreatureWithUnitaryManaCostThenRequiredChargedManaIsTapped [
+MatchUserStoryTest >> test07WhenPlayerSummonsSingleCivilizationCreatureThenCardsToTapAreTapped [
 
 	| march tulkTheOracle |
 
@@ -613,64 +659,26 @@ MatchUserStoryTest >> test07WhenPlayerSummonsCreatureWithUnitaryManaCostThenRequ
 
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty.
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
 
 	match chargeManaOf: shobu with: march.
 
 	self
-		assertTheOnlyElementIn: ( match manaOf: shobu ) is: march;
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
 		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
 
 	self summon: tulkTheOracle of: shobu tapping: march.
 
 	self
-		assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
-		assertTheOnlyElementIn: ( match manaOf: shobu ) is: march;
-		assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: march
+		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
+		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
+		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
 ]
 
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test08PlayerNotBelongingToMatchCantHaveNumberOfChargedMana [
-
-	| intruder |
-
-	intruder := self intruder.
-
-	self
-		should: [ match numberOfManaOf: intruder ]
-		raise: Error
-		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test08WhenPlayerSummonsCreatureWithManyManaCostThenRequiredChargedManaIsTapped [
-
-	| vocalMegahit immortalBaronVorg tulkTheOracle expectedMana |
-
-	vocalMegahit := self vocalMegahit.
-	immortalBaronVorg := self immortalBaronVorg.
-	tulkTheOracle := self tulkTheOracle.
-
-	expectedMana := Array with: vocalMegahit with: tulkTheOracle.
-
-	self chargeShobuManaWithAll: expectedMana.
-
-	self
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match canBeSummoned: immortalBaronVorg of: shobu );
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
-
-	match summon: immortalBaronVorg of: shobu tappingAll: expectedMana.
-
-	self
-		assertCollection: ( match tappedManaOf: shobu ) hasSameElements: expectedMana;
-		assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: immortalBaronVorg
-]
-
-{ #category : #'tests - field setup' }
-MatchUserStoryTest >> test09PlayerCantSeeOpponentCardsInHand [
+MatchUserStoryTest >> test08PlayerCantSeeOpponentCardsInHand [
 
 	self
 		should: [ match cardsInHandOf: shobu requestedBy: knight ]
@@ -679,144 +687,38 @@ MatchUserStoryTest >> test09PlayerCantSeeOpponentCardsInHand [
 ]
 
 { #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test09PlayerCantSummonCreatureWhenTheRequiredManaHasNotBeenCharged [
+MatchUserStoryTest >> test08WhenPlayerSummonsMultipleCivilizationCreatureThenCardsToTapAreTapped [
 
-	| march tulkTheOracle anotherTulkTheOracle |
+	| immortalBaronVorg darknessLeohl vorgBrawlerOfHell expectedMana |
 
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-	anotherTulkTheOracle := self tulkTheOracle.
+	immortalBaronVorg := self immortalBaronVorg.
+	darknessLeohl := self darknessLeohl.
+	vorgBrawlerOfHell := self vorgBrawlerOfHell.
 
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
 		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
 
-	match chargeManaOf: shobu with: anotherTulkTheOracle.
+	expectedMana := Array with: immortalBaronVorg with: darknessLeohl.
+
+	self chargeShobuManaWithAll: expectedMana.
 
 	self
-		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
-		should: [ self summon: tulkTheOracle of: shobu tapping: march ]
-			raise: IllegalPlay
-			withMessageText: 'Shobu: You can''t tap March because it isn''t in your mana zone.'
+		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
+		assert: ( match tappedManaOf: shobu ) isEmpty;
+		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+
+	match summon: vorgBrawlerOfHell of: shobu tappingAll: expectedMana.
+
+	self
+		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
+		assertCollection: ( match tappedManaOf: shobu ) hasSameElements: expectedMana;
+		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: vorgBrawlerOfHell
 ]
 
 { #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test10PlayerCantSummonCreatureWithUnitaryManaCostAndOneManaChargedWhenTheLatterIsTapped [
-
-	| march tulkTheOracle anotherTulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-	anotherTulkTheOracle := self tulkTheOracle.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty;
-		deny: ( match canBeSummoned: tulkTheOracle of: shobu ).
-
-	match chargeManaOf: shobu with: march.
-
-	self
-		assertTheOnlyElementIn: ( match manaOf: shobu ) is: march;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match canBeSummoned: tulkTheOracle of: shobu ).
-
-	self summon: tulkTheOracle of: shobu tapping: march.
-
-	self
-		assertTheOnlyElementIn: ( match manaOf: shobu ) is: march;
-		assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
-		deny: ( match canBeSummoned: anotherTulkTheOracle of: shobu );
-		should: [ self summon: anotherTulkTheOracle of: shobu tapping: march ]
-			raise: IllegalPlay
-			withMessageText: 'Shobu: You can''t tap March because it is already tapped.'
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test11PlayerCantSummonCreatureWithUnitaryManaCostAndManyManaChargedFromDifferentCivilizationButTheRequiredCivilizationIsTapped [
-
-	| march tulkTheOracle anotherTulkTheOracle immortalBaronVorg |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-	anotherTulkTheOracle := self tulkTheOracle.
-	immortalBaronVorg := self immortalBaronVorg.
-
-	self chargeShobuManaWithAll: ( Array with: march with: immortalBaronVorg ).
-
-	self
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty;
-		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
-		assert: ( match canBeSummoned: anotherTulkTheOracle of: shobu ).
-
-	self summon: tulkTheOracle of: shobu tapping: march.
-
-	self
-		assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
-		deny: ( match canBeSummoned: anotherTulkTheOracle of: shobu )
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test12PlayerCantSummonCreatureWithManyManaCostAndManyManaChargedFromDifferentCivilizationButOneOfTheRequiredCivilizationIsTapped [
-
-	| march tulkTheOracle anotherTulkTheOracle vocalMegahit immortalBaronVorg |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-	anotherTulkTheOracle := self tulkTheOracle.
-	vocalMegahit := self vocalMegahit.
-	immortalBaronVorg := self immortalBaronVorg.
-
-	self
-		chargeShobuManaWithAll: ( Array with: tulkTheOracle with: vocalMegahit with: immortalBaronVorg ).
-
-	self
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty;
-		assert: ( match canBeSummoned: march of: shobu );
-		assert: ( match canBeSummoned: anotherTulkTheOracle of: shobu ).
-
-	self summon: anotherTulkTheOracle of: shobu tapping: tulkTheOracle.
-
-	self
-		assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: tulkTheOracle;
-		assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: anotherTulkTheOracle;
-		deny: ( match canBeSummoned: march of: shobu )
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test13PlayerCantSummonCreatureWithManyManaCostAndManyManaChargedFromDifferentCivilizationButTheUntappedManaIsNotEnough [
-
-	| march tulkTheOracle vocalMegahit immortalBaronVorg |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-	vocalMegahit := self vocalMegahit.
-	immortalBaronVorg := self immortalBaronVorg.
-
-	self chargeShobuManaWithAll: ( Array with: march with: vocalMegahit ).
-
-	self
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty;
-		assert: ( match canBeSummoned: tulkTheOracle of: shobu );
-		assert: ( match canBeSummoned: immortalBaronVorg of: shobu ).
-
-	self summon: tulkTheOracle of: shobu tapping: march.
-
-	self
-		assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyElementIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
-		deny: ( match canBeSummoned: immortalBaronVorg of: shobu )
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test14TappedManaIsUntappedAtTheBeginningOfThePlayerTurn [
+MatchUserStoryTest >> test09TappedManaIsUntappedAtTheBeginningOfThePlayerTurn [
 
 	| march tulkTheOracle |
 
@@ -829,49 +731,52 @@ MatchUserStoryTest >> test14TappedManaIsUntappedAtTheBeginningOfThePlayerTurn [
 
 	self
 		summon: tulkTheOracle of: shobu tapping: march;
-		assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: march.
+		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march.
 
 	match endTurnOf: shobu.
 
-	self assertTheOnlyElementIn: ( match tappedManaOf: shobu ) is: march.
+	self assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march.
 
 	match endTurnOf: knight.
 
 	self assert: ( match tappedManaOf: shobu ) isEmpty
 ]
 
-{ #category : #'private - accessing' }
+{ #category : #'private - creature accessing' }
 MatchUserStoryTest >> tulkTheOracle [
 
 	^ CreatureCard
 		named: 'Tulk, the Oracle'
-		from: self lightCivilization
-		and: self lightBringerRace
+		from: self civilizationManagementSystem lightCivilization
+		ofType: self lightBringer
 		costing: self oneMana
 		providing: self oneMana
 		with: ( self power with: 500 )
 ]
 
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> twoManas [
-
-	^ self mana with: 2
-]
-
-{ #category : #'private - accessing' }
+{ #category : #'private - creature accessing' }
 MatchUserStoryTest >> vocalMegahit [
 
 	^ CreatureCard
 		named: 'Vocal Megahit'
-		from: self fireCivilization
-		and: self beatJockey
+		from: self civilizationManagementSystem fireCivilization
+		ofType: self beatJockey
 		costing: ( self mana with: 5 )
-		providing: ( self mana with: 1 )
+		providing: self oneMana
 		with: ( self power with: 5000 )
 ]
 
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> zeroMana [
+{ #category : #'private - creature accessing' }
+MatchUserStoryTest >> vorgBrawlerOfHell [
 
-	^ self mana nullMeasure
+	^ CreatureCard
+		named: 'Vorg, Brawler of Hell'
+		fromAll:
+			( Array
+				with: self civilizationManagementSystem fireCivilization
+				with: self civilizationManagementSystem darknessCivilization )
+		ofType: ( MultipleRace conformedByAll: ( Array with: self human with: self beatJockey with: self alien ) )
+		costing: ( self mana with: 2 )
+		providing: self oneMana
+		with: ( self power with: 4000 )
 ]

@@ -3,11 +3,11 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'civilization',
 		'race',
 		'manaCost',
 		'power',
-		'manaNumberToProvide'
+		'manaNumberToProvide',
+		'civilizations'
 	],
 	#category : #'DM-Card-Model'
 }
@@ -60,6 +60,15 @@ CreatureCard class >> assertNotEmpty: aPotentialName [
 		raising: InstanceCreationFailed
 ]
 
+{ #category : #'private - preconditions' }
+CreatureCard class >> assertThereAreCivilizationsIn: aPotentialCivilizationCollection [
+
+	AssertionChecker
+		enforce: [ aPotentialCivilizationCollection notEmpty ]
+		because: 'A creature must have at least one civilization.'
+		raising: InstanceCreationFailed
+]
+
 { #category : #'private - testing' }
 CreatureCard class >> isGreaterThanOne: aPotentialManaCost [
 
@@ -70,27 +79,40 @@ CreatureCard class >> isGreaterThanOne: aPotentialManaCost [
 ]
 
 { #category : #'instance creation' }
-CreatureCard class >> named: aName from: aCivilization and: aRace costing: aManaCost providing: aManaNumber with: aPower [
+CreatureCard class >> named: aName from: aCivilization ofType: aRace costing: aManaCost providing: aManaNumber with: aPower [
+
+	^ self
+		named: aName
+		fromAll: {aCivilization}
+		ofType: aRace
+		costing: aManaCost
+		providing: aManaNumber
+		with: aPower
+]
+
+{ #category : #'instance creation' }
+CreatureCard class >> named: aName fromAll: aCivilizationCollection ofType: aRace costing: aManaCost providing: aManaNumber with: aPower [
 
 	self
 		assertNotEmpty: aName;
+		assertThereAreCivilizationsIn: aCivilizationCollection;
 		assertIsValidManaCost: aManaCost;
 		assertIsValidManaNumber: aManaNumber;
 		assertIsValidPower: aPower.
 
 	^ self new
 		initializeNamed: aName
-		from: aCivilization
-		and: aRace
+		fromAll: aCivilizationCollection
+		ofType: aRace
 		costing: aManaCost
 		providing: aManaNumber
 		with: aPower
 ]
 
 { #category : #accessing }
-CreatureCard >> civilization [
+CreatureCard >> civilizations [
 
-	^ civilization
+	^ civilizations
 ]
 
 { #category : #testing }
@@ -106,10 +128,10 @@ CreatureCard >> hasPowerEquivalentTo: aPotentialPower [
 ]
 
 { #category : #initialization }
-CreatureCard >> initializeNamed: aName from: aCivilization and: aRace costing: aManaCost providing: aManaNumber with: aPower [
+CreatureCard >> initializeNamed: aName fromAll: aCivilizationCollection ofType: aRace costing: aManaCost providing: aManaNumber with: aPower [
 
 	name := aName.
-	civilization := aCivilization.
+	civilizations := aCivilizationCollection.
 	race := aRace.
 	manaCost := aManaCost.
 	manaNumberToProvide := aManaNumber.
@@ -119,7 +141,7 @@ CreatureCard >> initializeNamed: aName from: aCivilization and: aRace costing: a
 { #category : #testing }
 CreatureCard >> isFromTheCivilizationNamed: aPotentialCivilizationName [
 
-	^ civilization isNamed: aPotentialCivilizationName
+	^ civilizations anySatisfy: [ :aCivilization | aCivilization isNamed: aPotentialCivilizationName ]
 ]
 
 { #category : #testing }

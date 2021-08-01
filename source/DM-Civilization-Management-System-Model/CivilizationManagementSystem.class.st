@@ -22,6 +22,12 @@ CivilizationManagementSystem >> civilizationNamed: aCivilizationName [
 		else: [ Error signal: ( 'There is no civilization named <1s>.' expandMacrosWith: aCivilizationName ) ]
 ]
 
+{ #category : #querying }
+CivilizationManagementSystem >> darknessCivilization [
+
+	^ self civilizationNamed: 'Darkness'
+]
+
 { #category : #installing }
 CivilizationManagementSystem >> dependencies [
 
@@ -52,6 +58,12 @@ CivilizationManagementSystem >> name [
 	^'Civilization Management System'
 ]
 
+{ #category : #querying }
+CivilizationManagementSystem >> natureCivilization [
+
+	^ self civilizationNamed: 'Nature'
+]
+
 { #category : #management }
 CivilizationManagementSystem >> purgeCivilization: aSingleCivilization [
 
@@ -66,7 +78,7 @@ CivilizationManagementSystem >> resolveDependencies [
 	super resolveDependencies.
 	repositoryProviderSystem := self parent >> #RepositoryProviderSystem.
 	civilizations := repositoryProviderSystem
-		repositoryToStoreObjectsOfType: SingleCivilization
+		repositoryToStoreObjectsOfType: Civilization
 		checkingConflictsAccordingTo: ( CriteriaBasedConflictCheckingStrategy forSingleAspectMatching: #name ).
 
 	CivilizationMappingConfiguration new applyTo: civilizations
@@ -82,6 +94,12 @@ CivilizationManagementSystem >> storeCivilization: aSingleCivilization [
 CivilizationManagementSystem >> updateCivilization: aSingleCivilization with: anUpdatedSingleCivilization [
 
 	civilizations update: aSingleCivilization with: anUpdatedSingleCivilization
+]
+
+{ #category : #querying }
+CivilizationManagementSystem >> waterCivilization [
+
+	^ self civilizationNamed: 'Water'
 ]
 
 { #category : #querying }

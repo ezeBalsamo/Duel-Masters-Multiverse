@@ -22,7 +22,7 @@ CivilizationManagementSystemUserStoryTest >> civilizationManagementSystem [
 { #category : #'private - accessing' }
 CivilizationManagementSystemUserStoryTest >> fireCivilization [
 
-	^ SingleCivilization named: self fireCivilizationName
+	^ Civilization named: self fireCivilizationName
 ]
 
 { #category : #'private - accessing' }
@@ -233,7 +233,7 @@ CivilizationManagementSystemUserStoryTest >> update: aCivilization with: anUpdat
 { #category : #'private - accessing' }
 CivilizationManagementSystemUserStoryTest >> waterCivilization [
 
-	^ SingleCivilization named: self waterCivilizationName
+	^ Civilization named: self waterCivilizationName
 ]
 
 { #category : #'private - accessing' }
