@@ -179,6 +179,18 @@ MatchUserStoryTest >> summon: aCreatureCard of: aPotentialPlayer tapping: aCard 
 	match summon: aCreatureCard of: aPotentialPlayer tappingAll: {aCard}
 ]
 
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test01NotSummonedCreatureCantAttack [
+
+	self
+		should: [ match directAttackFrom: self immortalBaronVorg of: shobu ]
+			raise: IllegalPlay
+			withMessageText: 'Shobu: You can''t attack with Immortal Baron, Vorg because it''s not summoned.';
+		should: [ match attackFrom: self immortalBaronVorg of: shobu to: self march ]
+			raise: IllegalPlay
+			withMessageText: 'Shobu: You can''t attack with Immortal Baron, Vorg because it''s not summoned.'
+]
+
 { #category : #'tests - summoning creatures' }
 MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutTappingMana [
 
@@ -189,7 +201,7 @@ MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutTappingMana [
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	self
 		should: [ match summon: tulkTheOracle of: shobu tappingAll: #() ]
@@ -199,7 +211,7 @@ MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutTappingMana [
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - mana charge' }
@@ -290,7 +302,7 @@ MatchUserStoryTest >> test02PlayerCantSummonCreatureWhenAtLeastOneCardToTapDoesN
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	self
 		should: [ self summon: tulkTheOracle of: shobu tapping: march ]
@@ -300,7 +312,7 @@ MatchUserStoryTest >> test02PlayerCantSummonCreatureWhenAtLeastOneCardToTapDoesN
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - field setup' }
@@ -357,21 +369,21 @@ MatchUserStoryTest >> test03PlayerCantSummonCreatureWhenAtLeastOneCardToTapIsAlr
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	match chargeManaOf: shobu with: march.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	self summon: tulkTheOracle of: shobu tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
 		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle.
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle.
 
 	self
 		should: [ self summon: anotherTulkTheOracle of: shobu tapping: march ]
@@ -381,7 +393,7 @@ MatchUserStoryTest >> test03PlayerCantSummonCreatureWhenAtLeastOneCardToTapIsAlr
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
 		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle
 ]
 
 { #category : #'tests - turn order' }
@@ -457,14 +469,14 @@ MatchUserStoryTest >> test04PlayerCantSummonSingleCivilizationCreatureWhenAtLeas
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	match chargeManaOf: shobu with: immortalBaronVorg.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	self
 		should: [ self summon: tulkTheOracle of: shobu tapping: immortalBaronVorg ]
@@ -474,7 +486,7 @@ MatchUserStoryTest >> test04PlayerCantSummonSingleCivilizationCreatureWhenAtLeas
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - turn order' }
@@ -494,8 +506,8 @@ MatchUserStoryTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
 MatchUserStoryTest >> test04PlayersBeginTheMatchWithoutSummonedCreatures [
 
 	self
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: knight ) isEmpty
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assert: ( match summonedCreaturesOf: knight ) isEmpty
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -509,14 +521,14 @@ MatchUserStoryTest >> test05PlayerCantSummonCreatureWhenTheManaNumberOfCardsToTa
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	match chargeManaOf: shobu with: vocalMegahit.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: vocalMegahit;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	self
 		should: [ self summon: immortalBaronVorg of: shobu tapping: vocalMegahit ]
@@ -527,7 +539,7 @@ MatchUserStoryTest >> test05PlayerCantSummonCreatureWhenTheManaNumberOfCardsToTa
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: vocalMegahit;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - mana charge' }
@@ -595,7 +607,7 @@ MatchUserStoryTest >> test06PlayerCantSummonMultipleCivilizationCreatureWhenNone
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	expectedMana := Array with: march with: tulkTheOracle.
 
@@ -604,7 +616,7 @@ MatchUserStoryTest >> test06PlayerCantSummonMultipleCivilizationCreatureWhenNone
 	self
 		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	self
 		should: [ match summon: vorgBrawlerOfHell of: shobu tappingAll: expectedMana ]
@@ -615,7 +627,7 @@ MatchUserStoryTest >> test06PlayerCantSummonMultipleCivilizationCreatureWhenNone
 	self
 		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - field setup' }
@@ -655,21 +667,21 @@ MatchUserStoryTest >> test07WhenPlayerSummonsSingleCivilizationCreatureThenCards
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	match chargeManaOf: shobu with: march.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	self summon: tulkTheOracle of: shobu tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
 		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle
 ]
 
 { #category : #'tests - field setup' }
@@ -697,7 +709,7 @@ MatchUserStoryTest >> test08WhenPlayerSummonsMultipleCivilizationCreatureThenCar
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	expectedMana := Array with: immortalBaronVorg with: darknessLeohl.
 
@@ -706,14 +718,14 @@ MatchUserStoryTest >> test08WhenPlayerSummonsMultipleCivilizationCreatureThenCar
 	self
 		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	match summon: vorgBrawlerOfHell of: shobu tappingAll: expectedMana.
 
 	self
 		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
 		assertCollection: ( match tappedManaOf: shobu ) hasSameElements: expectedMana;
-		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: vorgBrawlerOfHell
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: vorgBrawlerOfHell
 ]
 
 { #category : #'tests - field setup' }
@@ -761,13 +773,13 @@ MatchUserStoryTest >> test10CreaturesHaveSummoningSicknessOnTheTurnTheyAreSummon
 	match chargeManaOf: shobu with: march.
 
 	self
-		assert: ( match creaturesSummonedOf: shobu ) isEmpty;
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
 		assert: match creaturesHavingSummonedSickness isEmpty.
 
 	self summon: tulkTheOracle of: shobu tapping: march.
 
 	self
-		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
 		assertTheOnlyOneIn: match creaturesHavingSummonedSickness is: tulkTheOracle
 ]
 
@@ -784,13 +796,13 @@ MatchUserStoryTest >> test11SummoningSicknessEndsWhenPlayerEndsTurn [
 	self summon: tulkTheOracle of: shobu tapping: march.
 
 	self
-		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
 		assertTheOnlyOneIn: match creaturesHavingSummonedSickness is: tulkTheOracle.
 
 	match endTurnOf: shobu.
 
 	self
-		assertTheOnlyOneIn: ( match creaturesSummonedOf: shobu ) is: tulkTheOracle;
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
 		assert: match creaturesHavingSummonedSickness isEmpty
 ]
 

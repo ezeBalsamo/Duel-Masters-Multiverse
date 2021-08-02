@@ -9,12 +9,12 @@ Class {
 		'playersTurn',
 		'canManaBeCharged',
 		'canCardBeDrawn',
-		'creaturesSummonedByPlayer',
 		'manaByPlayer',
 		'tappedManaByPlayer',
 		'hasFirstTurnEnded',
 		'creaturesHavingSummonedSickness',
-		'graveyardByPlayer'
+		'graveyardByPlayer',
+		'summonedCreaturesByPlayer'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -23,6 +23,15 @@ Class {
 Match class >> between: aPlayer and: anotherPlayer [
 
 	^ self new initializeBetween: aPlayer and: anotherPlayer
+]
+
+{ #category : #'private - preconditions' }
+Match >> assert: aCreatureCard isSummonedCreatureOf: aPlayer [
+
+	self
+		signalIllegalPlayFrom: aPlayer
+		because: [ 'You can''t attack with <1p> because it''s not summoned.' expandMacrosWith: aCreatureCard ]
+		unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard )
 ]
 
 { #category : #'private - preconditions' }
@@ -60,6 +69,12 @@ Match >> assertManaHasNotBeenChargedYet [
 ]
 
 { #category : #processing }
+Match >> attackFrom: aCreatureCard of: aPlayer to: anOpponentCreatureCard [
+
+	self assert: aCreatureCard isSummonedCreatureOf: aPlayer
+]
+
+{ #category : #processing }
 Match >> chargeManaOf: aPlayer with: aCard [
 
 	self
@@ -76,16 +91,16 @@ Match >> creaturesHavingSummonedSickness [
 	^ creaturesHavingSummonedSickness
 ]
 
-{ #category : #accessing }
-Match >> creaturesSummonedOf: aPlayer [
-
-	^ creaturesSummonedByPlayer at: aPlayer
-]
-
 { #category : #'private - accessing' }
 Match >> currentPlayer [
 
 	^ playersTurn current
+]
+
+{ #category : #processing }
+Match >> directAttackFrom: aCreatureCard of: aPlayer [
+
+	self assert: aCreatureCard isSummonedCreatureOf: aPlayer
 ]
 
 { #category : #testing }
@@ -181,7 +196,7 @@ Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 { #category : #initialization }
 Match >> initializeCreaturesSummonedByPlayer [
 
-	creaturesSummonedByPlayer := Dictionary
+	summonedCreaturesByPlayer := Dictionary
 		with: firstPlayer -> OrderedCollection new
 		with: secondPlayer -> OrderedCollection new.
 
@@ -299,8 +314,14 @@ Match >> summon: aCreatureCard of: aPlayer tappingAll: aCardCollection [
 		tappingAll: aCardCollection.
 
 	( self tappedManaOf: aPlayer ) addAll: aCardCollection.
-	( self creaturesSummonedOf: aPlayer ) add: aCreatureCard.
+	( self summonedCreaturesOf: aPlayer ) add: aCreatureCard.
 	creaturesHavingSummonedSickness add: aCreatureCard
+]
+
+{ #category : #accessing }
+Match >> summonedCreaturesOf: aPlayer [
+
+	^ summonedCreaturesByPlayer at: aPlayer
 ]
 
 { #category : #accessing }
