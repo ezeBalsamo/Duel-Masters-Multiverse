@@ -14,7 +14,9 @@ Class {
 		'hasFirstTurnEnded',
 		'creaturesHavingSummonedSickness',
 		'graveyardByPlayer',
-		'summonedCreaturesByPlayer'
+		'summonedCreaturesByPlayer',
+		'tappedCreaturesByPlayer',
+		'status'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -26,12 +28,35 @@ Match class >> between: aPlayer and: anotherPlayer [
 ]
 
 { #category : #'private - preconditions' }
-Match >> assert: aCreatureCard isSummonedCreatureOf: aPlayer [
+Match >> assert: aPlayer canAttack: aCreatureCard of: anOpponentPlayer [
 
 	self
 		signalIllegalPlayFrom: aPlayer
-		because: [ 'You can''t attack with <1p> because it''s not summoned.' expandMacrosWith: aCreatureCard ]
-		unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard )
+			because: [ '<1p> it''s not summoned.' expandMacrosWith: aCreatureCard ]
+			unless: ( self summonedCreatures includes: aCreatureCard );
+		signalIllegalPlayFrom: aPlayer
+			because:
+				[ 'You can''t attack <1p> because it''s on your side of the field.' expandMacrosWith: aCreatureCard ]
+			unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard ) not;
+		signalIllegalPlayFrom: aPlayer
+			because: [ 'You can''t attack <1p> because it''s untapped.' expandMacrosWith: aCreatureCard ]
+			unless: ( ( self tappedCreaturesOf: anOpponentPlayer ) includes: aCreatureCard )
+]
+
+{ #category : #'private - preconditions' }
+Match >> assert: aPlayer canAttackWith: aCreatureCard [
+
+	self
+		signalIllegalPlayFrom: aPlayer
+			because: [ '<1p> it''s not summoned.' expandMacrosWith: aCreatureCard ]
+			unless: ( self summonedCreatures includes: aCreatureCard );
+		signalIllegalPlayFrom: aPlayer
+			because: [ 'You can''t attack with <1p> because it''s not on your side of the field.'
+				expandMacrosWith: aCreatureCard
+			]
+			unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard );
+		assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer;
+		assertIsUntapped: aCreatureCard of: aPlayer
 ]
 
 { #category : #'private - preconditions' }
@@ -44,12 +69,30 @@ Match >> assertCardHasNotBeenDrawnYet [
 ]
 
 { #category : #'private - preconditions' }
+Match >> assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer [
+
+	self
+		signalIllegalPlayFrom: aPlayer
+		because: [ 'You can''t attack with <1p> because it has summoning sickness.' expandMacrosWith: aCreatureCard ]
+		unless: ( creaturesHavingSummonedSickness includes: aCreatureCard ) not
+]
+
+{ #category : #'private - preconditions' }
 Match >> assertIsNotFirstTurn [
 
 	self
 		signalIllegalPlayFrom: self currentPlayer
 		because: 'You can''t draw card in your first turn.'
 		unless: hasFirstTurnEnded
+]
+
+{ #category : #'private - preconditions' }
+Match >> assertIsUntapped: aCreatureCard of: aPlayer [
+
+	self
+		signalIllegalPlayFrom: aPlayer
+		because: [ 'You can''t attack with <1p> because is tapped.' expandMacrosWith: aCreatureCard ]
+		unless: ( ( self tappedCreaturesOf: aPlayer ) includes: aCreatureCard ) not
 ]
 
 { #category : #'private - preconditions' }
@@ -71,7 +114,31 @@ Match >> assertManaHasNotBeenChargedYet [
 { #category : #processing }
 Match >> attackFrom: aCreatureCard of: aPlayer to: anOpponentCreatureCard [
 
-	self assert: aCreatureCard isSummonedCreatureOf: aPlayer
+	| opponentPlayer |
+
+	self
+		ifIsNotTurnOf: aPlayer warnThat: 'You can''t attack on your opponent''s turn.';
+		assert: aPlayer canAttackWith: aCreatureCard.
+
+	opponentPlayer := self opponentOf: aPlayer.
+	self assert: aPlayer canAttack: anOpponentCreatureCard of: opponentPlayer.
+
+	( self tappedCreaturesOf: aPlayer ) add: aCreatureCard.
+
+	aCreatureCard power > anOpponentCreatureCard power
+		then: [ ( self summonedCreaturesOf: opponentPlayer ) remove: anOpponentCreatureCard.
+			( self graveyardOf: opponentPlayer ) add: anOpponentCreatureCard
+			]
+		otherwise: [ aCreatureCard power = anOpponentCreatureCard power
+				then: [ ( self summonedCreaturesOf: aPlayer ) remove: aCreatureCard.
+					( self graveyardOf: aPlayer ) add: aCreatureCard.
+					( self summonedCreaturesOf: opponentPlayer ) remove: anOpponentCreatureCard.
+					( self graveyardOf: opponentPlayer ) add: anOpponentCreatureCard
+					]
+				otherwise: [ ( self summonedCreaturesOf: aPlayer ) remove: aCreatureCard.
+					( self graveyardOf: aPlayer ) add: aCreatureCard
+					]
+			]
 ]
 
 { #category : #processing }
@@ -100,7 +167,22 @@ Match >> currentPlayer [
 { #category : #processing }
 Match >> directAttackFrom: aCreatureCard of: aPlayer [
 
-	self assert: aCreatureCard isSummonedCreatureOf: aPlayer
+	| opponentPlayer brokenShield |
+
+	self
+		ifIsNotTurnOf: aPlayer warnThat: 'You can''t attack on your opponent''s turn.';
+		assert: aPlayer canAttackWith: aCreatureCard.
+
+	( self tappedCreaturesOf: aPlayer ) add: aCreatureCard.
+
+	opponentPlayer := self opponentOf: aPlayer.
+	( self shieldsOf: opponentPlayer )
+		ifEmpty: [ status := GameEnded wonBy: aPlayer ]
+		ifNotEmpty: [ :opponentShields | 
+			brokenShield := opponentShields anyOne.
+			opponentShields remove: brokenShield.
+			( self handOf: opponentPlayer ) add: brokenShield
+			]
 ]
 
 { #category : #testing }
@@ -139,6 +221,7 @@ Match >> endTurnOf: aPlayer [
 	playersTurn next.
 
 	( self tappedManaOf: self currentPlayer ) removeAll.
+	( self tappedCreaturesOf: self currentPlayer ) removeAll.
 	creaturesHavingSummonedSickness removeAll
 ]
 
@@ -166,6 +249,12 @@ Match >> handOf: aPotentialPlayer requestedBy: aPetitioner [
 		handOf: aPotentialPlayer
 ]
 
+{ #category : #accessing }
+Match >> hasEnded [
+
+	^ status hasEnded
+]
+
 { #category : #'private - preconditions' }
 Match >> ifIsNotTurnOf: aPotentialPlayer warnThat: anErrorDescription [
 
@@ -184,6 +273,7 @@ Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 	canManaBeCharged := true.
 	canCardBeDrawn := false.
 	hasFirstTurnEnded := false.
+	status := GameInProgress new.
 
 	self
 		initializeHandByPlayer;
@@ -197,6 +287,10 @@ Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 Match >> initializeCreaturesSummonedByPlayer [
 
 	summonedCreaturesByPlayer := Dictionary
+		with: firstPlayer -> OrderedCollection new
+		with: secondPlayer -> OrderedCollection new.
+
+	tappedCreaturesByPlayer := Dictionary
 		with: firstPlayer -> OrderedCollection new
 		with: secondPlayer -> OrderedCollection new.
 
@@ -287,6 +381,18 @@ Match >> manaOf: aPotentialPlayer [
 ]
 
 { #category : #accessing }
+Match >> numberOfCardsInHandOf: aPlayer [
+
+	^ ( self handOf: aPlayer ) size
+]
+
+{ #category : #'private - accessing' }
+Match >> opponentOf: aPlayer [
+
+	^ aPlayer = firstPlayer then: [ secondPlayer ] otherwise: [ firstPlayer ]
+]
+
+{ #category : #accessing }
 Match >> shieldsOf: aPotentialPlayer [
 
 	^ shieldsByPlayer at: aPotentialPlayer ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
@@ -318,10 +424,24 @@ Match >> summon: aCreatureCard of: aPlayer tappingAll: aCardCollection [
 	creaturesHavingSummonedSickness add: aCreatureCard
 ]
 
+{ #category : #'private - accessing' }
+Match >> summonedCreatures [
+
+	^ summonedCreaturesByPlayer values flattened
+]
+
 { #category : #accessing }
 Match >> summonedCreaturesOf: aPlayer [
 
 	^ summonedCreaturesByPlayer at: aPlayer
+]
+
+{ #category : #accessing }
+Match >> tappedCreaturesOf: aPotentialPlayer [
+
+	^ tappedCreaturesByPlayer
+		at: aPotentialPlayer
+		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
 ]
 
 { #category : #accessing }
@@ -336,4 +456,10 @@ Match >> tappedManaOf: aPotentialPlayer [
 Match >> untappedManaOf: aPlayer [
 
 	^ ( self manaOf: aPlayer ) difference: ( self tappedManaOf: aPlayer )
+]
+
+{ #category : #accessing }
+Match >> winner [
+
+	^ status winner
 ]

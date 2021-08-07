@@ -63,6 +63,12 @@ CreatureSummonAssertion >> assertCivilizationOf: aCreatureCard isIncludedInCivil
 		unless: ( ( self civilizationsIn: aCardCollection ) includesAll: creatureCivilizations )
 ]
 
+{ #category : #'private - preconditions' }
+CreatureSummonAssertion >> assertIsTurnOf: aPlayer [
+
+	match ifIsNotTurnOf: aPlayer warnThat: 'You can''t summon creatures on your opponent''s turn.'
+]
+
 { #category : #'private - asserting' }
 CreatureSummonAssertion >> assertManaCostOf: aCreatureCard isLessThanOrEqualToThatOfAll: aCardCollection from: aPlayer [
 
@@ -104,6 +110,7 @@ CreatureSummonAssertion >> manaNumberToProvideByAll: aCardCollection [
 CreatureSummonAssertion >> validateSummoningOf: aCreatureCard from: aPlayer tappingAll: aCardCollection [
 
 	self
+		assertIsTurnOf: aPlayer;
 		assertCardsIn: aCardCollection belongToUntappedManaOf: aPlayer;
 		assertManaCostOf: aCreatureCard isLessThanOrEqualToThatOfAll: aCardCollection from: aPlayer;
 		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfAll: aCardCollection from: aPlayer

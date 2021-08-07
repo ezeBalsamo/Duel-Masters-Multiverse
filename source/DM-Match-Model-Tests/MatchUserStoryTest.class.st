@@ -69,12 +69,6 @@ MatchUserStoryTest >> darknessLeohl [
 ]
 
 { #category : #'private - accessing' }
-MatchUserStoryTest >> handOf: aPlayer [
-
-	^ match handOf: aPlayer requestedBy: aPlayer
-]
-
-{ #category : #'private - accessing' }
 MatchUserStoryTest >> human [
 
 	^ SingleRace ofTypeNamed: 'Human'
@@ -149,6 +143,100 @@ MatchUserStoryTest >> setUp [
 ]
 
 { #category : #'private - running' }
+MatchUserStoryTest >> setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAndReadyToAttackIt [
+
+	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle |
+
+	march := self march.
+	vocalMegahit := self vocalMegahit.
+	immortalBaronVorg := self immortalBaronVorg.
+	anotherMarch := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match chargeManaOf: shobu with: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
+	match endTurnOf: shobu.
+
+	match
+		chargeManaOf: knight with: anotherMarch;
+		endTurnOf: knight;
+		endTurnOf: shobu.
+
+	match
+		chargeManaOf: knight with: vocalMegahit;
+		summon: immortalBaronVorg of: knight tappingAll: ( Array with: anotherMarch with: vocalMegahit );
+		endTurnOf: knight;
+		endTurnOf: shobu.
+
+	match
+		directAttackFrom: immortalBaronVorg of: knight;
+		endTurnOf: knight
+]
+
+{ #category : #'private - running' }
+MatchUserStoryTest >> setUpFieldHavingCreatureMorePowerfulThanOpponentCreatureAndReadyToAttackIt [
+
+	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle |
+
+	march := self march.
+	vocalMegahit := self vocalMegahit.
+	immortalBaronVorg := self immortalBaronVorg.
+	anotherMarch := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match
+		chargeManaOf: shobu with: march;
+		endTurnOf: shobu.
+
+	match chargeManaOf: knight with: anotherMarch.
+	self summon: tulkTheOracle of: knight tapping: anotherMarch.
+	match endTurnOf: knight.
+
+	match
+		chargeManaOf: shobu with: vocalMegahit;
+		summon: immortalBaronVorg of: shobu tappingAll: ( Array with: march with: vocalMegahit );
+		endTurnOf: shobu;
+		directAttackFrom: tulkTheOracle of: knight;
+		endTurnOf: knight
+]
+
+{ #category : #'private - running' }
+MatchUserStoryTest >> setUpFieldHavingCreaturesWithSamePower [
+
+	| march vorgBrawlerOfHell darknessLeohl vocalMegahit tulkTheOracle immortalBaronVorg |
+
+	march := self march.
+	vorgBrawlerOfHell := self vorgBrawlerOfHell.
+	darknessLeohl := self darknessLeohl.
+	vocalMegahit := self vocalMegahit.
+	tulkTheOracle := self tulkTheOracle.
+	immortalBaronVorg := self immortalBaronVorg.
+
+	match
+		chargeManaOf: shobu with: march;
+		endTurnOf: shobu.
+
+	match
+		chargeManaOf: knight with: vocalMegahit;
+		endTurnOf: knight.
+
+	match
+		chargeManaOf: shobu with: vorgBrawlerOfHell;
+		summon: darknessLeohl of: shobu tappingAll: ( Array with: march with: vorgBrawlerOfHell );
+		endTurnOf: shobu.
+
+	match
+		chargeManaOf: knight with: tulkTheOracle;
+		summon: immortalBaronVorg of: knight tappingAll: ( Array with: vocalMegahit with: tulkTheOracle );
+		endTurnOf: knight.
+		
+	match
+		endTurnOf: shobu;
+		directAttackFrom: immortalBaronVorg of: knight;
+		endTurnOf: knight
+]
+
+{ #category : #'private - running' }
 MatchUserStoryTest >> setUpRequirements [
 
 	super setUpRequirements.
@@ -182,13 +270,17 @@ MatchUserStoryTest >> summon: aCreatureCard of: aPotentialPlayer tapping: aCard 
 { #category : #'tests - attacking' }
 MatchUserStoryTest >> test01NotSummonedCreatureCantAttack [
 
+	| errorDescription |
+
+	errorDescription := 'Shobu: Immortal Baron, Vorg it''s not summoned.'.
+
 	self
 		should: [ match directAttackFrom: self immortalBaronVorg of: shobu ]
 			raise: IllegalPlay
-			withMessageText: 'Shobu: You can''t attack with Immortal Baron, Vorg because it''s not summoned.';
+			withMessageText: errorDescription;
 		should: [ match attackFrom: self immortalBaronVorg of: shobu to: self march ]
 			raise: IllegalPlay
-			withMessageText: 'Shobu: You can''t attack with Immortal Baron, Vorg because it''s not summoned.'
+			withMessageText: errorDescription
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -228,19 +320,19 @@ MatchUserStoryTest >> test01PlayerChargesMana [
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test01PlayerDrawsCard [
 
-	self assert: ( self handOf: knight ) size equals: 5.
+	self assert: ( match numberOfCardsInHandOf: knight ) equals: 5.
 	match
 		endTurnOf: shobu;
 		drawCardFor: knight.
-	self assert: ( self handOf: knight ) size equals: 6
+	self assert: ( match numberOfCardsInHandOf: knight ) equals: 6
 ]
 
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test01PlayersBeginTheMatchWithFiveCardsInHand [
 
 	self
-		assert: ( self handOf: shobu ) size equals: 5;
-		assert: ( self handOf: knight ) size equals: 5
+		assert: ( match numberOfCardsInHandOf: shobu ) equals: 5;
+		assert: ( match numberOfCardsInHandOf: knight ) equals: 5
 ]
 
 { #category : #'tests - turn order' }
@@ -251,6 +343,29 @@ MatchUserStoryTest >> test01PlayersTurnOrderIsCircular [
 	self assert: ( match isTurnOf: knight ).
 	match endTurnOf: knight.
 	self assert: ( match isTurnOf: shobu )
+]
+
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test02PlayerCantAttackWithCreatureNotBelongingToHim [
+
+	| march tulkTheOracle errorDescription |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match chargeManaOf: shobu with: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
+	match endTurnOf: shobu.
+
+	errorDescription := 'Knight: You can''t attack with Tulk, the Oracle because it''s not on your side of the field.'.
+
+	self
+		should: [ match directAttackFrom: tulkTheOracle of: knight ]
+			raise: IllegalPlay
+			withMessageText: errorDescription;
+		should: [ match attackFrom: tulkTheOracle of: knight to: self immortalBaronVorg ]
+			raise: IllegalPlay
+			withMessageText: errorDescription
 ]
 
 { #category : #'tests - mana charge' }
@@ -273,11 +388,11 @@ MatchUserStoryTest >> test02PlayerCantDrawCardOnOpponentsTurn [
 
 	self
 		assert: ( match isTurnOf: shobu );
-		assert: ( self handOf: knight ) size equals: 5;
+		assert: ( match numberOfCardsInHandOf: knight ) equals: 5;
 		should: [ match drawCardFor: knight ]
 			raise: IllegalPlay
 			withMessageText: 'Knight: You can''t draw a card on your opponent''s turn.';
-		assert: ( self handOf: knight ) size equals: 5
+		assert: ( match numberOfCardsInHandOf: knight ) equals: 5
 ]
 
 { #category : #'tests - turn order' }
@@ -323,6 +438,28 @@ MatchUserStoryTest >> test02PlayersBeginTheMatchWithFiveShields [
 		assert: ( match shieldsOf: knight ) size equals: 5
 ]
 
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test03PlayerCantAttackWithCreatureHavingSummoningSickness [
+
+	| march tulkTheOracle errorDescription |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match chargeManaOf: shobu with: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
+
+	errorDescription := 'Shobu: You can''t attack with Tulk, the Oracle because it has summoning sickness.'.
+
+	self
+		should: [ match directAttackFrom: tulkTheOracle of: shobu ]
+			raise: IllegalPlay
+			withMessageText: errorDescription;
+		should: [ match attackFrom: tulkTheOracle of: shobu to: self immortalBaronVorg ]
+			raise: IllegalPlay
+			withMessageText: errorDescription
+]
+
 { #category : #'tests - mana charge' }
 MatchUserStoryTest >> test03PlayerCantChargeManaMoreThanOnceInTheSameTurn [
 
@@ -343,18 +480,18 @@ MatchUserStoryTest >> test03PlayerCantChargeManaMoreThanOnceInTheSameTurn [
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test03PlayerCantDrawMoreThanOneCardInTheSameTurn [
 
-	self assert: ( self handOf: knight ) size equals: 5.
+	self assert: ( match numberOfCardsInHandOf: knight ) equals: 5.
 
 	match
 		endTurnOf: shobu;
 		drawCardFor: knight.
 
 	self
-		assert: ( self handOf: knight ) size equals: 6;
+		assert: ( match numberOfCardsInHandOf: knight ) equals: 6;
 		should: [ match drawCardFor: knight ]
 			raise: IllegalPlay
 			withMessageText: 'Knight: Only one card can be drawn per turn.';
-		assert: ( self handOf: knight ) size equals: 6
+		assert: ( match numberOfCardsInHandOf: knight ) equals: 6
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -441,21 +578,39 @@ MatchUserStoryTest >> test04PlayerCanChargeManaEveryTurn [
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test04PlayerCanDrawCardEveryTurn [
 
-	self assert: ( self handOf: shobu ) size equals: 5.
+	self assert: ( match numberOfCardsInHandOf: shobu ) equals: 5.
 
 	match
 		endTurnOf: shobu;
 		endTurnOf: knight;
 		drawCardFor: shobu.
 
-	self assert: ( self handOf: shobu ) size equals: 6.
+	self assert: ( match numberOfCardsInHandOf: shobu ) equals: 6.
 
 	match
 		endTurnOf: shobu;
 		endTurnOf: knight;
 		drawCardFor: shobu.
 
-	self assert: ( self handOf: shobu ) size equals: 7
+	self assert: ( match numberOfCardsInHandOf: shobu ) equals: 7
+]
+
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test04PlayerCantAttackOnOpponentsTurn [
+
+	| errorDescription |
+
+	self assert: ( match isTurnOf: shobu ).
+
+	errorDescription := 'Knight: You can''t attack on your opponent''s turn.'.
+
+	self
+		should: [ match directAttackFrom: self tulkTheOracle of: knight ]
+			raise: IllegalPlay
+			withMessageText: errorDescription;
+		should: [ match attackFrom: self tulkTheOracle of: knight to: self immortalBaronVorg ]
+			raise: IllegalPlay
+			withMessageText: errorDescription
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -577,22 +732,49 @@ MatchUserStoryTest >> test05PlayersBeginTheMatchWithoutCardsInGraveyard [
 		assert: ( match graveyardOf: knight ) isEmpty
 ]
 
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match chargeManaOf: shobu with: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
+	match
+		endTurnOf: shobu;
+		endTurnOf: knight.
+
+	self
+		assert: ( match shieldsOf: knight ) size equals: 5;
+		assert: ( match numberOfCardsInHandOf: knight ) equals: 5;
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
+
+	match directAttackFrom: tulkTheOracle of: shobu.
+
+	self
+		assert: ( match shieldsOf: knight ) size equals: 4;
+		assert: ( match numberOfCardsInHandOf: knight ) equals: 6;
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: tulkTheOracle
+]
+
 { #category : #'tests - drawing cards' }
 MatchUserStoryTest >> test06InitialPlayerCantDrawCardInTheFirstTurn [
 
 	self
-		assert: ( self handOf: shobu ) size equals: 5;
+		assert: ( match numberOfCardsInHandOf: shobu ) equals: 5;
 		should: [ match drawCardFor: shobu ]
 			raise: IllegalPlay
 			withMessageText: 'Shobu: You can''t draw card in your first turn.';
-		assert: ( self handOf: shobu ) size equals: 5.
+		assert: ( match numberOfCardsInHandOf: shobu ) equals: 5.
 
 	match
 		endTurnOf: shobu;
 		endTurnOf: knight;
 		drawCardFor: shobu.
 
-	self assert: ( self handOf: shobu ) size equals: 6
+	self assert: ( match numberOfCardsInHandOf: shobu ) equals: 6
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -638,9 +820,32 @@ MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveCardsInHand [
 	intruder := self intruder.
 
 	self
-		should: [ self handOf: intruder ]
+		should: [ match handOf: intruder requestedBy: intruder ]
 		raise: Error
 		withMessageText: 'Intruder is not a valid player in this match.'
+]
+
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test06TappedCreatureCantAttack [
+
+	| errorDescription |
+
+	self
+		test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand.
+
+	errorDescription := 'Shobu: You can''t attack with Tulk, the Oracle because is tapped.'.
+
+	self
+		withTheOnlyOneIn: ( match tappedCreaturesOf: shobu )
+		do: [ :tappedCreature | 
+			self
+				should: [ match directAttackFrom: tappedCreature of: shobu ]
+					raise: IllegalPlay
+					withMessageText: errorDescription;
+				should: [ match attackFrom: tappedCreature of: shobu to: self immortalBaronVorg ]
+					raise: IllegalPlay
+					withMessageText: errorDescription
+			]
 ]
 
 { #category : #'tests - field setup' }
@@ -656,6 +861,27 @@ MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveShields [
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test07TappedCreatureRemainsTappedUntilTheBeginningOfItsOwnerTurn [
+
+	| tulkTheOracle |
+
+	self
+		test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand.
+
+	tulkTheOracle := self theOnlyOneIn: ( match tappedCreaturesOf: shobu ).
+
+	self assert: ( match isTurnOf: shobu ).
+	match endTurnOf: shobu.
+	self
+		assert: ( match isTurnOf: knight );
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: tulkTheOracle.
+	match endTurnOf: knight.
+	self
+		assert: ( match isTurnOf: shobu );
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty
+]
+
 { #category : #'tests - summoning creatures' }
 MatchUserStoryTest >> test07WhenPlayerSummonsSingleCivilizationCreatureThenCardsToTapAreTapped [
 
@@ -667,21 +893,24 @@ MatchUserStoryTest >> test07WhenPlayerSummonsSingleCivilizationCreatureThenCards
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
 
 	match chargeManaOf: shobu with: march.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
 
 	self summon: tulkTheOracle of: shobu tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
 		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - field setup' }
@@ -697,6 +926,41 @@ MatchUserStoryTest >> test08PlayerNotBelongingToMatchCantHaveChargedMana [
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test08WhenPlayerAttacksDirectlyAndOpponentHasNoShieldsLeftThenPlayerWinsTheMatch [
+
+	| tulkTheOracle |
+
+	self
+		test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand.
+
+	tulkTheOracle := self theOnlyOneIn: ( match tappedCreaturesOf: shobu ).
+
+	( match shieldsOf: knight ) size
+		timesRepeat: [ match
+				endTurnOf: shobu;
+				endTurnOf: knight;
+				directAttackFrom: tulkTheOracle of: shobu
+			].
+
+	self
+		assert: ( match shieldsOf: knight ) isEmpty;
+		deny: match hasEnded;
+		should: [ match winner ]
+			raise: Error
+			withMessageText: 'Can''t know the winner until the game has ended.'.
+
+	match
+		endTurnOf: shobu;
+		endTurnOf: knight;
+		directAttackFrom: tulkTheOracle of: shobu.
+
+	self
+		assert: ( match shieldsOf: knight ) isEmpty;
+		assert: match hasEnded;
+		assert: match winner equals: shobu
+]
+
 { #category : #'tests - summoning creatures' }
 MatchUserStoryTest >> test08WhenPlayerSummonsMultipleCivilizationCreatureThenCardsToTapAreTapped [
 
@@ -709,7 +973,8 @@ MatchUserStoryTest >> test08WhenPlayerSummonsMultipleCivilizationCreatureThenCar
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
 
 	expectedMana := Array with: immortalBaronVorg with: darknessLeohl.
 
@@ -718,14 +983,36 @@ MatchUserStoryTest >> test08WhenPlayerSummonsMultipleCivilizationCreatureThenCar
 	self
 		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
 		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
 
 	match summon: vorgBrawlerOfHell of: shobu tappingAll: expectedMana.
 
 	self
 		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
 		assertCollection: ( match tappedManaOf: shobu ) hasSameElements: expectedMana;
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: vorgBrawlerOfHell
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: vorgBrawlerOfHell;
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty
+]
+
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test09PlayerCantAttackOpponentCreatureNotBelongingToOpponent [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match chargeManaOf: shobu with: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
+	match
+		endTurnOf: shobu;
+		endTurnOf: knight.
+
+	self
+		should: [ match attackFrom: tulkTheOracle of: shobu to: self immortalBaronVorg ]
+		raise: IllegalPlay
+		withMessageText: 'Shobu: Immortal Baron, Vorg it''s not summoned.'
 ]
 
 { #category : #'tests - field setup' }
@@ -783,6 +1070,58 @@ MatchUserStoryTest >> test10CreaturesHaveSummoningSicknessOnTheTurnTheyAreSummon
 		assertTheOnlyOneIn: match creaturesHavingSummonedSickness is: tulkTheOracle
 ]
 
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test10PlayerCantAttackOpponentCreatureWhenIsUntapped [
+
+	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle |
+
+	march := self march.
+	vocalMegahit := self vocalMegahit.
+	immortalBaronVorg := self immortalBaronVorg.
+	anotherMarch := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match
+		chargeManaOf: shobu with: march;
+		endTurnOf: shobu.
+
+	match chargeManaOf: knight with: anotherMarch.
+	self summon: tulkTheOracle of: knight tapping: anotherMarch.
+	match endTurnOf: knight.
+
+	match
+		chargeManaOf: shobu with: vocalMegahit;
+		summon: immortalBaronVorg of: shobu tappingAll: ( Array with: march with: vocalMegahit );
+		endTurnOf: shobu.
+
+	self
+		should: [ match attackFrom: tulkTheOracle of: knight to: immortalBaronVorg ]
+		raise: IllegalPlay
+		withMessageText: 'Knight: You can''t attack Immortal Baron, Vorg because it''s untapped.'
+]
+
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test11PlayerCantAttackCreatureBelongingToHim [
+
+	| march tulkTheOracle anotherTulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+	anotherTulkTheOracle := self tulkTheOracle.
+
+	match chargeManaOf: shobu with: march.
+	self summon: tulkTheOracle of: shobu tapping: march.
+	match
+		endTurnOf: shobu;
+		endTurnOf: knight.
+	self summon: anotherTulkTheOracle of: shobu tapping: march.
+
+	self
+		should: [ match attackFrom: tulkTheOracle of: shobu to: anotherTulkTheOracle ]
+		raise: IllegalPlay
+		withMessageText: 'Shobu: You can''t attack Tulk, the Oracle because it''s on your side of the field.'
+]
+
 { #category : #'tests - summoning creatures' }
 MatchUserStoryTest >> test11SummoningSicknessEndsWhenPlayerEndsTurn [
 
@@ -804,6 +1143,96 @@ MatchUserStoryTest >> test11SummoningSicknessEndsWhenPlayerEndsTurn [
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
 		assert: match creaturesHavingSummonedSickness isEmpty
+]
+
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test12CreatureDestroysAnotherCreatureInBattleWhenItHasTheGreatestPower [
+
+	| immortalBaronVorg tulkTheOracle |
+
+	self setUpFieldHavingCreatureMorePowerfulThanOpponentCreatureAndReadyToAttackIt.
+	
+	immortalBaronVorg := self theOnlyOneIn: (match summonedCreaturesOf: shobu).
+	tulkTheOracle := self theOnlyOneIn: (match summonedCreaturesOf: knight).
+
+	self
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
+		assert: ( match graveyardOf: knight ) isEmpty.
+
+	match attackFrom: immortalBaronVorg of: shobu to: tulkTheOracle.
+
+	self
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: immortalBaronVorg;
+		assert: ( match summonedCreaturesOf: knight ) isEmpty;
+		assertTheOnlyOneIn: ( match graveyardOf: knight ) is: tulkTheOracle
+]
+
+{ #category : #'tests - summoning creatures' }
+MatchUserStoryTest >> test12PlayerCantSummonCreatureOnOpponentsTurn [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match
+		chargeManaOf: shobu with: march;
+		endTurnOf: shobu.
+
+	self
+		assert: ( match isTurnOf: knight );
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		should: [ self summon: tulkTheOracle of: shobu tapping: march ]
+			raise: IllegalPlay
+			withMessageText: 'Shobu: You can''t summon creatures on your opponent''s turn.';
+		assert: ( match isTurnOf: knight );
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty
+]
+
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test13CreatureIsDestroyedInBattleByAnotherCreatureWhenItHasLessPower [
+
+	| tulkTheOracle immortalBaronVorg |
+
+	self setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAndReadyToAttackIt.
+
+	tulkTheOracle := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
+	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
+
+	self
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
+		assert: ( match graveyardOf: knight ) isEmpty.
+
+	match attackFrom: tulkTheOracle of: shobu to: immortalBaronVorg.
+
+	self
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assertTheOnlyOneIn: ( match graveyardOf: shobu ) is: tulkTheOracle;
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: knight ) is: immortalBaronVorg
+]
+
+{ #category : #'tests - attacking' }
+MatchUserStoryTest >> test14BothCreaturesAreDestroyedInBattleWhenTheyHaveTheSamePower [
+
+	| darknessLeohl immortalBaronVorg |
+
+	self setUpFieldHavingCreaturesWithSamePower.
+
+	darknessLeohl := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
+	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
+
+	self
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
+		assert: ( match graveyardOf: shobu ) isEmpty;
+		assert: ( match graveyardOf: knight ) isEmpty.
+
+	match attackFrom: darknessLeohl of: shobu to: immortalBaronVorg.
+
+	self
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assert: ( match summonedCreaturesOf: knight ) isEmpty;
+		assertTheOnlyOneIn: ( match graveyardOf: shobu ) is: darknessLeohl;
+		assertTheOnlyOneIn: ( match graveyardOf: knight ) is: immortalBaronVorg
 ]
 
 { #category : #'private - creature accessing' }

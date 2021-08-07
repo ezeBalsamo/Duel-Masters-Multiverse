@@ -169,6 +169,12 @@ CreatureCard >> manaNumberToProvide [
 ]
 
 { #category : #accessing }
+CreatureCard >> power [
+
+	^ power
+]
+
+{ #category : #accessing }
 CreatureCard >> printOn: aStream [
 
 	^ aStream nextPutAll: name

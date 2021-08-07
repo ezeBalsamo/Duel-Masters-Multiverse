@@ -43,3 +43,13 @@ TestAsserter >> assertTheOnlyOneIn: aCollection is: aPotentialElement [
 		withTheOnlyOneIn: aCollection
 		do: [ :anElement | self assert: aPotentialElement equals: anElement ]
 ]
+
+{ #category : #'*DM-SUnit' }
+TestAsserter >> theOnlyOneIn: aCollection [
+
+	| element |
+
+	self withTheOnlyOneIn: aCollection do: [ :foundElement | element := foundElement ].
+
+	^ element
+]
