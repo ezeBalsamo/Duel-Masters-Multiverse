@@ -21,5 +21,5 @@ IllegalPlay >> initializeFrom: aPlayer because: anErrorDescription [
 
 	player := aPlayer.
 	errorDescription := anErrorDescription.
-	self messageText: ( '<1s>: <2s>' expandMacrosWith: player with: anErrorDescription )
+	self messageText: ( '<1p>: <2s>' expandMacrosWith: player with: anErrorDescription )
 ]

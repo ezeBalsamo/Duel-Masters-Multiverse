@@ -93,6 +93,12 @@ MatchUserStoryTest >> intruder [
 ]
 
 { #category : #'private - accessing' }
+MatchUserStoryTest >> knightDeck [
+
+	^ ( ( 1 to: 11 ) collect: #asString ) asOrderedCollection
+]
+
+{ #category : #'private - accessing' }
 MatchUserStoryTest >> lightBringer [
 
 	^ SingleRace ofTypeNamed: 'Light Bringer'
@@ -133,8 +139,8 @@ MatchUserStoryTest >> setUp [
 
 	super setUp.
 
-	shobu := 'Shobu'.
-	knight := 'Knight'.
+	shobu := Duelist named: 'Shobu' using: self shobuDeck.
+	knight := Duelist named: 'Knight' using: self knightDeck.
 	match := Match between: shobu and: knight.
 
 	self
@@ -248,6 +254,12 @@ MatchUserStoryTest >> setUpUnits [
 
 	mana := BaseUnit named: 'mana'.
 	power := BaseUnit named: 'power'
+]
+
+{ #category : #'private - accessing' }
+MatchUserStoryTest >> shobuDeck [
+
+	^ ( ( 1 to: 11 ) collect: #asString ) asOrderedCollection
 ]
 
 { #category : #'private - running' }
@@ -1061,13 +1073,13 @@ MatchUserStoryTest >> test10CreaturesHaveSummoningSicknessOnTheTurnTheyAreSummon
 
 	self
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		assert: match creaturesHavingSummonedSickness isEmpty.
+		assert: match creaturesHavingSummoningSickness isEmpty.
 
 	self summon: tulkTheOracle of: shobu tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assertTheOnlyOneIn: match creaturesHavingSummonedSickness is: tulkTheOracle
+		assertTheOnlyOneIn: match creaturesHavingSummoningSickness is: tulkTheOracle
 ]
 
 { #category : #'tests - attacking' }
@@ -1136,13 +1148,13 @@ MatchUserStoryTest >> test11SummoningSicknessEndsWhenPlayerEndsTurn [
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assertTheOnlyOneIn: match creaturesHavingSummonedSickness is: tulkTheOracle.
+		assertTheOnlyOneIn: match creaturesHavingSummoningSickness is: tulkTheOracle.
 
 	match endTurnOf: shobu.
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assert: match creaturesHavingSummonedSickness isEmpty
+		assert: match creaturesHavingSummoningSickness isEmpty
 ]
 
 { #category : #'tests - attacking' }

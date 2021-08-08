@@ -12,11 +12,11 @@ Class {
 		'manaByPlayer',
 		'tappedManaByPlayer',
 		'hasFirstTurnEnded',
-		'creaturesHavingSummonedSickness',
 		'graveyardByPlayer',
 		'summonedCreaturesByPlayer',
 		'tappedCreaturesByPlayer',
-		'status'
+		'status',
+		'creaturesHavingSummoningSickness'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -74,7 +74,7 @@ Match >> assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer [
 	self
 		signalIllegalPlayFrom: aPlayer
 		because: [ 'You can''t attack with <1p> because it has summoning sickness.' expandMacrosWith: aCreatureCard ]
-		unless: ( creaturesHavingSummonedSickness includes: aCreatureCard ) not
+		unless: ( creaturesHavingSummoningSickness includes: aCreatureCard ) not
 ]
 
 { #category : #'private - preconditions' }
@@ -153,9 +153,9 @@ Match >> chargeManaOf: aPlayer with: aCard [
 ]
 
 { #category : #accessing }
-Match >> creaturesHavingSummonedSickness [
+Match >> creaturesHavingSummoningSickness [
 
-	^ creaturesHavingSummonedSickness
+	^ creaturesHavingSummoningSickness
 ]
 
 { #category : #'private - accessing' }
@@ -205,7 +205,7 @@ Match >> drawCardFor: aPlayer [
 		assertIsNotFirstTurn;
 		assertCardHasNotBeenDrawnYet.
 
-	( self handOf: aPlayer ) add: 'bla-bla'.
+	( self handOf: aPlayer ) add: aPlayer drawCard.
 	canCardBeDrawn := false
 ]
 
@@ -222,7 +222,7 @@ Match >> endTurnOf: aPlayer [
 
 	( self tappedManaOf: self currentPlayer ) removeAll.
 	( self tappedCreaturesOf: self currentPlayer ) removeAll.
-	creaturesHavingSummonedSickness removeAll
+	creaturesHavingSummoningSickness removeAll
 ]
 
 { #category : #accessing }
@@ -276,8 +276,8 @@ Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 	status := GameInProgress new.
 
 	self
-		initializeHandByPlayer;
 		initializeShieldsByPlayer;
+		initializeHandByPlayer;
 		initializeManaByPlayer;
 		initializeCreaturesSummonedByPlayer;
 		initializeGraveyardByPlayer
@@ -294,7 +294,7 @@ Match >> initializeCreaturesSummonedByPlayer [
 		with: firstPlayer -> OrderedCollection new
 		with: secondPlayer -> OrderedCollection new.
 
-	creaturesHavingSummonedSickness := OrderedCollection new
+	creaturesHavingSummoningSickness := OrderedCollection new
 ]
 
 { #category : #initialization }
@@ -309,24 +309,8 @@ Match >> initializeGraveyardByPlayer [
 Match >> initializeHandByPlayer [
 
 	cardsInHandByPlayer := Dictionary
-		with:
-			firstPlayer
-				->
-					( OrderedCollection
-						with: 'bla'
-						with: 'ble'
-						with: 'bli'
-						with: 'blo'
-						with: 'blu' )
-		with:
-			secondPlayer
-				->
-					( OrderedCollection
-						with: 'blah'
-						with: 'bleh'
-						with: 'blih'
-						with: 'bloh'
-						with: 'bluh' )
+		with: firstPlayer -> firstPlayer drawFiveCards
+		with: secondPlayer -> secondPlayer drawFiveCards
 ]
 
 { #category : #initialization }
@@ -345,24 +329,8 @@ Match >> initializeManaByPlayer [
 Match >> initializeShieldsByPlayer [
 
 	shieldsByPlayer := Dictionary
-		with:
-			firstPlayer
-				->
-					( OrderedCollection
-						with: 'bla'
-						with: 'ble'
-						with: 'bli'
-						with: 'blo'
-						with: 'blu' )
-		with:
-			secondPlayer
-				->
-					( OrderedCollection
-						with: 'blah'
-						with: 'bleh'
-						with: 'blih'
-						with: 'bloh'
-						with: 'bluh' )
+		with: firstPlayer -> firstPlayer drawFiveCards
+		with: secondPlayer -> secondPlayer drawFiveCards
 ]
 
 { #category : #testing }
@@ -421,7 +389,7 @@ Match >> summon: aCreatureCard of: aPlayer tappingAll: aCardCollection [
 
 	( self tappedManaOf: aPlayer ) addAll: aCardCollection.
 	( self summonedCreaturesOf: aPlayer ) add: aCreatureCard.
-	creaturesHavingSummonedSickness add: aCreatureCard
+	creaturesHavingSummoningSickness add: aCreatureCard
 ]
 
 { #category : #'private - accessing' }
