@@ -48,7 +48,7 @@ CivilizationTest >> test03PrintString [
 	| civilization |
 
 	civilization := Civilization named: self natureCivilizationName.
-	self assert: civilization printString equals: 'Nature civilization'
+	self assert: civilization asString equals: 'Nature civilization'
 ]
 
 { #category : #tests }
