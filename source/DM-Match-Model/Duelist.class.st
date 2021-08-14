@@ -8,19 +8,17 @@ Class {
 	#category : #'DM-Match-Model'
 }
 
-{ #category : #'private - preconditions' }
-Duelist class >> assertNotEmpty: aPotentialDuelistName [
-
-	AssertionChecker
-		enforce: [ aPotentialDuelistName notEmpty ]
-		because: 'A duelist must have a name.'
-		raising: InstanceCreationFailed
-]
-
 { #category : #'instance creation' }
 Duelist class >> named: aName using: aDeck [
 
-	self assertNotEmpty: aName.
+	AssertionCheckerBuilder new
+		raising: InstanceCreationFailed;
+		checking: [ :asserter | 
+			asserter
+				refuse: [ aName isEmpty ] because: 'A duelist must have a name.';
+				refuse: [ aDeck isEmpty ] because: 'A duelist deck must have cards.'
+			];
+		buildAndCheck.
 
 	^ self new initializeNamed: aName using: aDeck
 ]

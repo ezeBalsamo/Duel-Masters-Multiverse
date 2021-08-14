@@ -10,7 +10,7 @@ Class {
 { #category : #'private - accessing' }
 DuelistTest >> deck [
 
-	^ #()
+	^ ( ( 1 to: 40 ) collect: #asString ) asOrderedCollection
 ]
 
 { #category : #tests }
@@ -26,7 +26,16 @@ DuelistTest >> test01DuelistMustHaveName [
 ]
 
 { #category : #tests }
-DuelistTest >> test02InstanceCreationAndAccessing [
+DuelistTest >> test02DeckMustNotBeEmpty [
+
+	self
+		should: [ Duelist named: 'Shobu' using: #() ]
+		raise: InstanceCreationFailed
+		withMessageText: 'A duelist deck must have cards.'
+]
+
+{ #category : #tests }
+DuelistTest >> test03InstanceCreationAndAccessing [
 
 	| name deck duelist |
 
@@ -41,14 +50,13 @@ DuelistTest >> test02InstanceCreationAndAccessing [
 ]
 
 { #category : #tests }
-DuelistTest >> test03PrintString [
+DuelistTest >> test04PrintString [
 
-	| name deck duelist |
+	| name duelist |
 
 	name := 'Shobu'.
-	deck := self deck.
 
-	duelist := Duelist named: name using: deck.
+	duelist := Duelist named: name using: self deck.
 
 	self assert: duelist asString equals: name
 ]
