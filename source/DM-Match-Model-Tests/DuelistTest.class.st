@@ -60,3 +60,31 @@ DuelistTest >> test04PrintString [
 
 	self assert: duelist asString equals: name
 ]
+
+{ #category : #tests }
+DuelistTest >> test05DrawingCardMakesDeckToHaveOneLessCard [
+
+	| numberOfCards duelist |
+
+	duelist := Duelist named: 'Shobu' using: self deck.
+	numberOfCards := duelist numberOfCardsInDeck.
+
+	duelist drawCard.
+
+	self assert: duelist numberOfCardsInDeck equals: numberOfCards - 1
+]
+
+{ #category : #tests }
+DuelistTest >> test06DrawingFiveCardsMakesDeckToHaveFiveLessCards [
+
+	| numberOfCards duelist cards |
+
+	duelist := Duelist named: 'Shobu' using: self deck.
+	numberOfCards := duelist numberOfCardsInDeck.
+
+	cards := duelist drawFiveCards.
+
+	self
+		assert: cards size equals: 5;
+		assert: duelist numberOfCardsInDeck equals: numberOfCards - 5
+]

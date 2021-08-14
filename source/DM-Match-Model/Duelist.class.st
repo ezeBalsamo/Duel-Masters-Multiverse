@@ -32,13 +32,23 @@ Duelist >> deck [
 { #category : #accessing }
 Duelist >> drawCard [
 
-	^ deck first
+	^ ( self drawNumberOfCards: 1 ) anyOne
 ]
 
 { #category : #accessing }
 Duelist >> drawFiveCards [
 
-	^ deck first: 5
+	^ self drawNumberOfCards: 5
+]
+
+{ #category : #accessing }
+Duelist >> drawNumberOfCards: aNumberOfCards [
+
+	| cards |
+
+	cards := deck first: aNumberOfCards.
+	deck removeFirst: aNumberOfCards.
+	^ cards
 ]
 
 { #category : #initialization }
@@ -52,6 +62,12 @@ Duelist >> initializeNamed: aName using: aDeck [
 Duelist >> name [
 
 	^ name
+]
+
+{ #category : #accessing }
+Duelist >> numberOfCardsInDeck [
+
+	^ deck size
 ]
 
 { #category : #printing }
