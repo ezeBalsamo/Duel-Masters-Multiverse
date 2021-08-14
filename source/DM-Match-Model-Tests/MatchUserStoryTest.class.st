@@ -9,7 +9,8 @@ Class {
 		'knight',
 		'match',
 		'mana',
-		'power'
+		'power',
+		'cards'
 	],
 	#category : #'DM-Match-Model-Tests'
 }
@@ -892,6 +893,32 @@ MatchUserStoryTest >> test07TappedCreatureRemainsTappedUntilTheBeginningOfItsOwn
 	self
 		assert: ( match isTurnOf: shobu );
 		assert: ( match tappedCreaturesOf: shobu ) isEmpty
+]
+
+{ #category : #'tests - drawing cards' }
+MatchUserStoryTest >> test07WhenPlayerDrawsHisLastCardThenLosesTheMatch [
+
+	match
+		endTurnOf: shobu;
+		endTurnOf: knight.
+
+	shobu numberOfCardsInDeck - 1
+		timesRepeat: [ match
+				drawCardFor: shobu;
+				endTurnOf: shobu;
+				endTurnOf: knight
+			].
+
+	self
+		assert: shobu numberOfCardsInDeck equals: 1;
+		deny: match hasEnded.
+
+	match drawCardFor: shobu.
+
+	self
+		assert: shobu numberOfCardsInDeck isNothing;
+		assert: match hasEnded;
+		assert: match winner equals: knight
 ]
 
 { #category : #'tests - summoning creatures' }

@@ -206,7 +206,9 @@ Match >> drawCardFor: aPlayer [
 		assertCardHasNotBeenDrawnYet.
 
 	( self handOf: aPlayer ) add: aPlayer drawCard.
-	canCardBeDrawn := false
+	canCardBeDrawn := false.
+
+	aPlayer isDeckEmpty then: [ status := GameEnded wonBy: ( self opponentOf: aPlayer ) ]
 ]
 
 { #category : #processing }

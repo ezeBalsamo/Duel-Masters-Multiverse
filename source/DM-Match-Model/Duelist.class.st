@@ -59,6 +59,12 @@ Duelist >> initializeNamed: aName using: aDeck [
 ]
 
 { #category : #accessing }
+Duelist >> isDeckEmpty [
+
+	^ deck isEmpty
+]
+
+{ #category : #accessing }
 Duelist >> name [
 
 	^ name
