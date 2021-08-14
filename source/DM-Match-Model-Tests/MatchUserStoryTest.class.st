@@ -96,7 +96,7 @@ MatchUserStoryTest >> intruder [
 { #category : #'private - accessing' }
 MatchUserStoryTest >> knightDeck [
 
-	^ ( ( 1 to: 11 ) collect: #asString ) asOrderedCollection
+	^ ( ( 1 to: 15 ) collect: #asString ) asOrderedCollection
 ]
 
 { #category : #'private - accessing' }
@@ -260,7 +260,7 @@ MatchUserStoryTest >> setUpUnits [
 { #category : #'private - accessing' }
 MatchUserStoryTest >> shobuDeck [
 
-	^ ( ( 1 to: 11 ) collect: #asString ) asOrderedCollection
+	^ ( ( 1 to: 15 ) collect: #asString ) asOrderedCollection
 ]
 
 { #category : #'private - running' }
