@@ -125,20 +125,11 @@ Match >> attackFrom: aCreatureCard of: aPlayer to: anOpponentCreatureCard [
 
 	( self tappedCreaturesOf: aPlayer ) add: aCreatureCard.
 
-	aCreatureCard power > anOpponentCreatureCard power
-		then: [ ( self summonedCreaturesOf: opponentPlayer ) remove: anOpponentCreatureCard.
-			( self graveyardOf: opponentPlayer ) add: anOpponentCreatureCard
-			]
-		otherwise: [ aCreatureCard power = anOpponentCreatureCard power
-				then: [ ( self summonedCreaturesOf: aPlayer ) remove: aCreatureCard.
-					( self graveyardOf: aPlayer ) add: aCreatureCard.
-					( self summonedCreaturesOf: opponentPlayer ) remove: anOpponentCreatureCard.
-					( self graveyardOf: opponentPlayer ) add: anOpponentCreatureCard
-					]
-				otherwise: [ ( self summonedCreaturesOf: aPlayer ) remove: aCreatureCard.
-					( self graveyardOf: aPlayer ) add: aCreatureCard
-					]
-			]
+	( BattleResolver workingWith: self )
+		resolveBattleBetween: aCreatureCard
+		of: aPlayer
+		and: anOpponentCreatureCard
+		of: opponentPlayer
 ]
 
 { #category : #processing }
@@ -162,6 +153,13 @@ Match >> creaturesHavingSummoningSickness [
 Match >> currentPlayer [
 
 	^ playersTurn current
+]
+
+{ #category : #'private - processing' }
+Match >> destroy: aCreatureCard of: aDuelist [
+
+	( self summonedCreaturesOf: aDuelist ) remove: aCreatureCard.
+	( self graveyardOf: aDuelist ) add: aCreatureCard
 ]
 
 { #category : #processing }
