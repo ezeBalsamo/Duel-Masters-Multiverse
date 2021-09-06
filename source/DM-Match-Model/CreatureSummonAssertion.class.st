@@ -93,12 +93,6 @@ CreatureSummonAssertion >> initializeWorkingWith: aMatch [
 ]
 
 { #category : #'private - accessing' }
-CreatureSummonAssertion >> mana [
-
-	^ BaseUnit named: 'mana'
-]
-
-{ #category : #'private - accessing' }
 CreatureSummonAssertion >> manaNumberToProvideByAll: aCardCollection [
 
 	^ aCardCollection
@@ -119,5 +113,5 @@ CreatureSummonAssertion >> validateSummoningOf: aCreatureCard from: aPlayer tapp
 { #category : #'private - accessing' }
 CreatureSummonAssertion >> zeroMana [
 
-	^ self mana nullMeasure
+	^ DMUnits mana nullMeasure
 ]

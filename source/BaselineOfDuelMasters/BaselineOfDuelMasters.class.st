@@ -4,21 +4,6 @@ Class {
 	#category : #BaselineOfDuelMasters
 }
 
-{ #category : #'private - extensions package accessing' }
-BaselineOfDuelMasters >> aconcaguaCoreExtensionsPackage [
-
-	^ self extensionPackageNamed: 'DM-Aconcagua-Core' requiring: self keplerDependencyName
-]
-
-{ #category : #'private - test packages accessing' }
-BaselineOfDuelMasters >> aconcaguaCoreExtensionsTestsPackage [
-
-	| aconcaguaCoreExtensionsPackageName |
-
-	aconcaguaCoreExtensionsPackageName := self extensionPackageNameFor: 'DM-Aconcagua-Core'.
-	^ self testsPackageNamed: aconcaguaCoreExtensionsPackageName requiring: aconcaguaCoreExtensionsPackageName
-]
-
 { #category : #accessing }
 BaselineOfDuelMasters >> baseline: aSpec [
 
@@ -328,7 +313,6 @@ BaselineOfDuelMasters >> extensionPackages [
 
 	^ OrderedCollection new
 		add: self buoyMetaprogrammingExtensionsPackage;
-		add: self aconcaguaCoreExtensionsPackage;
 		add: self collectionsStringsBaseExtensionsPackage;
 		add: self collectionsAbstractBaseExtensionsPackage;
 		add: self toolDependencyAnalyserCoreExtensionsPackage;
@@ -754,7 +738,6 @@ BaselineOfDuelMasters >> testPackages [
 		add: self wikitextParsingModelTestsPackage;
 		add: self dependentSUnitTestsPackage;
 		add: self saganExtensionsTestsPackage;
-		add: self aconcaguaCoreExtensionsTestsPackage;
 		add: self toolDependencyAnalyserCoreExtensionsTestsPackage;
 		add: self developmentSupportTestsPackage;
 		yourself

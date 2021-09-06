@@ -64,9 +64,9 @@ MatchUserStoryTest >> darknessLeohl [
 		named: 'Darkness Leohl'
 		from: self civilizationManagementSystem darknessCivilization
 		ofType: self darkMonster
-		costing: ( self mana with: 2 )
+		costing: ( DMUnits mana with: 2 )
 		providing: self oneMana
-		with: ( self power with: 2000 )
+		with: ( DMUnits power with: 2000 )
 ]
 
 { #category : #'private - accessing' }
@@ -82,9 +82,9 @@ MatchUserStoryTest >> immortalBaronVorg [
 		named: 'Immortal Baron, Vorg'
 		from: self civilizationManagementSystem fireCivilization
 		ofType: self human
-		costing: ( self mana with: 2 )
+		costing: ( DMUnits mana with: 2 )
 		providing: self oneMana
-		with: ( self power with: 2000 )
+		with: ( DMUnits power with: 2000 )
 ]
 
 { #category : #'private - accessing' }
@@ -105,12 +105,6 @@ MatchUserStoryTest >> lightBringer [
 	^ SingleRace ofTypeNamed: 'Light Bringer'
 ]
 
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> mana [
-
-	^ mana
-]
-
 { #category : #'private - creature accessing' }
 MatchUserStoryTest >> march [
 
@@ -118,21 +112,15 @@ MatchUserStoryTest >> march [
 		named: 'March'
 		from: self civilizationManagementSystem lightCivilization
 		ofType: self calendar2016
-		costing: ( self mana with: 3 )
+		costing: ( DMUnits mana with: 3 )
 		providing: self oneMana
-		with: ( self power with: 3000 )
+		with: ( DMUnits power with: 3000 )
 ]
 
 { #category : #'private - accessing' }
 MatchUserStoryTest >> oneMana [
 
-	^ self mana with: 1
-]
-
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> power [
-
-	^ power
+	^ DMUnits mana with: 1
 ]
 
 { #category : #running }
@@ -144,9 +132,7 @@ MatchUserStoryTest >> setUp [
 	knight := Duelist named: 'Knight' using: self knightDeck.
 	match := Match between: shobu and: knight.
 
-	self
-		setUpUnits;
-		startManagingCivilizations
+	self startManagingCivilizations
 ]
 
 { #category : #'private - running' }
@@ -248,13 +234,6 @@ MatchUserStoryTest >> setUpRequirements [
 
 	super setUpRequirements.
 	self registerSubsystem: CivilizationManagementSystem new
-]
-
-{ #category : #'private - running' }
-MatchUserStoryTest >> setUpUnits [
-
-	mana := BaseUnit named: 'mana'.
-	power := BaseUnit named: 'power'
 ]
 
 { #category : #'private - accessing' }
@@ -1316,7 +1295,7 @@ MatchUserStoryTest >> tulkTheOracle [
 		ofType: self lightBringer
 		costing: self oneMana
 		providing: self oneMana
-		with: ( self power with: 500 )
+		with: ( DMUnits power with: 500 )
 ]
 
 { #category : #'private - creature accessing' }
@@ -1326,9 +1305,9 @@ MatchUserStoryTest >> vocalMegahit [
 		named: 'Vocal Megahit'
 		from: self civilizationManagementSystem fireCivilization
 		ofType: self beatJockey
-		costing: ( self mana with: 5 )
+		costing: ( DMUnits mana with: 5 )
 		providing: self oneMana
-		with: ( self power with: 5000 )
+		with: ( DMUnits power with: 5000 )
 ]
 
 { #category : #'private - creature accessing' }
@@ -1341,7 +1320,7 @@ MatchUserStoryTest >> vorgBrawlerOfHell [
 				with: self civilizationManagementSystem fireCivilization
 				with: self civilizationManagementSystem darknessCivilization )
 		ofType: ( MultipleRace conformedByAll: ( Array with: self human with: self beatJockey with: self alien ) )
-		costing: ( self mana with: 2 )
+		costing: ( DMUnits mana with: 2 )
 		providing: self oneMana
-		with: ( self power with: 4000 )
+		with: ( DMUnits power with: 4000 )
 ]

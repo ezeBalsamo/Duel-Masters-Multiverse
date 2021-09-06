@@ -22,19 +22,19 @@ CreatureCardTest >> defaultCivilization [
 { #category : #'private - accessing' }
 CreatureCardTest >> defaultManaCost [
 
-	^ self mana with: 2
+	^ DMUnits mana with: 2
 ]
 
 { #category : #'private - accessing' }
 CreatureCardTest >> defaultManaNumber [
 
-	^ self mana with: 1
+	^ DMUnits mana with: 1
 ]
 
 { #category : #'private - accessing' }
 CreatureCardTest >> defaultPower [
 
-	^ self power with: 2000
+	^ DMUnits power with: 2000
 ]
 
 { #category : #'private - accessing' }
@@ -65,18 +65,6 @@ CreatureCardTest >> human [
 CreatureCardTest >> humanRaceTypeName [
 
 	^ 'Human'
-]
-
-{ #category : #'private - accessing' }
-CreatureCardTest >> mana [
-
-	^ BaseUnit named: 'mana'
-]
-
-{ #category : #'private - accessing' }
-CreatureCardTest >> power [
-
-	^ BaseUnit named: 'power'
 ]
 
 { #category : #tests }
@@ -119,7 +107,7 @@ CreatureCardTest >> test03CreatureCardManaCostMustBeAnInteger [
 				named: self defaultCardName
 				from: self defaultCivilization
 				ofType: self defaultRace
-				costing: ( self mana with: 3.4 )
+				costing: ( DMUnits mana with: 3.4 )
 				providing: self defaultManaNumber
 				with: self defaultPower
 			]
@@ -135,7 +123,7 @@ CreatureCardTest >> test04CreatureCardManaCostMustBeGreaterOrEqualThanOne [
 				named: self defaultCardName
 				from: self defaultCivilization
 				ofType: self defaultRace
-				costing: ( self mana with: -2 )
+				costing: ( DMUnits mana with: -2 )
 				providing: self defaultManaNumber
 				with: self defaultPower
 			]
@@ -152,7 +140,7 @@ CreatureCardTest >> test05CreatureCardManaNumberMustBeAnInteger [
 				from: self defaultCivilization
 				ofType: self defaultRace
 				costing: self defaultManaCost
-				providing: ( self mana with: 3.4 )
+				providing: ( DMUnits mana with: 3.4 )
 				with: self defaultPower
 			]
 		raise: InstanceCreationFailed
@@ -168,7 +156,7 @@ CreatureCardTest >> test06CreatureCardManaNumberMustBePositive [
 				from: self defaultCivilization
 				ofType: self defaultRace
 				costing: self defaultManaCost
-				providing: ( self mana with: -2 )
+				providing: ( DMUnits mana with: -2 )
 				with: self defaultPower
 			]
 		raise: InstanceCreationFailed
@@ -185,7 +173,7 @@ CreatureCardTest >> test07CreatureCardPowerMustBeAnInteger [
 				ofType: self defaultRace
 				costing: self defaultManaCost
 				providing: self defaultManaNumber
-				with: ( self power with: 3.4 )
+				with: ( DMUnits power with: 3.4 )
 			]
 		raise: InstanceCreationFailed
 		withMessageText: 'A creature card''s power must be an integer.'
@@ -197,9 +185,9 @@ CreatureCardTest >> test08CreatureCardWithoutEffect [
 	| creatureName twoManas oneMana twoThousandsPower creatureCard |
 
 	creatureName := 'Immortal Baron, Vorg'.
-	twoManas := self mana with: 2.
-	oneMana := self mana with: 1.
-	twoThousandsPower := self power with: 2000.
+	twoManas := DMUnits mana with: 2.
+	oneMana := DMUnits mana with: 1.
+	twoThousandsPower := DMUnits power with: 2000.
 
 	creatureCard := CreatureCard
 		named: creatureName
