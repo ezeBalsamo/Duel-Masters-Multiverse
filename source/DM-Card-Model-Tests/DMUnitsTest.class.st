@@ -26,6 +26,6 @@ DMUnitsTest >> test02UnitsAreInstantiatedOnlyOnce [
 	DMUnits initialize.
 
 	self
-		assert: DMUnits mana equals: DMUnits mana;
-		assert: DMUnits power equals: DMUnits power
+		assert: DMUnits mana identicalTo: DMUnits mana;
+		assert: DMUnits power identicalTo: DMUnits power
 ]
