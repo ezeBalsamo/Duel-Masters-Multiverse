@@ -44,11 +44,7 @@ Duelist >> drawFiveCards [
 { #category : #accessing }
 Duelist >> drawNumberOfCards: aNumberOfCards [
 
-	| cards |
-
-	cards := deck first: aNumberOfCards.
-	deck removeFirst: aNumberOfCards.
-	^ cards
+	^ deck removeFirst: aNumberOfCards
 ]
 
 { #category : #initialization }
