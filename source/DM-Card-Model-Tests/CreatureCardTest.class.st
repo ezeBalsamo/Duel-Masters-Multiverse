@@ -22,31 +22,31 @@ CreatureCardTest >> defaultCivilization [
 { #category : #'private - accessing' }
 CreatureCardTest >> defaultManaCost [
 
-	^ self mana with: 2
+	^ DMUnits mana with: 2
 ]
 
 { #category : #'private - accessing' }
 CreatureCardTest >> defaultManaNumber [
 
-	^ self mana with: 1
+	^ DMUnits mana with: 1
 ]
 
 { #category : #'private - accessing' }
 CreatureCardTest >> defaultPower [
 
-	^ self power with: 2000
+	^ DMUnits power with: 2000
 ]
 
 { #category : #'private - accessing' }
 CreatureCardTest >> defaultRace [
 
-	^ self humanRace
+	^ self human
 ]
 
 { #category : #'private - accessing' }
 CreatureCardTest >> fireCivilization [
 
-	^ SingleCivilization named: self fireCivilizationName
+	^ Civilization named: self fireCivilizationName
 ]
 
 { #category : #'private - accessing' }
@@ -56,7 +56,7 @@ CreatureCardTest >> fireCivilizationName [
 ]
 
 { #category : #'private - accessing' }
-CreatureCardTest >> humanRace [
+CreatureCardTest >> human [
 
 	^ SingleRace ofTypeNamed: self humanRaceTypeName
 ]
@@ -67,18 +67,6 @@ CreatureCardTest >> humanRaceTypeName [
 	^ 'Human'
 ]
 
-{ #category : #'private - accessing' }
-CreatureCardTest >> mana [
-
-	^ BaseUnit named: 'mana'
-]
-
-{ #category : #'private - accessing' }
-CreatureCardTest >> power [
-
-	^ BaseUnit named: 'power'
-]
-
 { #category : #tests }
 CreatureCardTest >> test01CreatureCardNameMustNotBeEmpty [
 
@@ -86,7 +74,7 @@ CreatureCardTest >> test01CreatureCardNameMustNotBeEmpty [
 		should: [ CreatureCard
 				named: ''
 				from: self defaultCivilization
-				and: self defaultRace
+				ofType: self defaultRace
 				costing: self defaultManaCost
 				providing: self defaultManaNumber
 				with: self defaultPower
@@ -96,14 +84,30 @@ CreatureCardTest >> test01CreatureCardNameMustNotBeEmpty [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test02CreatureCardManaCostMustBeAnInteger [
+CreatureCardTest >> test02CreatureCardCivilizationsMustNotBeEmpty [
+
+	self
+		should: [ CreatureCard
+				named: self defaultCardName
+				fromAll: #()
+				ofType: self defaultRace
+				costing: self defaultManaCost
+				providing: self defaultManaNumber
+				with: self defaultPower
+			]
+		raise: InstanceCreationFailed
+		withMessageText: 'A creature card must have at least one civilization.'
+]
+
+{ #category : #tests }
+CreatureCardTest >> test03CreatureCardManaCostMustBeAnInteger [
 
 	self
 		should: [ CreatureCard
 				named: self defaultCardName
 				from: self defaultCivilization
-				and: self defaultRace
-				costing: ( self mana with: 3.4 )
+				ofType: self defaultRace
+				costing: ( DMUnits mana with: 3.4 )
 				providing: self defaultManaNumber
 				with: self defaultPower
 			]
@@ -112,14 +116,14 @@ CreatureCardTest >> test02CreatureCardManaCostMustBeAnInteger [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test03CreatureCardManaCostMustBeGreaterOrEqualThanOne [
+CreatureCardTest >> test04CreatureCardManaCostMustBeGreaterOrEqualThanOne [
 
 	self
 		should: [ CreatureCard
 				named: self defaultCardName
 				from: self defaultCivilization
-				and: self defaultRace
-				costing: ( self mana with: -2 )
+				ofType: self defaultRace
+				costing: ( DMUnits mana with: -2 )
 				providing: self defaultManaNumber
 				with: self defaultPower
 			]
@@ -128,15 +132,15 @@ CreatureCardTest >> test03CreatureCardManaCostMustBeGreaterOrEqualThanOne [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test04CreatureCardManaNumberMustBeAnInteger [
+CreatureCardTest >> test05CreatureCardManaNumberMustBeAnInteger [
 
 	self
 		should: [ CreatureCard
 				named: self defaultCardName
 				from: self defaultCivilization
-				and: self defaultRace
+				ofType: self defaultRace
 				costing: self defaultManaCost
-				providing: ( self mana with: 3.4 )
+				providing: ( DMUnits mana with: 3.4 )
 				with: self defaultPower
 			]
 		raise: InstanceCreationFailed
@@ -144,15 +148,15 @@ CreatureCardTest >> test04CreatureCardManaNumberMustBeAnInteger [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test05CreatureCardManaNumberMustBePositive [
+CreatureCardTest >> test06CreatureCardManaNumberMustBePositive [
 
 	self
 		should: [ CreatureCard
 				named: self defaultCardName
 				from: self defaultCivilization
-				and: self defaultRace
+				ofType: self defaultRace
 				costing: self defaultManaCost
-				providing: ( self mana with: -2 )
+				providing: ( DMUnits mana with: -2 )
 				with: self defaultPower
 			]
 		raise: InstanceCreationFailed
@@ -160,35 +164,35 @@ CreatureCardTest >> test05CreatureCardManaNumberMustBePositive [
 ]
 
 { #category : #tests }
-CreatureCardTest >> test06CreatureCardPowerMustBeAnInteger [
+CreatureCardTest >> test07CreatureCardPowerMustBeAnInteger [
 
 	self
 		should: [ CreatureCard
 				named: self defaultCardName
 				from: self defaultCivilization
-				and: self defaultRace
+				ofType: self defaultRace
 				costing: self defaultManaCost
 				providing: self defaultManaNumber
-				with: ( self power with: 3.4 )
+				with: ( DMUnits power with: 3.4 )
 			]
 		raise: InstanceCreationFailed
 		withMessageText: 'A creature card''s power must be an integer.'
 ]
 
 { #category : #tests }
-CreatureCardTest >> test07CreatureCardWithoutEffect [
+CreatureCardTest >> test08CreatureCardWithoutEffect [
 
 	| creatureName twoManas oneMana twoThousandsPower creatureCard |
 
 	creatureName := 'Immortal Baron, Vorg'.
-	twoManas := self mana with: 2.
-	oneMana := self mana with: 1.
-	twoThousandsPower := self power with: 2000.
+	twoManas := DMUnits mana with: 2.
+	oneMana := DMUnits mana with: 1.
+	twoThousandsPower := DMUnits power with: 2000.
 
 	creatureCard := CreatureCard
 		named: creatureName
 		from: self fireCivilization
-		and: self humanRace
+		ofType: self human
 		costing: twoManas
 		providing: oneMana
 		with: twoThousandsPower.
@@ -200,4 +204,34 @@ CreatureCardTest >> test07CreatureCardWithoutEffect [
 		assert: ( creatureCard costs: twoManas );
 		assert: ( creatureCard provides: oneMana );
 		assert: ( creatureCard hasPowerEquivalentTo: twoThousandsPower )
+]
+
+{ #category : #tests }
+CreatureCardTest >> test09MultipleCivilizationCreatureCard [
+
+	| creatureCard |
+
+	creatureCard := CreatureCard
+		named: self defaultCardName
+		fromAll: ( Array with: self fireCivilization with: self waterCivilization )
+		ofType: self defaultRace
+		costing: self defaultManaCost
+		providing: self defaultManaNumber
+		with: self defaultPower.
+
+	self
+		assert: ( creatureCard isFromTheCivilizationNamed: self fireCivilizationName );
+		assert: ( creatureCard isFromTheCivilizationNamed: self waterCivilizationName )
+]
+
+{ #category : #'private - accessing' }
+CreatureCardTest >> waterCivilization [
+
+	^ Civilization named: self waterCivilizationName
+]
+
+{ #category : #'private - accessing' }
+CreatureCardTest >> waterCivilizationName [
+
+	^ 'Water'
 ]

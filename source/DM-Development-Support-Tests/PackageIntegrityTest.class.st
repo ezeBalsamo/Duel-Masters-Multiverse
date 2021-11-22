@@ -13,7 +13,7 @@ Class {
 { #category : #accessing }
 PackageIntegrityTest class >> defaultTimeLimit [
 
-	^ 1 minute
+	^ 2 minutes
 ]
 
 { #category : #'private - accessing' }

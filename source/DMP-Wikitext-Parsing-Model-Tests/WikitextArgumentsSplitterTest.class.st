@@ -13,7 +13,7 @@ WikitextArgumentsSplitterTest >> test01SplittingAnEmptyWikitextArgumentShouldRai
 	self
 		should: [ WikitextArgumentsSplitter splitting: '' ]
 		raise: ParsingFailed
-		withMessageText: #'A collection of wikitext arguments to split was expected'
+		withMessageText: #'A collection of wikitext arguments to split was expected.'
 ]
 
 { #category : #tests }

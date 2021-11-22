@@ -3,11 +3,11 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'name',
-		'civilization',
 		'race',
 		'manaCost',
 		'power',
-		'manaNumberToProvide'
+		'manaNumberToProvide',
+		'civilizations'
 	],
 	#category : #'DM-Card-Model'
 }
@@ -45,14 +45,10 @@ CreatureCard class >> assertIsValidManaNumber: aPotentialManaNumber [
 { #category : #'private - preconditions' }
 CreatureCard class >> assertIsValidPower: aPotentialPower [
 
-	^ AssertionCheckerBuilder new
-		raising: InstanceCreationFailed;
-		checking: [ :checker | 
-			checker
-				enforce: [ aPotentialPower amount isInteger ]
-				because: 'A creature card''s power must be an integer.'
-			];
-		buildAndCheck
+	AssertionChecker
+		enforce: [ aPotentialPower amount isInteger ]
+		because: 'A creature card''s power must be an integer.'
+		raising: InstanceCreationFailed
 ]
 
 { #category : #'private - preconditions' }
@@ -61,6 +57,15 @@ CreatureCard class >> assertNotEmpty: aPotentialName [
 	AssertionChecker
 		enforce: [ aPotentialName notEmpty ]
 		because: 'A creature card must have a name.'
+		raising: InstanceCreationFailed
+]
+
+{ #category : #'private - preconditions' }
+CreatureCard class >> assertThereAreCivilizationsIn: aPotentialCivilizationCollection [
+
+	AssertionChecker
+		enforce: [ aPotentialCivilizationCollection notEmpty ]
+		because: 'A creature card must have at least one civilization.'
 		raising: InstanceCreationFailed
 ]
 
@@ -74,21 +79,40 @@ CreatureCard class >> isGreaterThanOne: aPotentialManaCost [
 ]
 
 { #category : #'instance creation' }
-CreatureCard class >> named: aName from: aCivilization and: aRace costing: aManaCost providing: aManaNumber with: aPower [
+CreatureCard class >> named: aName from: aCivilization ofType: aRace costing: aManaCost providing: aManaNumber with: aPower [
+
+	^ self
+		named: aName
+		fromAll: {aCivilization}
+		ofType: aRace
+		costing: aManaCost
+		providing: aManaNumber
+		with: aPower
+]
+
+{ #category : #'instance creation' }
+CreatureCard class >> named: aName fromAll: aCivilizationCollection ofType: aRace costing: aManaCost providing: aManaNumber with: aPower [
 
 	self
 		assertNotEmpty: aName;
+		assertThereAreCivilizationsIn: aCivilizationCollection;
 		assertIsValidManaCost: aManaCost;
 		assertIsValidManaNumber: aManaNumber;
 		assertIsValidPower: aPower.
 
 	^ self new
 		initializeNamed: aName
-		from: aCivilization
-		and: aRace
+		fromAll: aCivilizationCollection
+		ofType: aRace
 		costing: aManaCost
 		providing: aManaNumber
 		with: aPower
+]
+
+{ #category : #accessing }
+CreatureCard >> civilizations [
+
+	^ civilizations
 ]
 
 { #category : #testing }
@@ -104,10 +128,10 @@ CreatureCard >> hasPowerEquivalentTo: aPotentialPower [
 ]
 
 { #category : #initialization }
-CreatureCard >> initializeNamed: aName from: aCivilization and: aRace costing: aManaCost providing: aManaNumber with: aPower [
+CreatureCard >> initializeNamed: aName fromAll: aCivilizationCollection ofType: aRace costing: aManaCost providing: aManaNumber with: aPower [
 
 	name := aName.
-	civilization := aCivilization.
+	civilizations := aCivilizationCollection.
 	race := aRace.
 	manaCost := aManaCost.
 	manaNumberToProvide := aManaNumber.
@@ -117,7 +141,7 @@ CreatureCard >> initializeNamed: aName from: aCivilization and: aRace costing: a
 { #category : #testing }
 CreatureCard >> isFromTheCivilizationNamed: aPotentialCivilizationName [
 
-	^ civilization isNamed: aPotentialCivilizationName
+	^ civilizations anySatisfy: [ :aCivilization | aCivilization isNamed: aPotentialCivilizationName ]
 ]
 
 { #category : #testing }
@@ -130,6 +154,30 @@ CreatureCard >> isFromTheRaceOfTypeNamed: aPotentialRaceTypeName [
 CreatureCard >> isNamed: aPotentialName [
 
 	^ name = aPotentialName
+]
+
+{ #category : #accessing }
+CreatureCard >> manaCost [
+
+	^ manaCost
+]
+
+{ #category : #accessing }
+CreatureCard >> manaNumberToProvide [
+
+	^ manaNumberToProvide
+]
+
+{ #category : #accessing }
+CreatureCard >> power [
+
+	^ power
+]
+
+{ #category : #accessing }
+CreatureCard >> printOn: aStream [
+
+	^ aStream nextPutAll: name
 ]
 
 { #category : #testing }

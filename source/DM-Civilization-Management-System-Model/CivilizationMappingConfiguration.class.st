@@ -20,7 +20,7 @@ CivilizationMappingConfiguration >> applyTo: aRepository [
 CivilizationMappingConfiguration >> civilizationClassModelDefinition [
 
 	^ ClassModelDefinition
-		for: SingleCivilization
+		for: Civilization
 		attributesDefinedBy:
 			( Array
 				with: ( BasicAttributeDefinition named: RDBMSConstants sequentialNumberAttribute )
@@ -31,7 +31,7 @@ CivilizationMappingConfiguration >> civilizationClassModelDefinition [
 CivilizationMappingConfiguration >> civilizationDescriptorDefinition [
 
 	^ ConcreteDescriptorDefinition
-		for: SingleCivilization
+		for: Civilization
 		onTableNamed: self civilizationTableName
 		mappingsDefinedBy:
 			( Array

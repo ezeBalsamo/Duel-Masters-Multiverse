@@ -12,8 +12,10 @@ Class {
 { #category : #'private - preconditions' }
 WikitextArgumentsSplitter class >> assertNotEmpty: aWikitextArgumentCollectionToSplit [
 
-	aWikitextArgumentCollectionToSplit
-		ifEmpty: [ ParsingFailed signal: #'A collection of wikitext arguments to split was expected' ]
+	AssertionChecker
+		refuse: [ aWikitextArgumentCollectionToSplit isEmpty ]
+		because: 'A collection of wikitext arguments to split was expected.'
+		raising: ParsingFailed
 ]
 
 { #category : #'instance creation' }

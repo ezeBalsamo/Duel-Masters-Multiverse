@@ -10,10 +10,10 @@ Class {
 { #category : #'private - preconditions' }
 WikitextMixedContentSplitter class >> assertNotEmpty: aWikitextMixedContentsToSplit [
 
-	aWikitextMixedContentsToSplit
-		ifEmpty: [ ParsingFailed
-				signal: #'A collection of wikitext contents to split was expected.'
-			]
+	AssertionChecker
+		refuse: [ aWikitextMixedContentsToSplit isEmpty ]
+		because: 'A collection of wikitext contents to split was expected.'
+		raising: ParsingFailed
 ]
 
 { #category : #'instance creation' }

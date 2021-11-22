@@ -115,6 +115,7 @@ BaselineOfDuelMasters >> civilizationManagementSystemModelTestsPackage [
 		testsPackageNamed: civillizationMagenementSystemModelPackageName
 		requiringAll:
 			( Array
+				with: 'DM-SUnit'
 				with: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) )
 				with: civillizationMagenementSystemModelPackageName
 				with: ( self modelPackageNameFor: 'DM-Civilization' ) )
@@ -370,6 +371,38 @@ BaselineOfDuelMasters >> kernelBasicObjectsExtensionsPackage [
 ]
 
 { #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> matchModelPackage [
+
+	^ self
+		modelPackageNamed: 'DM-Match'
+		requiringAll:
+			( Array
+				with: ( self modelPackageNameFor: 'DM-Exception' )
+				with: ( self modelPackageNameFor: 'DM-Card' ) )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> matchModelTestsPackage [
+
+	| matchModelPackageName |
+
+	matchModelPackageName := self modelPackageNameFor: 'DM-Match'.
+	^ self
+		testsPackageNamed: matchModelPackageName
+		requiringAll:
+			( OrderedCollection new
+				add: matchModelPackageName;
+				add: 'DM-SUnit';
+				add: ( self modelPackageNameFor: 'DM-Race' );
+				add: ( self modelPackageNameFor: 'DM-Civilization' );
+				add: ( self modelPackageNameFor: 'DM-Card' );
+				add: ( self modelPackageNameFor: 'DM-Exception' );
+				add: ( self systemModelPackageNameFor: 'DM-Civilization-Management' );
+				add: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) );
+				yourself )
+]
+
+{ #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> metaprogrammingModelPackage [
 
 	^ self
@@ -430,6 +463,7 @@ BaselineOfDuelMasters >> modelPackages [
 		add: self civilizationModelPackage;
 		add: self raceModelPackage;
 		add: self cardModelPackage;
+		add: self matchModelPackage;
 		add: self repositoryProviderSystemModelPackage;
 		add: self civilizationManagementSystemModelPackage;
 		add: self raceManagementSystemModelPackage;
@@ -691,6 +725,7 @@ BaselineOfDuelMasters >> testPackages [
 		add: self civilizationModelTestsPackage;
 		add: self raceModelTestsPackage;
 		add: self cardModelTestsPackage;
+		add: self matchModelTestsPackage;
 		add: self repositoryProviderSystemModelTestsPackage;
 		add: self civilizationManagementSystemModelTestsPackage;
 		add: self raceManagementSystemModelTestsPackage;
