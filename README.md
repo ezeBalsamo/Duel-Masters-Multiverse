@@ -15,8 +15,7 @@
 [![GitHub release](https://img.shields.io/github/release/ezeBalsamo/Duel-Masters-Multiverse.svg)](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/releases/latest)
 [![PostgreSQL Status](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/workflows/PostgreSQL%20Integration%20Tests/badge.svg?branch=release-candidate)](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions?query=workflow%3APostgreSQL%20Integration%20Tests)
 [![Coverage Status](https://codecov.io/github/ezeBalsamo/Duel-Masters-Multiverse/coverage.svg?branch=release-candidate)](https://codecov.io/gh/ezeBalsamo/Duel-Masters-Multiverse/branch/release-candidate)
-[![Pharo 7.0](https://img.shields.io/badge/Pharo-7.0-informational)](https://pharo.org)
-[![Pharo 8.0](https://img.shields.io/badge/Pharo-8.0-informational)](https://pharo.org)
+[![Pharo 9.0](https://img.shields.io/badge/Pharo-9.0-informational)](https://pharo.org)
 
 
 Duel Masters Multiverse focuses on gathering the three main card games (Duel Masters, Kaijudo and the new Duel Masters PLAY'S) into a single game, playable in both Spanish and English.
