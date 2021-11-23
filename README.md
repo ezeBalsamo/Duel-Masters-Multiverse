@@ -12,9 +12,13 @@
   </p>
 </p>
 
-[![GitHub release](https://img.shields.io/github/release/ezeBalsamo/Duel-Masters-Multiverse.svg)](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/releases/latest)
-[![PostgreSQL Status](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/workflows/PostgreSQL%20Integration%20Tests/badge.svg?branch=release-candidate)](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions?query=workflow%3APostgreSQL%20Integration%20Tests)
+[![Unit Tests](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions/workflows/unit-tests.yml/badge.svg)
+[![PostgreSQL Integration Tests](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions/workflows/PostgreSQL-Integration-Tests.yml/badge.svg)](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions/workflows/PostgreSQL-Integration-Tests.yml/badge.svg)
 [![Coverage Status](https://codecov.io/github/ezeBalsamo/Duel-Masters-Multiverse/coverage.svg?branch=release-candidate)](https://codecov.io/gh/ezeBalsamo/Duel-Masters-Multiverse/branch/release-candidate)
+[![Group loading check](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions/workflows/loading-groups.yml/badge.svg)](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions/workflows/loading-groups.yml)
+[![Markdown Lint](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions/workflows/markdown-lint.yml/badge.svg)](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/actions/workflows/markdown-lint.yml)
+
+[![GitHub release](https://img.shields.io/github/release/ezeBalsamo/Duel-Masters-Multiverse.svg)](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/releases/latest)
 [![Pharo 9.0](https://img.shields.io/badge/Pharo-9.0-informational)](https://pharo.org)
 
 
@@ -27,7 +31,7 @@ Duel Masters Multiverse focuses on gathering the three main card games (Duel Mas
 
 ## Quick Start
 
-- Download the latest [Pharo 32](https://get.pharo.org/) or [64 bits VM](https://get.pharo.org/64/).
+- Download the latest [Pharo 64 bits VM](https://get.pharo.org/64/).
 - Download a ready to use image from the [release page](https://github.com/ezeBalsamo/Duel-Masters-Multiverse/releases/latest)
 - Explore the [documentation](docs/)
 
