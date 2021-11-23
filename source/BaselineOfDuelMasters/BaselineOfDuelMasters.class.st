@@ -626,7 +626,7 @@ BaselineOfDuelMasters >> saganDependency [
 
 	^ self
 		dependencyTo: self saganDependencyName
-		hostedIn: 'github://ba-st/Sagan:v4.1.0/source'
+		hostedIn: 'github://ba-st/Sagan:v5.0.4/source'
 		loadingAll: #('Deployment' 'PostgreSQL')
 ]
 
@@ -682,7 +682,7 @@ BaselineOfDuelMasters >> superluminalDependency [
 
 	^ self
 		dependencyTo: self superluminalDependencyName
-		hostedIn: 'github://ba-st/Superluminal:v1.2.0/source'
+		hostedIn: 'github://ba-st/Superluminal:v2.2.0/source'
 		loading: 'Core'
 ]
 

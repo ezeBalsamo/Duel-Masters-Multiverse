@@ -3,7 +3,7 @@ A RDBRepositoryProviderModuleTest is a test class for testing the behavior of RD
 "
 Class {
 	#name : #RDBRepositoryProviderModuleTest,
-	#superclass : #ModuleTest,
+	#superclass : #Object,
 	#category : #'DM-Repository-Provider-Module-Model-Tests'
 }
 

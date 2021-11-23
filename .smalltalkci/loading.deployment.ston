@@ -2,10 +2,9 @@ SmalltalkCISpec {
   #loading : [
     SCIMetacelloLoadSpec {
       #baseline : 'DuelMasters',
-      #directory : 'source',
+      #directory : '../source',
       #load : [ 'Deployment' ],
-      #platforms : [  #pharo ],
-      #onConflict : #useLoaded
+      #platforms : [  #pharo ]
     }
   ],
   #testing : {

@@ -2,13 +2,12 @@ SmalltalkCISpec {
   #loading : [
     SCIMetacelloLoadSpec {
       #baseline : 'DuelMasters',
-      #directory : 'source',
+      #directory : '../source',
       #load : [ 'CI' ],
-      #platforms : [  #pharo ],
-      #onConflict : #useLoaded
+      #platforms : [  #pharo ]
     }
   ],
-  #preTesting : 'scripts/setUpRDBSuite.st',
+  #preTesting : '../scripts/setUpRDBSuite.st',
   #testing : {
     #coverage : {
       #packages : [ 'DM*' ],

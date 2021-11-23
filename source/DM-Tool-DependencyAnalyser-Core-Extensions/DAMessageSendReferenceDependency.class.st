@@ -31,7 +31,7 @@ DAMessageSendReferenceDependency >> initializeFrom: aSourceDAPackage to: aTarget
 
 	self
 		initializeFrom: aSourceDAPackage to: aTargetDAPackage;
-		theClass: aRGMethodDefinition actualClass.
+		theClass: aRGMethodDefinition methodClass.
 	referenceSelector := aSelector.
 	method := aRGMethodDefinition
 ]
