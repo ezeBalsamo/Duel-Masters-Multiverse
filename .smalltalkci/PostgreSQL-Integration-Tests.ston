@@ -7,7 +7,7 @@ SmalltalkCISpec {
       #platforms : [  #pharo ]
     }
   ],
-  #preTesting : 'scripts/setUpRDBSuite.st',
+  #preTesting : '../scripts/setUpRDBSuite.st',
   #testing : {
     #coverage : {
       #packages : [ 'DM*' ],
