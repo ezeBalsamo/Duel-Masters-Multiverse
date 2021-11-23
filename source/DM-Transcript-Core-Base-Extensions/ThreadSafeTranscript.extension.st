@@ -1,7 +1,7 @@
 Extension { #name : #ThreadSafeTranscript }
 
 { #category : #'*DM-Transcript-Core-Base-Extensions' }
-ThreadSafeTranscript >> isInteractive [ 
+ThreadSafeTranscript >> canBeUsedRunningHeadless [
 
-	^true
+	^ false
 ]

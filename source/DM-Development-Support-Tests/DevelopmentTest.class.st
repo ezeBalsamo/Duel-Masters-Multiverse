@@ -28,7 +28,8 @@ DevelopmentTest >> considerOpeningFailureLog [
 	| failureLog |
 
 	failureLog := self failureLog.
-	( failureLog isInteractive and: [ failureLog dependents isEmpty ] ) then: [ failureLog open ]
+	[ failureLog dependents isEmpty then: [ failureLog open ] ] unless:
+		failureLog canBeUsedRunningHeadless
 ]
 
 { #category : #'private - logging' }
@@ -73,7 +74,8 @@ DevelopmentTest >> ownedClasses [
 { #category : #'private - accessing' }
 DevelopmentTest >> ownedPackages [
 
-	^ RPackageOrganizer default packages select: [ :package | package name beginsWith: 'DM' ]
+	^ ( RPackageOrganizer default packages select: [ :package | package name beginsWith: 'DM' ] )
+		  sorted
 ]
 
 { #category : #'private - logging' }

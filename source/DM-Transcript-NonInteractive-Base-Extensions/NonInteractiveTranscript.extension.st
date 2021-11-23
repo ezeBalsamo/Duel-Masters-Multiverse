@@ -1,7 +1,7 @@
 Extension { #name : #NonInteractiveTranscript }
 
 { #category : #'*DM-Transcript-NonInteractive-Base-Extensions' }
-NonInteractiveTranscript >> isInteractive [
+NonInteractiveTranscript >> canBeUsedRunningHeadless [
 
-	^false
+	^ true
 ]

@@ -93,7 +93,7 @@ PackageIntegrityTest >> baselineDependencyNameFrom: aBaselineDependencyNameColle
 	self assertIsNotOwnProject: aRepositoryName.
 
 	^ Metacello registrations
-		detect: [ :aMetacelloProjectRegistration | aMetacelloProjectRegistration baseName = aRepositoryName ]
+		detect: [ :aMetacelloProjectRegistration | aMetacelloProjectRegistration baseName sameAs: aRepositoryName ]
 		ifFound: [ :aMetacelloProjectRegistration | 
 			| loaderRepositoryName |
 
