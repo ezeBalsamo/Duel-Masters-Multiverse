@@ -1,5 +1,5 @@
-<p align="center"><img src="assets/logos/128x128.png">
- <h1 align="center">Duel Masters Multiverse</h1>
+<h1 align="center">Duel Masters Multiverse</h1>
+ <p align="center"><img src="assets/logos/128x128.png">
   <p align="center">
     A fan-made Duel Masters card game
     <br>
