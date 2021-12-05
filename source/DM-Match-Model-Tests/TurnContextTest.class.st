@@ -14,6 +14,17 @@ Class {
 }
 
 { #category : #'private - accessing' }
+TurnContextTest >> immortalBaronVorg [
+
+	^ CreatureCard named: 'Immortal Baron, Vorg'
+		  from: ( Civilization named: 'Fire' )
+		  ofType: ( SingleRace ofTypeNamed: 'Human' )
+		  costing: ( DMUnits mana with: 2 )
+		  providing: ( DMUnits mana with: 1 )
+		  with: ( DMUnits power with: 2000 )
+]
+
+{ #category : #'private - accessing' }
 TurnContextTest >> knightDeck [
 
 	^ ( ( 1 to: 15 ) collect: #asString ) asOrderedCollection
@@ -101,6 +112,18 @@ TurnContextTest >> test04TurnPlayerCantDrawCardMoreThanOnceInTheSameTurn [
 	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Draw Card in the Charge Mana Step.'
+]
+
+{ #category : #tests }
+TurnContextTest >> test05NonTurnPlayerCantChargeMana [
+
+	| request |
+
+	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
+
+	self should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
+		raiseIllegalPlayFrom: self nonTurnPlayer
+		because: 'You can''t Charge Mana on your opponent''s turn.'
 ]
 
 { #category : #'private - accessing' }

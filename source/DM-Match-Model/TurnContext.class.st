@@ -23,8 +23,11 @@ TurnContext >> endTurn [
 { #category : #executing }
 TurnContext >> execute: aRequest requestedBy: aPlayer [
 
-	[ IllegalPlay from: aPlayer because: 'You can''t Draw Card on your opponent''s turn.' ] unless:
-		match currentPlayer = aPlayer.
+	[ 
+	IllegalPlay from: aPlayer
+		because:
+		( 'You can''t <1s> on your opponent''s turn.' expandMacrosWith: aRequest actionDescription )
+	] unless: match currentPlayer = aPlayer.
 
 	[ IllegalPlay from: aPlayer because: 'You can''t Draw Card in the Charge Mana Step.' ] unless:
 		canCardBeDrawn
