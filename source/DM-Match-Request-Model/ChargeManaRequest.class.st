@@ -10,7 +10,7 @@ Class {
 { #category : #accessing }
 ChargeManaRequest class >> actionDescription [
 
-	^ 'Charge Mana'
+	^ PlayerActionDescriptions chargeMana
 ]
 
 { #category : #'instance creation' }

@@ -5,9 +5,9 @@ Class {
 }
 
 { #category : #'private - accessing' }
-ChargeManaStep >> allowedActions [
+ChargeManaStep >> allowedActionDescriptions [
 
-	^ { ChargeManaRequest actionDescription }
+	^ { PlayerActionDescriptions chargeMana }
 ]
 
 { #category : #'private - accessing' }

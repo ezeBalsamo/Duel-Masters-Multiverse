@@ -5,15 +5,15 @@ Class {
 }
 
 { #category : #'private - accessing' }
-TurnStep >> allowedActions [
+TurnStep >> allowedActionDescriptions [
 
 	self subclassResponsibility
 ]
 
 { #category : #testing }
-TurnStep >> allows: aRequest [
+TurnStep >> allowsActionDescribedAs: anActionDescription [
 
-	^ self allowedActions includes: aRequest actionDescription
+	^ self allowedActionDescriptions includes: anActionDescription
 ]
 
 { #category : #printing }

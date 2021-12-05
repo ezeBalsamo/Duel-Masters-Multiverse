@@ -19,5 +19,5 @@ MatchRequest >> actionDescription [
 { #category : #testing }
 MatchRequest >> isAllowedIn: aStep [
 
-	^ aStep allows: self
+	^ aStep allowsActionDescribedAs: self actionDescription
 ]

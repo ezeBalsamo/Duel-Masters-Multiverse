@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 DrawCardRequest class >> actionDescription [
 
-	^ 'Draw Card'
+	^ PlayerActionDescriptions drawCard
 ]
 
 { #category : #executing }

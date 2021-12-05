@@ -5,9 +5,9 @@ Class {
 }
 
 { #category : #'private - accessing' }
-DrawCardStep >> allowedActions [
+DrawCardStep >> allowedActionDescriptions [
 
-	^ { DrawCardRequest actionDescription }
+	^ { PlayerActionDescriptions drawCard }
 ]
 
 { #category : #'private - accessing' }
