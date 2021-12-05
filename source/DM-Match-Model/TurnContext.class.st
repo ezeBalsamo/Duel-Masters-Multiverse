@@ -25,7 +25,7 @@ TurnContext >> changeCurrentStepTo: aTurnStep [
 TurnContext >> endTurn [
 
 	canCardBeDrawn := true.
-	currentStep := DrawCardStep new
+	self changeCurrentStepTo: DrawCardStep new
 ]
 
 { #category : #executing }
@@ -51,5 +51,5 @@ TurnContext >> initializeWithin: aMatch [
 
 	match := aMatch.
 	canCardBeDrawn := false.
-	currentStep := ChargeManaStep new
+	self changeCurrentStepTo: ChargeManaStep new
 ]
