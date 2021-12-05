@@ -3,7 +3,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'match',
-		'hasFirstTurnEnded'
+		'canCardBeDrawn'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -17,7 +17,7 @@ TurnContext class >> within: aMatch [
 { #category : #processing }
 TurnContext >> endTurn [
 
-	hasFirstTurnEnded := true
+	canCardBeDrawn := true
 ]
 
 { #category : #executing }
@@ -27,13 +27,15 @@ TurnContext >> execute: aRequest requestedBy: aPlayer [
 		match currentPlayer = aPlayer.
 
 	[ IllegalPlay from: aPlayer because: 'You can''t Draw Card in the Charge Mana Step.' ] unless:
-		hasFirstTurnEnded
-		inWhichCase: [ aRequest executeOn: match ]
+		canCardBeDrawn
+		inWhichCase: [ aRequest executeOn: match ].
+
+	canCardBeDrawn := false
 ]
 
 { #category : #initialization }
 TurnContext >> initializeWithin: aMatch [
 
 	match := aMatch.
-	hasFirstTurnEnded := false
+	canCardBeDrawn := false
 ]

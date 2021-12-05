@@ -89,6 +89,20 @@ TurnContextTest >> test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst [
 	self assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand + 1
 ]
 
+{ #category : #tests }
+TurnContextTest >> test04DrawCardMoreThanOnceForTurnPlayer [
+
+	| request |
+
+	self test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst.
+
+	request := DrawCardRequest new.
+
+	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Draw Card in the Charge Mana Step.'
+]
+
 { #category : #'private - accessing' }
 TurnContextTest >> turnPlayer [
 
