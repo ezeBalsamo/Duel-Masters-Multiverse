@@ -52,19 +52,7 @@ TurnContextTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anError
 ]
 
 { #category : #tests }
-TurnContextTest >> test01DrawCardForTurnPlayerOnFirstTurn [
-
-	| request |
-
-	request := DrawCardRequest new.
-
-	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
-		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Draw Card in the Charge Mana Step.'
-]
-
-{ #category : #tests }
-TurnContextTest >> test02DrawCardForNonTurnPlayer [
+TurnContextTest >> test01DrawCardForNonTurnPlayer [
 
 	| request |
 
@@ -73,6 +61,18 @@ TurnContextTest >> test02DrawCardForNonTurnPlayer [
 	self should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
 		because: 'You can''t Draw Card on your opponent''s turn.'
+]
+
+{ #category : #tests }
+TurnContextTest >> test02DrawCardForTurnPlayerOnFirstTurn [
+
+	| request |
+
+	request := DrawCardRequest new.
+
+	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Draw Card in the Charge Mana Step.'
 ]
 
 { #category : #'private - accessing' }
