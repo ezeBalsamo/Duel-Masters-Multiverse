@@ -19,6 +19,12 @@ TurnContextTest >> knightDeck [
 	^ ( ( 1 to: 15 ) collect: #asString ) asOrderedCollection
 ]
 
+{ #category : #'private - accessing' }
+TurnContextTest >> nonTurnPlayer [
+
+	^ match opponentOf: self turnPlayer
+]
+
 { #category : #running }
 TurnContextTest >> setUp [
 
@@ -55,6 +61,18 @@ TurnContextTest >> test01DrawCardForTurnPlayerOnFirstTurn [
 	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Draw Card in the Charge Mana Step.'
+]
+
+{ #category : #tests }
+TurnContextTest >> test02DrawCardForNonTurnPlayer [
+
+	| request |
+
+	request := DrawCardRequest new.
+
+	self should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
+		raiseIllegalPlayFrom: self nonTurnPlayer
+		because: 'You can''t Draw Card on your opponent''s turn.'
 ]
 
 { #category : #'private - accessing' }

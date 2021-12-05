@@ -16,6 +16,9 @@ TurnContext class >> within: aMatch [
 { #category : #executing }
 TurnContext >> execute: aRequest requestedBy: aPlayer [
 
+	[ IllegalPlay from: aPlayer because: 'You can''t Draw Card on your opponent''s turn.' ] unless:
+		match currentPlayer = aPlayer.
+
 	IllegalPlay from: aPlayer because: 'You can''t Draw Card in the Charge Mana Step.'
 ]
 
