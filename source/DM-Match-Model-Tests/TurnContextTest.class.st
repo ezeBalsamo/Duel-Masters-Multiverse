@@ -52,7 +52,7 @@ TurnContextTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anError
 ]
 
 { #category : #tests }
-TurnContextTest >> test01DrawCardForNonTurnPlayer [
+TurnContextTest >> test01NonTurnPlayerCantDrawCard [
 
 	| request |
 
@@ -64,7 +64,7 @@ TurnContextTest >> test01DrawCardForNonTurnPlayer [
 ]
 
 { #category : #tests }
-TurnContextTest >> test02DrawCardForTurnPlayerOnFirstTurn [
+TurnContextTest >> test02TurnPlayerCantDrawCardOnFirstTurn [
 
 	| request |
 
@@ -90,7 +90,7 @@ TurnContextTest >> test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst [
 ]
 
 { #category : #tests }
-TurnContextTest >> test04DrawCardMoreThanOnceForTurnPlayer [
+TurnContextTest >> test04TurnPlayerCantDrawCardMoreThanOnceInTheSameTurn [
 
 	| request |
 
