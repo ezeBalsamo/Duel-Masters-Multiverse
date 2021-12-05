@@ -16,6 +16,12 @@ TurnContext class >> within: aMatch [
 ]
 
 { #category : #processing }
+TurnContext >> changeCurrentStepTo: aTurnStep [
+
+	currentStep := aTurnStep
+]
+
+{ #category : #processing }
 TurnContext >> endTurn [
 
 	canCardBeDrawn := true.

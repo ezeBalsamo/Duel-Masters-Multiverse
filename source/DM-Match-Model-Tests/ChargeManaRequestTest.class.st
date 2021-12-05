@@ -47,9 +47,9 @@ ChargeManaRequestTest >> test03ChargeManaOfTurnPlayer [
 	card := self immortalBaronVorg.
 	request := ChargeManaRequest chargingManaWith: card.
 
-	self assertEmpty: ( match manaOf: self turnPlayer ).
+	self deny: ( match manaOf: self turnPlayer ) includes: card.
 	turnContext execute: request requestedBy: self turnPlayer.
-	self assertTheOnlyOneIn: ( match manaOf: self turnPlayer ) is: card
+	self assert: ( match manaOf: self turnPlayer ) includes: card
 ]
 
 { #category : #tests }
@@ -68,4 +68,21 @@ ChargeManaRequestTest >> test04TurnPlayerCantChargeManaMoreThanOnceInTheSameTurn
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'Mana can only be charged once per turn.';
 		assertCollection: ( match manaOf: self turnPlayer ) equals: mana
+]
+
+{ #category : #tests }
+ChargeManaRequestTest >> test05PlayerCanChargeManaEveryTurn [
+
+	self test03ChargeManaOfTurnPlayer.
+
+	2 timesRepeat: [ 
+		match endTurnOf: self turnPlayer.
+		turnContext endTurn
+		].
+
+	turnContext
+		execute: DrawCardRequest new requestedBy: self turnPlayer;
+		changeCurrentStepTo: ChargeManaStep new.
+
+	self test03ChargeManaOfTurnPlayer
 ]
