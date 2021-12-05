@@ -1,6 +1,6 @@
 Class {
 	#name : #ChargeManaRequest,
-	#superclass : #Object,
+	#superclass : #MatchRequest,
 	#instVars : [
 		'card'
 	],
@@ -19,20 +19,8 @@ ChargeManaRequest class >> chargingManaWith: aCard [
 	^ self new initializeChargingManaWith: aCard
 ]
 
-{ #category : #accessing }
-ChargeManaRequest >> actionDescription [
-
-	^ self class actionDescription
-]
-
 { #category : #initialization }
 ChargeManaRequest >> initializeChargingManaWith: aCard [
 
 	card := aCard
-]
-
-{ #category : #testing }
-ChargeManaRequest >> isAllowedIn: aStep [
-
-	^ aStep allows: self
 ]

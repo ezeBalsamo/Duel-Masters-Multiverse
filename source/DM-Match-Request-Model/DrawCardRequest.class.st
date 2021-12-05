@@ -1,6 +1,6 @@
 Class {
 	#name : #DrawCardRequest,
-	#superclass : #Object,
+	#superclass : #MatchRequest,
 	#category : #'DM-Match-Request-Model'
 }
 
@@ -10,20 +10,8 @@ DrawCardRequest class >> actionDescription [
 	^ 'Draw Card'
 ]
 
-{ #category : #accessing }
-DrawCardRequest >> actionDescription [
-
-	^ self class actionDescription
-]
-
 { #category : #executing }
 DrawCardRequest >> executeOn: aMatch [
 
 	aMatch drawCardFor: aMatch currentPlayer
-]
-
-{ #category : #testing }
-DrawCardRequest >> isAllowedIn: aStep [
-
-	^ aStep allows: self
 ]
