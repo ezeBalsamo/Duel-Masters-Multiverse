@@ -5,13 +5,25 @@ Class {
 }
 
 { #category : #accessing }
-DrawCardRequest >> actionDescription [
+DrawCardRequest class >> actionDescription [
 
 	^ 'Draw Card'
+]
+
+{ #category : #accessing }
+DrawCardRequest >> actionDescription [
+
+	^ self class actionDescription
 ]
 
 { #category : #executing }
 DrawCardRequest >> executeOn: aMatch [
 
 	aMatch drawCardFor: aMatch currentPlayer
+]
+
+{ #category : #testing }
+DrawCardRequest >> isAllowedIn: aStep [
+
+	^ aStep allows: self
 ]

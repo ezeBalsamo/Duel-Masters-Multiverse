@@ -111,7 +111,7 @@ TurnContextTest >> test04TurnPlayerCantDrawCardMoreThanOnceInTheSameTurn [
 
 	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Draw Card in the Charge Mana Step.'
+		because: 'Only one card can be drawn per turn.'
 ]
 
 { #category : #'tests - charge mana' }
@@ -124,6 +124,20 @@ TurnContextTest >> test05NonTurnPlayerCantChargeMana [
 	self should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
 		because: 'You can''t Charge Mana on your opponent''s turn.'
+]
+
+{ #category : #'tests - charge mana' }
+TurnContextTest >> test06TurnPlayerCantChargeManaBeforeDrawingCard [
+
+	| request |
+
+	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
+	
+	match endTurnOf: self turnPlayer.
+	turnContext endTurn.
+	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Charge Mana in the Draw Card Step.'
 ]
 
 { #category : #'private - accessing' }

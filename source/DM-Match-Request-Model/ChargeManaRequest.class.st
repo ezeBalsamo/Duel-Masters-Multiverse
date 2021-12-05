@@ -7,6 +7,12 @@ Class {
 	#category : #'DM-Match-Request-Model'
 }
 
+{ #category : #accessing }
+ChargeManaRequest class >> actionDescription [
+
+	^ 'Charge Mana'
+]
+
 { #category : #'instance creation' }
 ChargeManaRequest class >> chargingManaWith: aCard [
 
@@ -16,11 +22,17 @@ ChargeManaRequest class >> chargingManaWith: aCard [
 { #category : #accessing }
 ChargeManaRequest >> actionDescription [
 
-	^ 'Charge Mana'
+	^ self class actionDescription
 ]
 
 { #category : #initialization }
 ChargeManaRequest >> initializeChargingManaWith: aCard [
 
 	card := aCard
+]
+
+{ #category : #testing }
+ChargeManaRequest >> isAllowedIn: aStep [
+
+	^ aStep allows: self
 ]
