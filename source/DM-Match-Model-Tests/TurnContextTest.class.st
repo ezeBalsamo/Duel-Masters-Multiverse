@@ -153,6 +153,24 @@ TurnContextTest >> test07ChargeManaOfTurnPlayer [
 	self assertTheOnlyOneIn: ( match manaOf: self turnPlayer ) is: card
 ]
 
+{ #category : #'tests - charge mana' }
+TurnContextTest >> test08TurnPlayerCantChargeManaMoreThanOnceInTheSameTurn [
+
+	| request turnPlayerMana |
+
+	self test07ChargeManaOfTurnPlayer.
+
+	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
+
+	turnPlayerMana := match manaOf: self turnPlayer.
+
+	self
+		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'Mana can only be charged once per turn.';
+		assertCollection: ( match manaOf: self turnPlayer ) equals: turnPlayerMana
+]
+
 { #category : #'private - accessing' }
 TurnContextTest >> turnPlayer [
 
