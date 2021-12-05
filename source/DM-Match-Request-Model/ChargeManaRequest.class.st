@@ -19,6 +19,12 @@ ChargeManaRequest class >> chargingManaWith: aCard [
 	^ self new initializeChargingManaWith: aCard
 ]
 
+{ #category : #executing }
+ChargeManaRequest >> executeOn: aMatch [
+
+	aMatch chargeManaOf: aMatch currentPlayer with: card
+]
+
 { #category : #initialization }
 ChargeManaRequest >> initializeChargingManaWith: aCard [
 

@@ -16,6 +16,12 @@ MatchRequest >> actionDescription [
 	^ self class actionDescription
 ]
 
+{ #category : #executing }
+MatchRequest >> executeOn: aMatch [
+
+	self subclassResponsibility
+]
+
 { #category : #testing }
 MatchRequest >> isAllowedIn: aStep [
 

@@ -140,6 +140,19 @@ TurnContextTest >> test06TurnPlayerCantChargeManaBeforeDrawingCard [
 		because: 'You can''t Charge Mana in the Draw Card Step.'
 ]
 
+{ #category : #'tests - charge mana' }
+TurnContextTest >> test07ChargeManaOfTurnPlayer [
+
+	| card request |
+
+	card := self immortalBaronVorg.
+	request := ChargeManaRequest chargingManaWith: card.
+
+	self assertEmpty: ( match manaOf: self turnPlayer ).
+	turnContext execute: request requestedBy: self turnPlayer.
+	self assertTheOnlyOneIn: ( match manaOf: self turnPlayer ) is: card
+]
+
 { #category : #'private - accessing' }
 TurnContextTest >> turnPlayer [
 
