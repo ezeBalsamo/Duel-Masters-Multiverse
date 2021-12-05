@@ -65,25 +65,33 @@ TurnContextTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anError
 { #category : #'tests - draw card' }
 TurnContextTest >> test01NonTurnPlayerCantDrawCard [
 
-	| request |
+	| request numberOfCardsInHand |
 
 	request := DrawCardRequest new.
 
-	self should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
+	numberOfCardsInHand := match numberOfCardsInHandOf: self nonTurnPlayer.
+
+	self
+		should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
-		because: 'You can''t Draw Card on your opponent''s turn.'
+		because: 'You can''t Draw Card on your opponent''s turn.';
+		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: numberOfCardsInHand
 ]
 
 { #category : #'tests - draw card' }
 TurnContextTest >> test02TurnPlayerCantDrawCardOnFirstTurn [
 
-	| request |
+	| request numberOfCardsInHand |
 
 	request := DrawCardRequest new.
 
-	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
+	numberOfCardsInHand := match numberOfCardsInHandOf: self turnPlayer.
+
+	self
+		should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Draw Card in the Charge Mana Step.'
+		because: 'You can''t Draw Card in the Charge Mana Step.';
+		assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand
 ]
 
 { #category : #'tests - draw card' }
@@ -103,15 +111,19 @@ TurnContextTest >> test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst [
 { #category : #'tests - draw card' }
 TurnContextTest >> test04TurnPlayerCantDrawCardMoreThanOnceInTheSameTurn [
 
-	| request |
+	| request numberOfCardsInHand |
 
 	self test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst.
 
 	request := DrawCardRequest new.
 
-	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
+	numberOfCardsInHand := match numberOfCardsInHandOf: self turnPlayer.
+
+	self
+		should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'Only one card can be drawn per turn.'
+		because: 'Only one card can be drawn per turn.';
+		assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand
 ]
 
 { #category : #'tests - charge mana' }
