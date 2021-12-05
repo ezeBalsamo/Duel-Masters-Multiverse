@@ -67,3 +67,16 @@ DrawCardRequestTest >> test04TurnPlayerCantDrawCardMoreThanOnceInTheSameTurn [
 		because: 'Only one card can be drawn per turn.';
 		assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand
 ]
+
+{ #category : #tests }
+DrawCardRequestTest >> test05PlayerCanDrawCardEveryTurn [
+
+	self test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst.
+
+	2 timesRepeat: [ 
+		match endTurnOf: self turnPlayer.
+		turnContext endTurn
+		].
+
+	self test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst
+]
