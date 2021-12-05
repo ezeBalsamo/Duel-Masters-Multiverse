@@ -16,10 +16,22 @@ IllegalPlay class >> from: aPlayer because: anErrorDescription [
 		signal
 ]
 
+{ #category : #accessing }
+IllegalPlay >> errorDescription [
+
+	^ errorDescription
+]
+
 { #category : #initialization }
 IllegalPlay >> initializeFrom: aPlayer because: anErrorDescription [
 
 	player := aPlayer.
 	errorDescription := anErrorDescription.
 	self messageText: ( '<1p>: <2s>' expandMacrosWith: player with: anErrorDescription )
+]
+
+{ #category : #accessing }
+IllegalPlay >> player [
+
+	^ player
 ]
