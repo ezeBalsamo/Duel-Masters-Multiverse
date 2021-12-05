@@ -75,6 +75,20 @@ TurnContextTest >> test02DrawCardForTurnPlayerOnFirstTurn [
 		because: 'You can''t Draw Card in the Charge Mana Step.'
 ]
 
+{ #category : #tests }
+TurnContextTest >> test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst [
+
+	| request numberOfCardsInHand |
+
+	request := DrawCardRequest new.
+
+	match endTurnOf: self turnPlayer.
+	turnContext endTurn.
+	numberOfCardsInHand := match numberOfCardsInHandOf: self turnPlayer.
+	turnContext execute: request requestedBy: self turnPlayer.
+	self assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand + 1
+]
+
 { #category : #'private - accessing' }
 TurnContextTest >> turnPlayer [
 
