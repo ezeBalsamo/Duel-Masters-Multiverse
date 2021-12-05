@@ -129,27 +129,36 @@ TurnContextTest >> test04TurnPlayerCantDrawCardMoreThanOnceInTheSameTurn [
 { #category : #'tests - charge mana' }
 TurnContextTest >> test05NonTurnPlayerCantChargeMana [
 
-	| request |
+	| request mana |
 
 	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
 
-	self should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
+	mana := match manaOf: self nonTurnPlayer.
+
+	self
+		should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
-		because: 'You can''t Charge Mana on your opponent''s turn.'
+		because: 'You can''t Charge Mana on your opponent''s turn.';
+		assertCollection: ( match manaOf: self nonTurnPlayer ) equals: mana
 ]
 
 { #category : #'tests - charge mana' }
 TurnContextTest >> test06TurnPlayerCantChargeManaBeforeDrawingCard [
 
-	| request |
+	| request mana |
 
 	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
-	
+
 	match endTurnOf: self turnPlayer.
 	turnContext endTurn.
-	self should: [ turnContext execute: request requestedBy: self turnPlayer ]
+
+	mana := match manaOf: self turnPlayer.
+
+	self
+		should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Charge Mana in the Draw Card Step.'
+		because: 'You can''t Charge Mana in the Draw Card Step.';
+		assertCollection: ( match manaOf: self turnPlayer ) equals: mana
 ]
 
 { #category : #'tests - charge mana' }
@@ -168,19 +177,19 @@ TurnContextTest >> test07ChargeManaOfTurnPlayer [
 { #category : #'tests - charge mana' }
 TurnContextTest >> test08TurnPlayerCantChargeManaMoreThanOnceInTheSameTurn [
 
-	| request turnPlayerMana |
+	| request mana |
 
 	self test07ChargeManaOfTurnPlayer.
 
 	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
 
-	turnPlayerMana := match manaOf: self turnPlayer.
+	mana := match manaOf: self turnPlayer.
 
 	self
 		should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'Mana can only be charged once per turn.';
-		assertCollection: ( match manaOf: self turnPlayer ) equals: turnPlayerMana
+		assertCollection: ( match manaOf: self turnPlayer ) equals: mana
 ]
 
 { #category : #'private - accessing' }
