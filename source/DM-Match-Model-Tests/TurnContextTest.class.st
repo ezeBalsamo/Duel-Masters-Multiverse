@@ -62,7 +62,7 @@ TurnContextTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anError
 		]
 ]
 
-{ #category : #tests }
+{ #category : #'tests - draw card' }
 TurnContextTest >> test01NonTurnPlayerCantDrawCard [
 
 	| request |
@@ -74,7 +74,7 @@ TurnContextTest >> test01NonTurnPlayerCantDrawCard [
 		because: 'You can''t Draw Card on your opponent''s turn.'
 ]
 
-{ #category : #tests }
+{ #category : #'tests - draw card' }
 TurnContextTest >> test02TurnPlayerCantDrawCardOnFirstTurn [
 
 	| request |
@@ -86,7 +86,7 @@ TurnContextTest >> test02TurnPlayerCantDrawCardOnFirstTurn [
 		because: 'You can''t Draw Card in the Charge Mana Step.'
 ]
 
-{ #category : #tests }
+{ #category : #'tests - draw card' }
 TurnContextTest >> test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst [
 
 	| request numberOfCardsInHand |
@@ -100,7 +100,7 @@ TurnContextTest >> test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst [
 	self assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand + 1
 ]
 
-{ #category : #tests }
+{ #category : #'tests - draw card' }
 TurnContextTest >> test04TurnPlayerCantDrawCardMoreThanOnceInTheSameTurn [
 
 	| request |
@@ -114,7 +114,7 @@ TurnContextTest >> test04TurnPlayerCantDrawCardMoreThanOnceInTheSameTurn [
 		because: 'You can''t Draw Card in the Charge Mana Step.'
 ]
 
-{ #category : #tests }
+{ #category : #'tests - charge mana' }
 TurnContextTest >> test05NonTurnPlayerCantChargeMana [
 
 	| request |
