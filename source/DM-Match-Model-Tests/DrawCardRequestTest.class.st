@@ -16,7 +16,7 @@ DrawCardRequestTest >> test01NonTurnPlayerCantDrawCard [
 	self
 		should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
-		because: 'You can''t Draw Card on your opponent''s turn.';
+		because: 'You can''t Draw a card on your opponent''s turn.';
 		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: numberOfCardsInHand
 ]
 
@@ -32,7 +32,7 @@ DrawCardRequestTest >> test02TurnPlayerCantDrawCardOnFirstTurn [
 	self
 		should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Draw Card in the Charge Mana Step.';
+		because: 'You can''t Draw a card in the Charge Mana Step.';
 		assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand
 ]
 

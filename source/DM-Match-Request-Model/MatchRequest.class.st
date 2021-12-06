@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 MatchRequest class >> actionDescription [
 
-	self subclassResponsibility
+	^ PlayerActionDescriptions summonCreature
 ]
 
 { #category : #accessing }

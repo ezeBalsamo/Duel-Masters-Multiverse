@@ -16,7 +16,7 @@ ChargeManaRequestTest >> test01NonTurnPlayerCantChargeMana [
 	self
 		should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
-		because: 'You can''t Charge Mana on your opponent''s turn.';
+		because: 'You can''t Charge mana on your opponent''s turn.';
 		assertCollection: ( match manaOf: self nonTurnPlayer ) equals: mana
 ]
 
@@ -35,7 +35,7 @@ ChargeManaRequestTest >> test02TurnPlayerCantChargeManaBeforeDrawingCard [
 	self
 		should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Charge Mana in the Draw Card Step.';
+		because: 'You can''t Charge mana in the Draw Card Step.';
 		assertCollection: ( match manaOf: self turnPlayer ) equals: mana
 ]
 

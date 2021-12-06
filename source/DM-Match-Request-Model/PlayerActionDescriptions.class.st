@@ -7,11 +7,17 @@ Class {
 { #category : #accessing }
 PlayerActionDescriptions class >> chargeMana [
 
-	^ 'Charge Mana'
+	^ 'Charge mana'
 ]
 
 { #category : #accessing }
 PlayerActionDescriptions class >> drawCard [
 
-	^ 'Draw Card'
+	^ 'Draw a card'
+]
+
+{ #category : #accessing }
+PlayerActionDescriptions class >> summonCreature [
+
+	^ 'Summon a creature'
 ]
