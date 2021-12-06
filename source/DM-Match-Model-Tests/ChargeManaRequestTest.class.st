@@ -7,36 +7,32 @@ Class {
 { #category : #tests }
 ChargeManaRequestTest >> test01NonTurnPlayerCantChargeMana [
 
-	| request mana |
+	| request |
 
 	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
-
-	mana := match manaOf: self nonTurnPlayer.
 
 	self
 		should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
 		because: 'You can''t Charge mana on your opponent''s turn.';
-		assertCollection: ( match manaOf: self nonTurnPlayer ) equals: mana
+		assertEmpty: ( match manaOf: self nonTurnPlayer )
 ]
 
 { #category : #tests }
 ChargeManaRequestTest >> test02TurnPlayerCantChargeManaBeforeDrawingCard [
 
-	| request mana |
+	| request |
 
 	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
 
 	match endTurnOf: self turnPlayer.
 	turnContext endTurn.
 
-	mana := match manaOf: self turnPlayer.
-
 	self
 		should: [ turnContext execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Charge mana in the Draw Card Step.';
-		assertCollection: ( match manaOf: self turnPlayer ) equals: mana
+		assertEmpty: ( match manaOf: self turnPlayer )
 ]
 
 { #category : #tests }
