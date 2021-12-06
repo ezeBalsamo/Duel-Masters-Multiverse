@@ -403,6 +403,25 @@ BaselineOfDuelMasters >> matchModelTestsPackage [
 ]
 
 { #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> matchRequestModelPackage [
+
+	^ self modelPackageNamed: 'DM-Match-Request'
+		  requiringAll:
+		  ( Array 
+				with: ( self modelPackageNameFor: 'DM-Step' )
+			   with: ( self modelPackageNameFor: 'DM-Match' ) )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> matchRequestModelTestsPackage [
+
+	| matchModelPackageName |
+
+	matchModelPackageName := self modelPackageNameFor: 'DM-Match-Request'.
+	^ self testsPackageNamed: matchModelPackageName requiring: matchModelPackageName
+]
+
+{ #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> metaprogrammingModelPackage [
 
 	^ self
@@ -460,21 +479,23 @@ BaselineOfDuelMasters >> modelPackageNames [
 BaselineOfDuelMasters >> modelPackages [
 
 	^ OrderedCollection new
-		add: self civilizationModelPackage;
-		add: self raceModelPackage;
-		add: self cardModelPackage;
-		add: self matchModelPackage;
-		add: self repositoryProviderSystemModelPackage;
-		add: self civilizationManagementSystemModelPackage;
-		add: self raceManagementSystemModelPackage;
-		add: self cardManagementSystemModelPackage;
-		add: self cardModuleModelPackage;
-		add: self repositoryProviderModuleModelPackage;
-		add: self installationModelPackage;
-		add: self exceptionModelPackage;
-		add: self metaprogrammingModelPackage;
-		add: self wikitextParsingModelPackage;
-		yourself
+		  add: self civilizationModelPackage;
+		  add: self raceModelPackage;
+		  add: self cardModelPackage;
+		  add: self matchRequestModelPackage;
+		  add: self stepModelPackage;
+		  add: self matchModelPackage;
+		  add: self repositoryProviderSystemModelPackage;
+		  add: self civilizationManagementSystemModelPackage;
+		  add: self raceManagementSystemModelPackage;
+		  add: self cardManagementSystemModelPackage;
+		  add: self cardModuleModelPackage;
+		  add: self repositoryProviderModuleModelPackage;
+		  add: self installationModelPackage;
+		  add: self exceptionModelPackage;
+		  add: self metaprogrammingModelPackage;
+		  add: self wikitextParsingModelPackage;
+		  yourself
 ]
 
 { #category : #'private - model package accessing' }
@@ -677,6 +698,12 @@ BaselineOfDuelMasters >> setUpPackagesIn: aSpec [
 	self packages do: [ :package | self configure: package asPackageIn: aSpec ]
 ]
 
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> stepModelPackage [
+
+	^ self modelPackageNamed: 'DM-Step' requiringAll: #(  )
+]
+
 { #category : #'private - dependencies accessing' }
 BaselineOfDuelMasters >> superluminalDependency [
 
@@ -722,25 +749,26 @@ BaselineOfDuelMasters >> testPackageNames [
 BaselineOfDuelMasters >> testPackages [
 
 	^ OrderedCollection new
-		add: self civilizationModelTestsPackage;
-		add: self raceModelTestsPackage;
-		add: self cardModelTestsPackage;
-		add: self matchModelTestsPackage;
-		add: self repositoryProviderSystemModelTestsPackage;
-		add: self civilizationManagementSystemModelTestsPackage;
-		add: self raceManagementSystemModelTestsPackage;
-		add: self cardManagementSystemModelTestsPackage;
-		add: self repositoryProviderModuleModelTestsPackage;
-		add: self cardModuleModelTestsPackage;
-		add: self installationModelTestsPackage;
-		add: self exceptionModelTestsPackage;
-		add: self metaprogrammingModelTestsPackage;
-		add: self wikitextParsingModelTestsPackage;
-		add: self dependentSUnitTestsPackage;
-		add: self saganExtensionsTestsPackage;
-		add: self toolDependencyAnalyserCoreExtensionsTestsPackage;
-		add: self developmentSupportTestsPackage;
-		yourself
+		  add: self civilizationModelTestsPackage;
+		  add: self raceModelTestsPackage;
+		  add: self cardModelTestsPackage;
+		  add: self matchRequestModelTestsPackage;
+		  add: self matchModelTestsPackage;
+		  add: self repositoryProviderSystemModelTestsPackage;
+		  add: self civilizationManagementSystemModelTestsPackage;
+		  add: self raceManagementSystemModelTestsPackage;
+		  add: self cardManagementSystemModelTestsPackage;
+		  add: self repositoryProviderModuleModelTestsPackage;
+		  add: self cardModuleModelTestsPackage;
+		  add: self installationModelTestsPackage;
+		  add: self exceptionModelTestsPackage;
+		  add: self metaprogrammingModelTestsPackage;
+		  add: self wikitextParsingModelTestsPackage;
+		  add: self dependentSUnitTestsPackage;
+		  add: self saganExtensionsTestsPackage;
+		  add: self toolDependencyAnalyserCoreExtensionsTestsPackage;
+		  add: self developmentSupportTestsPackage;
+		  yourself
 ]
 
 { #category : #'private - test packages accessing' }

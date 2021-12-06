@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'match',
 		'canCardBeDrawn',
-		'currentStep'
+		'currentStep',
+		'canManaBeCharged'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -15,41 +16,70 @@ TurnContext class >> within: aMatch [
 	^ self new initializeWithin: aMatch
 ]
 
+{ #category : #testing }
+TurnContext >> canCardBeDrawn [
+
+	^ match canCardBeDrawn
+]
+
+{ #category : #testing }
+TurnContext >> canManaBeCharged [
+
+	^ canManaBeCharged
+]
+
 { #category : #processing }
 TurnContext >> changeCurrentStepTo: aTurnStep [
 
 	currentStep := aTurnStep
 ]
 
+{ #category : #accessing }
+TurnContext >> currentPlayer [
+
+	^ match currentPlayer
+]
+
+{ #category : #accessing }
+TurnContext >> currentStep [
+
+	^ currentStep
+]
+
 { #category : #processing }
 TurnContext >> endTurn [
 
-	canCardBeDrawn := true.
-	self changeCurrentStepTo: DrawCardStep new
+	self
+		changeCurrentStepTo: DrawCardStep new;
+		manaCanBeCharged
 ]
 
 { #category : #executing }
 TurnContext >> execute: aRequest requestedBy: aPlayer [
 
-	[ 
-	IllegalPlay from: aPlayer
-		because:
-		( 'You can''t <1s> on your opponent''s turn.' expandMacrosWith: aRequest actionDescription )
-	] unless: match currentPlayer = aPlayer.
+	( RequestExecutionAssertion for: aRequest requestedBy: aPlayer workingWith: self ) assert.
 
-	[ 
-	IllegalPlay from: aPlayer
-		because:
-		( 'You can''t <1s> in the <2p>.' expandMacrosWith: aRequest actionDescription with: currentStep )
-	] unless: ( aRequest isAllowedIn: currentStep ) inWhichCase: [ aRequest executeOn: match ].
-
-	canCardBeDrawn := false
+	aRequest executeOn: match
 ]
 
 { #category : #initialization }
 TurnContext >> initializeWithin: aMatch [
 
 	match := aMatch.
-	canCardBeDrawn := false.
-	self changeCurrentStepTo: ChargeManaStep new
+
+	self
+		manaCanBeCharged;
+		changeCurrentStepTo: ChargeManaStep new
+]
+
+{ #category : #initialization }
+TurnContext >> manaCanBeCharged [
+
+	canManaBeCharged := true
+]
+
+{ #category : #processing }
+TurnContext >> manaHasBeenCharged [
+
+	canManaBeCharged := false
 ]

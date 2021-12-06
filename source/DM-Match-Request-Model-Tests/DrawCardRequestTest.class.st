@@ -1,7 +1,7 @@
 Class {
 	#name : #DrawCardRequestTest,
-	#superclass : #TurnContextTest,
-	#category : #'DM-Match-Model-Tests'
+	#superclass : #MatchRequestTest,
+	#category : #'DM-Match-Request-Model-Tests'
 }
 
 { #category : #tests }
@@ -14,7 +14,7 @@ DrawCardRequestTest >> test01NonTurnPlayerCantDrawCard [
 	numberOfCardsInHand := match numberOfCardsInHandOf: self nonTurnPlayer.
 
 	self
-		should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
+		should: [ match execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
 		because: 'You can''t Draw a card on your opponent''s turn.';
 		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: numberOfCardsInHand
@@ -30,7 +30,7 @@ DrawCardRequestTest >> test02TurnPlayerCantDrawCardOnFirstTurn [
 	numberOfCardsInHand := match numberOfCardsInHandOf: self turnPlayer.
 
 	self
-		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Draw a card in the Charge Mana Step.';
 		assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand
@@ -44,9 +44,8 @@ DrawCardRequestTest >> test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst [
 	request := DrawCardRequest new.
 
 	match endTurnOf: self turnPlayer.
-	turnContext endTurn.
 	numberOfCardsInHand := match numberOfCardsInHandOf: self turnPlayer.
-	turnContext execute: request requestedBy: self turnPlayer.
+	match execute: request requestedBy: self turnPlayer.
 	self assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand + 1
 ]
 
@@ -62,7 +61,7 @@ DrawCardRequestTest >> test04TurnPlayerCantDrawCardMoreThanOnceInTheSameTurn [
 	numberOfCardsInHand := match numberOfCardsInHandOf: self turnPlayer.
 
 	self
-		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'Only one card can be drawn per turn.';
 		assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand
@@ -73,10 +72,7 @@ DrawCardRequestTest >> test05PlayerCanDrawCardEveryTurn [
 
 	self test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst.
 
-	2 timesRepeat: [ 
-		match endTurnOf: self turnPlayer.
-		turnContext endTurn
-		].
+	2 timesRepeat: [ match endTurnOf: self turnPlayer ].
 
 	self test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst
 ]

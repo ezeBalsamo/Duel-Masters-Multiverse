@@ -1,7 +1,7 @@
 Class {
 	#name : #ChargeManaRequestTest,
-	#superclass : #TurnContextTest,
-	#category : #'DM-Match-Model-Tests'
+	#superclass : #MatchRequestTest,
+	#category : #'DM-Match-Request-Model-Tests'
 }
 
 { #category : #tests }
@@ -12,7 +12,7 @@ ChargeManaRequestTest >> test01NonTurnPlayerCantChargeMana [
 	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
 
 	self
-		should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
+		should: [ match execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
 		because: 'You can''t Charge mana on your opponent''s turn.';
 		assertEmpty: ( match manaOf: self nonTurnPlayer )
@@ -26,10 +26,9 @@ ChargeManaRequestTest >> test02TurnPlayerCantChargeManaBeforeDrawingCard [
 	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
 
 	match endTurnOf: self turnPlayer.
-	turnContext endTurn.
 
 	self
-		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Charge mana in the Draw Card Step.';
 		assertEmpty: ( match manaOf: self turnPlayer )
@@ -44,7 +43,7 @@ ChargeManaRequestTest >> test03ChargeManaOfTurnPlayer [
 	request := ChargeManaRequest chargingManaWith: card.
 
 	self deny: ( match manaOf: self turnPlayer ) includes: card.
-	turnContext execute: request requestedBy: self turnPlayer.
+	match execute: request requestedBy: self turnPlayer.
 	self assert: ( match manaOf: self turnPlayer ) includes: card
 ]
 
@@ -60,7 +59,7 @@ ChargeManaRequestTest >> test04TurnPlayerCantChargeManaMoreThanOnceInTheSameTurn
 	mana := match manaOf: self turnPlayer.
 
 	self
-		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'Mana can only be charged once per turn.';
 		assertCollection: ( match manaOf: self turnPlayer ) equals: mana
@@ -71,14 +70,10 @@ ChargeManaRequestTest >> test05PlayerCanChargeManaEveryTurn [
 
 	self test03ChargeManaOfTurnPlayer.
 
-	2 timesRepeat: [ 
-		match endTurnOf: self turnPlayer.
-		turnContext endTurn
-		].
+	2 timesRepeat: [ match endTurnOf: self turnPlayer ].
 
-	turnContext
-		execute: DrawCardRequest new requestedBy: self turnPlayer;
-		changeCurrentStepTo: ChargeManaStep new.
+	match execute: DrawCardRequest new requestedBy: self turnPlayer.
+	self changeCurrentStepTo: ChargeManaStep new.
 
 	self test03ChargeManaOfTurnPlayer
 ]

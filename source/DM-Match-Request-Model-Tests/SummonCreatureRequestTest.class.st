@@ -1,7 +1,7 @@
 Class {
 	#name : #SummonCreatureRequestTest,
-	#superclass : #TurnContextTest,
-	#category : #'DM-Match-Model-Tests'
+	#superclass : #MatchRequestTest,
+	#category : #'DM-Match-Request-Model-Tests'
 }
 
 { #category : #tests }
@@ -13,7 +13,7 @@ SummonCreatureRequestTest >> test01NonTurnPlayerCantSummonCreature [
 
 	self
 		assertEmpty: ( match summonedCreaturesOf: self nonTurnPlayer );
-		should: [ turnContext execute: request requestedBy: self nonTurnPlayer ]
+		should: [ match execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
 		because: 'You can''t Summon a creature on your opponent''s turn.';
 		assertEmpty: ( match summonedCreaturesOf: self nonTurnPlayer )
@@ -27,11 +27,10 @@ SummonCreatureRequestTest >> test02TurnPlayerCantSummonCreatureBeforeDrawingCard
 	request := SummonCreatureRequest summoning: self immortalBaronVorg tappingAll: #(  ).
 
 	match endTurnOf: self turnPlayer.
-	turnContext endTurn.
 
 	self
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
-		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Summon a creature in the Draw Card Step.';
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
@@ -46,7 +45,7 @@ SummonCreatureRequestTest >> test03TurnPlayerCantSummonCreatureInTheChargeManaSt
 
 	self
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
-		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Summon a creature in the Charge Mana Step.';
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
@@ -58,12 +57,11 @@ SummonCreatureRequestTest >> test04TurnPlayerCantSummonCreatureWithoutTappingMan
 	| request |
 
 	request := SummonCreatureRequest summoning: self immortalBaronVorg tappingAll: #(  ).
-	
-	turnContext changeCurrentStepTo: MainStep new.
 
 	self
+		changeCurrentStepTo: MainStep new;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
-		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Summon a creature without tapping mana.';
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )

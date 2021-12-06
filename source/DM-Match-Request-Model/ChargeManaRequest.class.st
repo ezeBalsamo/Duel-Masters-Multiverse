@@ -22,7 +22,7 @@ ChargeManaRequest class >> chargingManaWith: aCard [
 { #category : #executing }
 ChargeManaRequest >> executeOn: aMatch [
 
-	aMatch chargeManaOf: aMatch currentPlayer with: card
+	aMatch chargeManaWith: card
 ]
 
 { #category : #initialization }

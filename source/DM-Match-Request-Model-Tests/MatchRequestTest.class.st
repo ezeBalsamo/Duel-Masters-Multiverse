@@ -2,25 +2,28 @@
 A TurnContextTest is a test class for testing the behavior of TurnContext
 "
 Class {
-	#name : #TurnContextTest,
+	#name : #MatchRequestTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'turnContext',
-		'shobu',
-		'knight',
 		'match'
 	],
-	#category : #'DM-Match-Model-Tests'
+	#category : #'DM-Match-Request-Model-Tests'
 }
 
 { #category : #testing }
-TurnContextTest class >> isAbstract [
+MatchRequestTest class >> isAbstract [
 
-	^ self = TurnContextTest
+	^ self = MatchRequestTest
+]
+
+{ #category : #'private - processing' }
+MatchRequestTest >> changeCurrentStepTo: aTurnStep [
+
+	match execute: ( ChangeCurrentStepRequest changingTo: aTurnStep ) requestedBy: self turnPlayer
 ]
 
 { #category : #'private - accessing' }
-TurnContextTest >> immortalBaronVorg [
+MatchRequestTest >> immortalBaronVorg [
 
 	^ CreatureCard named: 'Immortal Baron, Vorg'
 		  from: ( Civilization named: 'Fire' )
@@ -31,35 +34,36 @@ TurnContextTest >> immortalBaronVorg [
 ]
 
 { #category : #'private - accessing' }
-TurnContextTest >> knightDeck [
+MatchRequestTest >> knightDeck [
 
 	^ ( ( 1 to: 15 ) collect: #asString ) asOrderedCollection
 ]
 
 { #category : #'private - accessing' }
-TurnContextTest >> nonTurnPlayer [
+MatchRequestTest >> nonTurnPlayer [
 
 	^ match opponentOf: self turnPlayer
 ]
 
 { #category : #running }
-TurnContextTest >> setUp [
+MatchRequestTest >> setUp [
+
+	| shobu knight |
 
 	super setUp.
 	shobu := Duelist named: 'Shobu' using: self shobuDeck.
 	knight := Duelist named: 'Knight' using: self knightDeck.
-	match := Match between: shobu and: knight.
-	turnContext := TurnContext within: match
+	match := Match between: shobu and: knight
 ]
 
 { #category : #'private - accessing' }
-TurnContextTest >> shobuDeck [
+MatchRequestTest >> shobuDeck [
 
 	^ ( ( 1 to: 15 ) collect: #asString ) asOrderedCollection
 ]
 
 { #category : #'private - asserting' }
-TurnContextTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anErrorDescription [
+MatchRequestTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anErrorDescription [
 
 	self should: aBlock raise: IllegalPlay withExceptionDo: [ :signal | 
 		self
@@ -69,7 +73,7 @@ TurnContextTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anError
 ]
 
 { #category : #'private - accessing' }
-TurnContextTest >> turnPlayer [
+MatchRequestTest >> turnPlayer [
 
 	^ match currentPlayer
 ]

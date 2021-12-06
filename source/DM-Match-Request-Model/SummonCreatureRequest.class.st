@@ -8,6 +8,12 @@ Class {
 	#category : #'DM-Match-Request-Model'
 }
 
+{ #category : #accessing }
+SummonCreatureRequest class >> actionDescription [
+
+	^ PlayerActionDescriptions summonCreature
+]
+
 { #category : #'instance creation' }
 SummonCreatureRequest class >> summoning: aCreatureCard tappingAll: aCardCollection [
 

@@ -13,5 +13,5 @@ DrawCardRequest class >> actionDescription [
 { #category : #executing }
 DrawCardRequest >> executeOn: aMatch [
 
-	aMatch drawCardFor: aMatch currentPlayer
+	aMatch drawCard
 ]

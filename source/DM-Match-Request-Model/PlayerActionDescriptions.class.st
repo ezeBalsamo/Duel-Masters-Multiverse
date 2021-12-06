@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #accessing }
+PlayerActionDescriptions class >> changeCurrentStep [
+
+	^ 'Change current step'
+]
+
+{ #category : #accessing }
 PlayerActionDescriptions class >> chargeMana [
 
 	^ 'Charge mana'

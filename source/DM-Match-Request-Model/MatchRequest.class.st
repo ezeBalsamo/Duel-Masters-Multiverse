@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 MatchRequest class >> actionDescription [
 
-	^ PlayerActionDescriptions summonCreature
+	self subclassResponsibility
 ]
 
 { #category : #accessing }
@@ -25,5 +25,5 @@ MatchRequest >> executeOn: aMatch [
 { #category : #testing }
 MatchRequest >> isAllowedIn: aStep [
 
-	^ aStep allowsExecutionOf: self
+	^ aStep allowsActionDescribedAs: self actionDescription
 ]
