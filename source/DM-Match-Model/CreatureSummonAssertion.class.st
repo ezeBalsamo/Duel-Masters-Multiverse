@@ -36,7 +36,7 @@ CreatureSummonAssertion >> assertCardsIn: aCardCollection belongToUntappedManaOf
 
 	match
 		signalIllegalPlayFrom: aPlayer
-		because: 'You haven''t selected cards to tap.'
+		because: 'You can''t Summon a creature without tapping mana.'
 		unless: aCardCollection notEmpty.
 
 	aCardCollection

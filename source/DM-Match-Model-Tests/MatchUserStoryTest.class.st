@@ -290,7 +290,7 @@ MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutTappingMana [
 	self
 		should: [ match summon: tulkTheOracle of: shobu tappingAll: #() ]
 		raise: IllegalPlay
-		withMessageText: 'Shobu: You haven''t selected cards to tap.'.
+		withMessageText: 'Shobu: You can''t Summon a creature without tapping mana.'.
 
 	self
 		assert: ( match manaOf: shobu ) isEmpty;

@@ -25,5 +25,5 @@ MatchRequest >> executeOn: aMatch [
 { #category : #testing }
 MatchRequest >> isAllowedIn: aStep [
 
-	^ aStep allowsActionDescribedAs: self actionDescription
+	^ aStep allowsExecutionOf: self
 ]

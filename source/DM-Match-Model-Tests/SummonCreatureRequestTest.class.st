@@ -51,3 +51,20 @@ SummonCreatureRequestTest >> test03TurnPlayerCantSummonCreatureInTheChargeManaSt
 		because: 'You can''t Summon a creature in the Charge Mana Step.';
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
+
+{ #category : #tests }
+SummonCreatureRequestTest >> test04TurnPlayerCantSummonCreatureWithoutTappingMana [
+
+	| request |
+
+	request := SummonCreatureRequest summoning: self immortalBaronVorg tappingAll: #(  ).
+	
+	turnContext changeCurrentStepTo: MainStep new.
+
+	self
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
+		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Summon a creature without tapping mana.';
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
+]

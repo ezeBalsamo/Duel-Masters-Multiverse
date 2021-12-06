@@ -16,6 +16,12 @@ TurnStep >> allowsActionDescribedAs: anActionDescription [
 	^ self allowedActionDescriptions includes: anActionDescription
 ]
 
+{ #category : #testing }
+TurnStep >> allowsExecutionOf: aRequest [
+
+	^ self allowsActionDescribedAs: aRequest actionDescription
+]
+
 { #category : #printing }
 TurnStep >> printOn: aStream [
 

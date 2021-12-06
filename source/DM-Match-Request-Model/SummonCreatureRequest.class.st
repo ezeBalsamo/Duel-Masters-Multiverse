@@ -14,6 +14,12 @@ SummonCreatureRequest class >> summoning: aCreatureCard tappingAll: aCardCollect
 	^ self new initializeSummoning: aCreatureCard tappingAll: aCardCollection
 ]
 
+{ #category : #accessing }
+SummonCreatureRequest >> cardsToTap [
+
+	^ cardsToTap
+]
+
 { #category : #initialization }
 SummonCreatureRequest >> initializeSummoning: aCreatureCard tappingAll: aCardCollection [
 
