@@ -1,11 +1,11 @@
 Class {
-	#name : #SummonCreatureTest,
+	#name : #SummonCreatureRequestTest,
 	#superclass : #TurnContextTest,
 	#category : #'DM-Match-Model-Tests'
 }
 
 { #category : #tests }
-SummonCreatureTest >> test01NonTurnPlayerCantSummonCreature [
+SummonCreatureRequestTest >> test01NonTurnPlayerCantSummonCreature [
 
 	| request |
 
