@@ -36,3 +36,18 @@ SummonCreatureRequestTest >> test02TurnPlayerCantSummonCreatureBeforeDrawingCard
 		because: 'You can''t Summon a creature in the Draw Card Step.';
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
+
+{ #category : #tests }
+SummonCreatureRequestTest >> test03TurnPlayerCantSummonCreatureInTheChargeManaStep [
+
+	| request |
+
+	request := SummonCreatureRequest summoning: self immortalBaronVorg tappingAll: #(  ).
+
+	self
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
+		should: [ turnContext execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Summon a creature in the Charge Mana Step.';
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
+]
