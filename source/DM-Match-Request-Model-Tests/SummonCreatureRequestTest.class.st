@@ -76,12 +76,12 @@ SummonCreatureRequestTest >> test05TurnPlayerCantSummonCreatureWhenAtLeastOneCar
 
 	self
 		changeCurrentStepTo: MainStep new;
-		assertEmpty: ( match manaOf: self turnPlayer );
+		assertEmpty: ( match untappedManaOf: self turnPlayer );
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
 		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t tap March because it isn''t in your mana zone.';
-		assertEmpty: ( match manaOf: self turnPlayer );
+		assertEmpty: ( match untappedManaOf: self turnPlayer );
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
 
@@ -97,13 +97,13 @@ SummonCreatureRequestTest >> test06TurnPlayerCantSummonSingleCivilizationCreatur
 	self
 		chargeManaWith: march;
 		changeCurrentStepTo: MainStep new;
-		assertTheOnlyOneIn: ( match manaOf: self turnPlayer ) is: march;
+		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: march;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
 		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because:
 			'You can''t summon Tulk, the Oracle without tapping at least one card from Light civilization from your mana zone.';
-		assertTheOnlyOneIn: ( match manaOf: self turnPlayer ) is: march;
+		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: march;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
 
@@ -123,13 +123,13 @@ SummonCreatureRequestTest >> test07TurnPlayerCantSummonMultipleCivilizationCreat
 	self
 		chargeManaWithAll: cardsToTap;
 		changeCurrentStepTo: MainStep new;
-		assertCollection: ( match manaOf: self turnPlayer ) hasSameElements: cardsToTap;
+		assertCollection: ( match untappedManaOf: self turnPlayer ) hasSameElements: cardsToTap;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
 		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because:
 			'You can''t summon Vorg, Brawler of Hell without tapping at least one card from Fire civilization and Darkness civilization from your mana zone.';
-		assertCollection: ( match manaOf: self turnPlayer ) hasSameElements: cardsToTap;
+		assertCollection: ( match untappedManaOf: self turnPlayer ) hasSameElements: cardsToTap;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
 
