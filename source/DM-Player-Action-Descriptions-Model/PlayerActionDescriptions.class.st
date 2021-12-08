@@ -11,6 +11,12 @@ PlayerActionDescriptions class >> attack [
 ]
 
 { #category : #accessing }
+PlayerActionDescriptions class >> attackCreature [
+
+	^ 'Attack a creature'
+]
+
+{ #category : #accessing }
 PlayerActionDescriptions class >> changeCurrentStep [
 
 	^ 'Change current step'
