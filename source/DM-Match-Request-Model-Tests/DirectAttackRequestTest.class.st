@@ -90,3 +90,23 @@ DirectAttackRequestTest >> test06TurnPlayerCantDirectAttackWithNonBelongingCreat
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t attack with Tulk, the Oracle because it''s not yours.'
 ]
+
+{ #category : #tests }
+DirectAttackRequestTest >> test07TurnPlayerCantDirectAttackWithCreatureThatHasSummoningSickness [
+
+	| march tulkTheOracle request |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	request := DirectAttackRequest attackingWith: tulkTheOracle.
+
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march;
+		changeCurrentStepTo: AttackStep new;
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t attack with Tulk, the Oracle because it has summoning sickness.'
+]
