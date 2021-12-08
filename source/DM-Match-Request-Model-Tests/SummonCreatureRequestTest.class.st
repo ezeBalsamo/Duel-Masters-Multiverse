@@ -88,22 +88,22 @@ SummonCreatureRequestTest >> test05TurnPlayerCantSummonCreatureWhenAtLeastOneCar
 { #category : #tests }
 SummonCreatureRequestTest >> test06TurnPlayerCantSummonSingleCivilizationCreatureWhenAtLeastOneCardToTapIsNotFromThatCivilization [
 
-	| march request |
+	| immortalBaronVorg request |
 
-	march := self march.
+	immortalBaronVorg := self immortalBaronVorg.
 
-	request := SummonCreatureRequest summoning: self tulkTheOracle tapping: march.
+	request := SummonCreatureRequest summoning: self tulkTheOracle tapping: immortalBaronVorg.
 
 	self
-		chargeManaWith: march;
+		chargeManaWith: immortalBaronVorg;
 		changeCurrentStepTo: MainStep new;
-		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: march;
+		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: immortalBaronVorg;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
 		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
 		because:
 			'You can''t summon Tulk, the Oracle without tapping at least one card from Light civilization from your mana zone.';
-		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: march;
+		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: immortalBaronVorg;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
 
@@ -154,4 +154,29 @@ SummonCreatureRequestTest >> test08TurnPlayerCantSummonCreatureWhenTheManaNumber
 			'You have to tap cards whose sum of mana number equals the mana cost of Immortal Baron, Vorg.';
 		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: vocalMegahit;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
+]
+
+{ #category : #tests }
+SummonCreatureRequestTest >> test09SummonCreatureOfTurnPlayer [
+
+	| march tulkTheOracle request |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	request := SummonCreatureRequest summoning: tulkTheOracle tapping: march.
+
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: march;
+		assertEmpty: ( match tappedManaOf: self turnPlayer );
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer ).
+
+	match execute: request requestedBy: self turnPlayer.
+
+	self
+		assertEmpty: ( match untappedManaOf: self turnPlayer );
+		assertTheOnlyOneIn: ( match tappedManaOf: self turnPlayer ) is: march;
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: self turnPlayer ) is: tulkTheOracle
 ]

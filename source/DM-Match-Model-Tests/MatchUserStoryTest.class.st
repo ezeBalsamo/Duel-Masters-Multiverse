@@ -585,37 +585,6 @@ MatchUserStoryTest >> test07TappedCreatureRemainsTappedUntilTheBeginningOfItsOwn
 		assert: ( match tappedCreaturesOf: shobu ) isEmpty
 ]
 
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test07WhenPlayerSummonsSingleCivilizationCreatureThenCardsToTapAreTapped [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
-
-	match chargeManaWith: march.
-
-	self
-		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
-
-	self summon: tulkTheOracle tapping: march.
-
-	self
-		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty
-]
-
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test08PlayerNotBelongingToMatchCantHaveChargedMana [
 

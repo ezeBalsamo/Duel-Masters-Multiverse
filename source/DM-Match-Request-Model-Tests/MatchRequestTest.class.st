@@ -5,7 +5,10 @@ Class {
 	#name : #MatchRequestTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'match'
+		'match',
+		'lightCivilization',
+		'fireCivilization',
+		'darknessCivilization'
 	],
 	#category : #'DM-Match-Request-Model-Tests'
 }
@@ -51,7 +54,7 @@ MatchRequestTest >> drawCard [
 MatchRequestTest >> immortalBaronVorg [
 
 	^ CreatureCard named: 'Immortal Baron, Vorg'
-		  from: ( Civilization named: 'Fire' )
+		  from: fireCivilization
 		  ofType: ( SingleRace ofTypeNamed: 'Human' )
 		  costing: ( DMUnits mana with: 2 )
 		  providing: ( DMUnits mana with: 1 )
@@ -68,7 +71,7 @@ MatchRequestTest >> knightDeck [
 MatchRequestTest >> march [
 
 	^ CreatureCard named: 'March'
-		  from: ( Civilization named: 'Light' )
+		  from: lightCivilization
 		  ofType: ( SingleRace ofTypeNamed: '2016 Calendar' )
 		  costing: ( DMUnits mana with: 3 )
 		  providing: self oneMana
@@ -93,9 +96,18 @@ MatchRequestTest >> setUp [
 	| shobu knight |
 
 	super setUp.
+	self setUpCivilizations.
 	shobu := Duelist named: 'Shobu' using: self shobuDeck.
 	knight := Duelist named: 'Knight' using: self knightDeck.
 	match := Match between: shobu and: knight
+]
+
+{ #category : #'private - running' }
+MatchRequestTest >> setUpCivilizations [
+
+	lightCivilization := Civilization named: 'Light'.
+	fireCivilization := Civilization named: 'Fire'.
+	darknessCivilization := Civilization named: 'Darkness'
 ]
 
 { #category : #'private - accessing' }
@@ -118,7 +130,7 @@ MatchRequestTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anErro
 MatchRequestTest >> tulkTheOracle [
 
 	^ CreatureCard named: 'Tulk, the Oracle'
-		  from: ( Civilization named: 'Light' )
+		  from: lightCivilization
 		  ofType: ( SingleRace ofTypeNamed: 'Light Bringer' )
 		  costing: self oneMana
 		  providing: self oneMana
@@ -135,7 +147,7 @@ MatchRequestTest >> turnPlayer [
 MatchRequestTest >> vocalMegahit [
 
 	^ CreatureCard named: 'Vocal Megahit'
-		  from: ( Civilization named: 'Fire' )
+		  from: fireCivilization
 		  ofType: ( SingleRace ofTypeNamed: 'Beat Jockey' )
 		  costing: ( DMUnits mana with: 5 )
 		  providing: self oneMana
@@ -147,7 +159,7 @@ MatchRequestTest >> vorgBrawlerOfHell [
 
 	^ CreatureCard
 		  named: 'Vorg, Brawler of Hell'
-		  fromAll: ( Array with: ( Civilization named: 'Fire' ) with: ( Civilization named: 'Darkness' ) )
+		  fromAll: ( Array with: fireCivilization with: darknessCivilization )
 		  ofType: ( MultipleRace conformedByAll: ( Array with: ( SingleRace ofTypeNamed: 'Human' )
 					      with: ( SingleRace ofTypeNamed: 'Beat Jockey' )
 					      with: ( SingleRace ofTypeNamed: 'Alien' ) ) )
