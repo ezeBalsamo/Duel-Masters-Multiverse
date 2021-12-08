@@ -349,7 +349,7 @@ MatchUserStoryTest >> test02PlayerCantAttackWithCreatureNotBelongingToHim [
 	self summon: tulkTheOracle tapping: march.
 	match endTurnOf: shobu.
 
-	errorDescription := 'Knight: You can''t attack with Tulk, the Oracle because it''s not on your side of the field.'.
+	errorDescription := 'Knight: You can''t attack with Tulk, the Oracle because it''s not yours.'.
 
 	self
 		should: [ match directAttackFrom: tulkTheOracle of: knight ]

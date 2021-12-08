@@ -48,19 +48,17 @@ Match >> assert: aPlayer canAttackWith: aCreatureCard [
 
 	| errorDescriptionTemplate |
 
-	errorDescriptionTemplate := [ :errorDescription | 
+	errorDescriptionTemplate := [ :reason | 
 	                            'You can''t attack with <1p> because <2s>' expandMacrosWith:
 		                            aCreatureCard
-		                            with: errorDescription ].
+		                            with: reason ].
 
 	self
 		signalIllegalPlayFrom: aPlayer
 		because: [ errorDescriptionTemplate value: 'it''s not summoned.' ]
 		unless: ( self summonedCreatures includes: aCreatureCard );
-		signalIllegalPlayFrom: aPlayer because: [ 
-			'You can''t attack with <1p> because it''s not on your side of the field.' expandMacrosWith:
-					aCreatureCard
-			]
+		signalIllegalPlayFrom: aPlayer
+		because: [ errorDescriptionTemplate value: 'it''s not yours.' ]
 		unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard );
 		assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer;
 		assertIsUntapped: aCreatureCard of: aPlayer

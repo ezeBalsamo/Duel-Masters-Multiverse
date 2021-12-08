@@ -50,6 +50,12 @@ MatchRequestTest >> drawCard [
 	match execute: DrawCardRequest new requestedBy: self turnPlayer
 ]
 
+{ #category : #'private - test support' }
+MatchRequestTest >> endTurn [
+
+	match endTurnOf: self turnPlayer
+]
+
 { #category : #'private - accessing' }
 MatchRequestTest >> immortalBaronVorg [
 
@@ -124,6 +130,13 @@ MatchRequestTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anErro
 			assert: signal player equals: aPlayer;
 			assert: signal errorDescription equals: anErrorDescription
 		]
+]
+
+{ #category : #'private - test support' }
+MatchRequestTest >> summon: aCreatureCard tapping: aCard [
+
+	match execute: ( SummonCreatureRequest summoning: aCreatureCard tapping: aCard )
+		requestedBy: self turnPlayer
 ]
 
 { #category : #'private - accessing' }
