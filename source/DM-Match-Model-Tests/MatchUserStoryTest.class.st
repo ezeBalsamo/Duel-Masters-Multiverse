@@ -356,28 +356,6 @@ MatchUserStoryTest >> test02PlayersBeginTheMatchWithFiveShields [
 		assert: ( match shieldsOf: knight ) size equals: 5
 ]
 
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test03PlayerCantAttackWithCreatureHavingSummoningSickness [
-
-	| march tulkTheOracle errorDescription |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	match chargeManaWith: march.
-	self summon: tulkTheOracle tapping: march.
-
-	errorDescription := 'Shobu: You can''t attack with Tulk, the Oracle because it has summoning sickness.'.
-
-	self
-		should: [ match directAttackFrom: tulkTheOracle of: shobu ]
-		raise: IllegalPlay
-		withMessageText: errorDescription;
-		should: [ match attackFrom: tulkTheOracle of: shobu to: self immortalBaronVorg ]
-		raise: IllegalPlay
-		withMessageText: errorDescription
-]
-
 { #category : #'tests - turn order' }
 MatchUserStoryTest >> test03PlayerNotBelongingToMatchCantEndOpponentsTurn [
 
