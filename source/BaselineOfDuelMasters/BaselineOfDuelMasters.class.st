@@ -427,6 +427,7 @@ BaselineOfDuelMasters >> matchRequestModelTestsPackage [
 		requiringAll: ( 
 			OrderedCollection new
 				add: matchModelPackageName;
+				add: 'DM-SUnit';
 				add: ( self modelPackageNameFor: 'DM-Match' );
 			   add: ( self modelPackageNameFor: 'DM-Step' );
 			   add: ( self modelPackageNameFor: 'DM-Exception' );
