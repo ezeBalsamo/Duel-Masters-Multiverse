@@ -7,7 +7,9 @@ Class {
 { #category : #'private - accessing' }
 MainStep >> allowedActionDescriptions [
 
-	^ { PlayerActionDescriptions summonCreature }
+	^ super allowedActionDescriptions
+		  add: PlayerActionDescriptions summonCreature;
+		  yourself
 ]
 
 { #category : #'private - accessing' }

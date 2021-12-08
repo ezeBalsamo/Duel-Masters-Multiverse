@@ -1,6 +1,6 @@
 Class {
 	#name : #SummonCreatureRequest,
-	#superclass : #MatchRequest,
+	#superclass : #DMRequest,
 	#instVars : [
 		'creatureToSummon',
 		'cardsToTap'

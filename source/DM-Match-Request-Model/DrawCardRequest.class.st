@@ -1,6 +1,6 @@
 Class {
 	#name : #DrawCardRequest,
-	#superclass : #MatchRequest,
+	#superclass : #DMRequest,
 	#category : #'DM-Match-Request-Model'
 }
 

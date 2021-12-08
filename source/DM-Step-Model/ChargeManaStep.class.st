@@ -7,7 +7,9 @@ Class {
 { #category : #'private - accessing' }
 ChargeManaStep >> allowedActionDescriptions [
 
-	^ { PlayerActionDescriptions chargeMana }
+	^ super allowedActionDescriptions
+		  add: PlayerActionDescriptions chargeMana;
+		  yourself
 ]
 
 { #category : #'private - accessing' }

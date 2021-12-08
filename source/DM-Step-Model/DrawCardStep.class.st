@@ -7,7 +7,9 @@ Class {
 { #category : #'private - accessing' }
 DrawCardStep >> allowedActionDescriptions [
 
-	^ { PlayerActionDescriptions drawCard }
+	^ super allowedActionDescriptions
+		  add: PlayerActionDescriptions drawCard;
+		  yourself
 ]
 
 { #category : #'private - accessing' }

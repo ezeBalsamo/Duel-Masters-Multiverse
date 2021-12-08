@@ -60,6 +60,14 @@ Match >> assert: aPlayer canAttackWith: aCreatureCard [
 		assertIsUntapped: aCreatureCard of: aPlayer
 ]
 
+{ #category : #'private - asserting' }
+Match >> assertCardCanBeDrawn [
+
+	self signalIllegalPlayFrom: self currentPlayer
+		because: 'Only one card can be drawn per turn.'
+		unless: self canCardBeDrawn
+]
+
 { #category : #'private - preconditions' }
 Match >> assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer [
 
@@ -67,6 +75,19 @@ Match >> assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer [
 		signalIllegalPlayFrom: aPlayer
 		because: [ 'You can''t attack with <1p> because it has summoning sickness.' expandMacrosWith: aCreatureCard ]
 		unless: ( creaturesHavingSummoningSickness includes: aCreatureCard ) not
+]
+
+{ #category : #'private - asserting' }
+Match >> assertIsAllowedInCurrentStep: aRequest [
+
+	| currentStep |
+
+	currentStep := turnContext currentStep.
+
+	self signalIllegalPlayFrom: self currentPlayer
+		because:
+		( 'You can''t <1s> in the <2p>.' expandMacrosWith: aRequest actionDescription with: currentStep )
+		unless: ( currentStep allowsActionDescribedAs: aRequest actionDescription )
 ]
 
 { #category : #'private - preconditions' }
@@ -83,6 +104,23 @@ Match >> assertIsValidPlayer: aPotentialPlayer [
 
 	^ [ self signalIsNotValidPlayer: aPotentialPlayer ]
 		unless: ( playersTurn includes: aPotentialPlayer )
+]
+
+{ #category : #'private - asserting' }
+Match >> assertManaCanBeCharged [
+
+	self signalIllegalPlayFrom: self currentPlayer
+		because: 'Mana can only be charged once per turn.'
+		unless: turnContext canManaBeCharged
+]
+
+{ #category : #'private - asserting' }
+Match >> assertThatIsItsTurn: aPlayer inOrderToExecute: aRequest [
+
+	self signalIllegalPlayFrom: aPlayer
+		because:
+		( 'You can''t <1s> on your opponent''s turn.' expandMacrosWith: aRequest actionDescription )
+		unless: self currentPlayer = aPlayer
 ]
 
 { #category : #processing }
@@ -120,6 +158,8 @@ Match >> changeCurrentStepTo: aTurnStep [
 
 { #category : #processing }
 Match >> chargeManaWith: aCard [
+
+	self assertManaCanBeCharged.
 
 	( self manaOf: self currentPlayer ) add: aCard.
 	turnContext manaHasBeenCharged
@@ -182,6 +222,8 @@ Match >> drawCard [
 
 	| turnPlayer |
 
+	self assertCardCanBeDrawn.
+
 	turnPlayer := self currentPlayer.
 
 	( self handOf: turnPlayer ) add: turnPlayer drawCard.
@@ -207,7 +249,11 @@ Match >> endTurnOf: aPlayer [
 { #category : #executing }
 Match >> execute: aRequest requestedBy: aPlayer [
 
-	turnContext execute: aRequest requestedBy: aPlayer
+	self
+		assertThatIsItsTurn: aPlayer inOrderToExecute: aRequest;
+		assertIsAllowedInCurrentStep: aRequest.
+
+	aRequest executeOn: self
 ]
 
 { #category : #accessing }

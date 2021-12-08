@@ -378,7 +378,9 @@ BaselineOfDuelMasters >> matchModelPackage [
 		requiringAll:
 			( Array
 				with: ( self modelPackageNameFor: 'DM-Exception' )
-				with: ( self modelPackageNameFor: 'DM-Card' ) )
+				with: ( self modelPackageNameFor: 'DM-Card' )
+				with: ( self modelPackageNameFor: 'DM-Step' )
+				with: ( self modelPackageNameFor: 'DM-Request' ) )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -405,11 +407,13 @@ BaselineOfDuelMasters >> matchModelTestsPackage [
 { #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> matchRequestModelPackage [
 
-	^ self modelPackageNamed: 'DM-Match-Request'
-		  requiringAll:
-		  ( Array 
-				with: ( self modelPackageNameFor: 'DM-Step' )
-			   with: ( self modelPackageNameFor: 'DM-Match' ) )
+	^ self 
+		modelPackageNamed: 'DM-Match-Request'
+		requiringAll: ( 
+			Array
+				with: ( self modelPackageNameFor: 'DM-Player-Action-Descriptions' )
+				with: ( self modelPackageNameFor: 'DM-Request' )
+				with: ( self modelPackageNameFor: 'DM-Match' ) )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -418,7 +422,18 @@ BaselineOfDuelMasters >> matchRequestModelTestsPackage [
 	| matchModelPackageName |
 
 	matchModelPackageName := self modelPackageNameFor: 'DM-Match-Request'.
-	^ self testsPackageNamed: matchModelPackageName requiring: matchModelPackageName
+	^ self 
+		testsPackageNamed: matchModelPackageName 
+		requiringAll: ( 
+			OrderedCollection new
+				add: matchModelPackageName;
+				add: ( self modelPackageNameFor: 'DM-Match' );
+			   add: ( self modelPackageNameFor: 'DM-Step' );
+			   add: ( self modelPackageNameFor: 'DM-Exception' );
+			   add: ( self modelPackageNameFor: 'DM-Card' );
+			   add: ( self modelPackageNameFor: 'DM-Civilization' );
+			   add: ( self modelPackageNameFor: 'DM-Race' );
+			   yourself )
 ]
 
 { #category : #'private - model package accessing' }
@@ -482,6 +497,8 @@ BaselineOfDuelMasters >> modelPackages [
 		  add: self civilizationModelPackage;
 		  add: self raceModelPackage;
 		  add: self cardModelPackage;
+		  add: self playerActionDescriptionsModelPackage;
+		  add: self requestModelPackage;
 		  add: self matchRequestModelPackage;
 		  add: self stepModelPackage;
 		  add: self matchModelPackage;
@@ -550,6 +567,21 @@ BaselineOfDuelMasters >> packages [
 		addAll: self dependentSUnitExtensionsPackages;
 		addAll: self testPackages;
 		yourself
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> playerActionDescriptionsModelPackage [
+
+	^ self modelPackageNamed: 'DM-Player-Action-Descriptions' requiringAll: #(  )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> playerActionDescriptionsModelTestsPackage [
+
+	| modelPackageName |
+
+	modelPackageName := self modelPackageNameFor: 'DM-Player-Action-Descriptions'.
+	^ self testsPackageNamed: modelPackageName requiring: modelPackageName
 ]
 
 { #category : #accessing }
@@ -636,6 +668,12 @@ BaselineOfDuelMasters >> repositoryProviderSystemModelTestsPackage [
 		requiringAll: ( Array with: 'DM-SUnit' with: ( self moduleModelPackageNameFor: repositoryProviderPackageName ) )
 ]
 
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> requestModelPackage [
+
+	^ self modelPackageNamed: 'DM-Request' requiringAll: #(  )
+]
+
 { #category : #'private - packages set up' }
 BaselineOfDuelMasters >> requirementNamesOf: aPackageRepresentation [
 
@@ -701,7 +739,8 @@ BaselineOfDuelMasters >> setUpPackagesIn: aSpec [
 { #category : #'private - model package accessing' }
 BaselineOfDuelMasters >> stepModelPackage [
 
-	^ self modelPackageNamed: 'DM-Step' requiringAll: #(  )
+	^ self modelPackageNamed: 'DM-Step'
+		  requiring: ( self modelPackageNameFor: 'DM-Player-Action-Descriptions' )
 ]
 
 { #category : #'private - dependencies accessing' }
@@ -752,6 +791,7 @@ BaselineOfDuelMasters >> testPackages [
 		  add: self civilizationModelTestsPackage;
 		  add: self raceModelTestsPackage;
 		  add: self cardModelTestsPackage;
+		  add: self playerActionDescriptionsModelTestsPackage;
 		  add: self matchRequestModelTestsPackage;
 		  add: self matchModelTestsPackage;
 		  add: self repositoryProviderSystemModelTestsPackage;

@@ -1,6 +1,6 @@
 Class {
 	#name : #ChangeCurrentStepRequest,
-	#superclass : #MatchRequest,
+	#superclass : #DMRequest,
 	#instVars : [
 		'turnStep'
 	],
@@ -29,10 +29,4 @@ ChangeCurrentStepRequest >> executeOn: aMatch [
 ChangeCurrentStepRequest >> initializeChangingTo: aTurnStep [
 
 	turnStep := aTurnStep
-]
-
-{ #category : #testing }
-ChangeCurrentStepRequest >> isAllowedIn: aStep [
-
-	^ true
 ]

@@ -7,7 +7,7 @@ Class {
 { #category : #'private - accessing' }
 TurnStep >> allowedActionDescriptions [
 
-	self subclassResponsibility
+	^ OrderedCollection with: PlayerActionDescriptions changeCurrentStep
 ]
 
 { #category : #testing }

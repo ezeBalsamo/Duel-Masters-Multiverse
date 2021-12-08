@@ -1,7 +1,7 @@
 Class {
 	#name : #PlayerActionDescriptions,
 	#superclass : #Object,
-	#category : #'DM-Match-Request-Model'
+	#category : #'DM-Player-Action-Descriptions-Model'
 }
 
 { #category : #accessing }

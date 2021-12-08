@@ -1,6 +1,6 @@
 Class {
 	#name : #ChargeManaRequest,
-	#superclass : #MatchRequest,
+	#superclass : #DMRequest,
 	#instVars : [
 		'card'
 	],
