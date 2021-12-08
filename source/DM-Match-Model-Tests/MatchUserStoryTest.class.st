@@ -461,24 +461,6 @@ MatchUserStoryTest >> test03SummoningSicknessEndsWhenPlayerEndsTurn [
 		assert: match creaturesThatHaveSummoningSickness isEmpty
 ]
 
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test04PlayerCantAttackOnOpponentsTurn [
-
-	| errorDescription |
-
-	self assert: ( match isTurnOf: shobu ).
-
-	errorDescription := 'Knight: You can''t attack on your opponent''s turn.'.
-
-	self
-		should: [ match directAttackFrom: self tulkTheOracle of: knight ]
-			raise: IllegalPlay
-			withMessageText: errorDescription;
-		should: [ match attackFrom: self tulkTheOracle of: knight to: self immortalBaronVorg ]
-			raise: IllegalPlay
-			withMessageText: errorDescription
-]
-
 { #category : #'tests - turn order' }
 MatchUserStoryTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
 

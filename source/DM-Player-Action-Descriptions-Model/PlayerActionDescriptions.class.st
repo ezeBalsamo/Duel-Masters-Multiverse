@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #accessing }
+PlayerActionDescriptions class >> attack [
+
+	^ 'Attack'
+]
+
+{ #category : #accessing }
 PlayerActionDescriptions class >> changeCurrentStep [
 
 	^ 'Change current step'
