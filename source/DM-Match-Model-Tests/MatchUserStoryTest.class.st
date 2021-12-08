@@ -274,29 +274,6 @@ MatchUserStoryTest >> test01NotSummonedCreatureCantAttack [
 			withMessageText: errorDescription
 ]
 
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutTappingMana [
-
-	| tulkTheOracle |
-
-	tulkTheOracle := self tulkTheOracle.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	self
-		should: [ match summon: tulkTheOracle tappingAll: #() ]
-		raise: IllegalPlay
-		withMessageText: 'Shobu: You can''t Summon a creature without tapping mana.'.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty
-]
-
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test01PlayersBeginTheMatchWithFiveCardsInHand [
 
@@ -373,29 +350,6 @@ MatchUserStoryTest >> test02PlayerCantEndOpponentsTurn [
 			raise: IllegalPlay
 			withMessageText: 'Knight: You can''t end your opponent''s turn.';
 		assert: ( match isTurnOf: shobu )
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test02PlayerCantSummonCreatureWhenAtLeastOneCardToTapDoesNotBelongToPlayerMana [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	self should: [ self summon: tulkTheOracle tapping: march ]
-		raise: IllegalPlay
-		withMessageText: 'Shobu: You can''t tap March because it isn''t in your mana zone.'.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - field setup' }
@@ -503,36 +457,6 @@ MatchUserStoryTest >> test04PlayerCantAttackOnOpponentsTurn [
 		should: [ match attackFrom: self tulkTheOracle of: knight to: self immortalBaronVorg ]
 			raise: IllegalPlay
 			withMessageText: errorDescription
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test04PlayerCantSummonSingleCivilizationCreatureWhenAtLeastOneCardToTapIsNotFromThatSameCivilization [
-
-	| immortalBaronVorg tulkTheOracle |
-
-	immortalBaronVorg := self immortalBaronVorg.
-	tulkTheOracle := self tulkTheOracle.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	match chargeManaWith: immortalBaronVorg.
-
-	self
-		assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	self should: [ self summon: tulkTheOracle tapping: immortalBaronVorg ]
-		raise: IllegalPlay
-		withMessageText: 'Shobu: You don''t have Light civilization mana to summon Tulk, the Oracle.'.
-
-	self
-		assertTheOnlyOneIn: ( match manaOf: shobu ) is: immortalBaronVorg;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - turn order' }

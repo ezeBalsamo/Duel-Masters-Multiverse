@@ -67,10 +67,11 @@ CreatureSummonAssertion >> assertCivilizationOf: aCreatureCard isIncludedInCivil
 	match
 		signalIllegalPlayFrom: match currentPlayer
 		because: [ 
-			'You don''t have <1s> mana to summon <2p>.' expandMacrosWith:
+			'You can''t summon <1p> without tapping at least one card from <2s> from your mana zone.' 
+				expandMacrosWith: aCreatureCard
+				with:
 				( ( CollectionFormatter separatingWith: ', ' andLastWith: ' and ' ) format:
 					  creatureCivilizations )
-				with: aCreatureCard
 			]
 		unless: ( ( self civilizationsIn: aCardCollection ) includesAll: creatureCivilizations )
 ]

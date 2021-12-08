@@ -22,6 +22,12 @@ MatchRequestTest >> changeCurrentStepTo: aTurnStep [
 	match execute: ( ChangeCurrentStepRequest changingTo: aTurnStep ) requestedBy: self turnPlayer
 ]
 
+{ #category : #'private - test support' }
+MatchRequestTest >> chargeManaWith: aCard [
+
+	match execute: ( ChargeManaRequest chargingManaWith: aCard ) requestedBy: self turnPlayer
+]
+
 { #category : #'private - accessing' }
 MatchRequestTest >> immortalBaronVorg [
 

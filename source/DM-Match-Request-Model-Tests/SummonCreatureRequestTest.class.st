@@ -84,3 +84,25 @@ SummonCreatureRequestTest >> test05TurnPlayerCantSummonCreatureWhenAtLeastOneCar
 		assertEmpty: ( match manaOf: self turnPlayer );
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
+
+{ #category : #tests }
+SummonCreatureRequestTest >> test06TurnPlayerCantSummonSingleCivilizationCreatureWhenAtLeastOneCardToTapIsNotFromThatCivilization [
+
+	| march request |
+
+	march := self march.
+
+	request := SummonCreatureRequest summoning: self tulkTheOracle tapping: march.
+
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		assertTheOnlyOneIn: ( match manaOf: self turnPlayer ) is: march;
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because:
+			'You can''t summon Tulk, the Oracle without tapping at least one card from Light civilization from your mana zone.';
+		assertTheOnlyOneIn: ( match manaOf: self turnPlayer ) is: march;
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
+]
