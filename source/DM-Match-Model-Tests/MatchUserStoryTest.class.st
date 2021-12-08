@@ -146,7 +146,7 @@ MatchUserStoryTest >> setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAn
 	tulkTheOracle := self tulkTheOracle.
 
 	match chargeManaWith: march.
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 	match endTurnOf: shobu.
 
 	match
@@ -156,7 +156,7 @@ MatchUserStoryTest >> setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAn
 
 	match
 		chargeManaWith: vocalMegahit;
-		summon: immortalBaronVorg of: knight tappingAll: ( Array with: anotherMarch with: vocalMegahit );
+		summon: immortalBaronVorg tappingAll: ( Array with: anotherMarch with: vocalMegahit );
 		endTurnOf: knight;
 		endTurnOf: shobu.
 
@@ -181,12 +181,12 @@ MatchUserStoryTest >> setUpFieldHavingCreatureMorePowerfulThanOpponentCreatureAn
 		endTurnOf: shobu.
 
 	match chargeManaWith: anotherMarch.
-	self summon: tulkTheOracle of: knight tapping: anotherMarch.
+	self summon: tulkTheOracle tapping: anotherMarch.
 	match endTurnOf: knight.
 
 	match
 		chargeManaWith: vocalMegahit;
-		summon: immortalBaronVorg of: shobu tappingAll: ( Array with: march with: vocalMegahit );
+		summon: immortalBaronVorg tappingAll: ( Array with: march with: vocalMegahit );
 		endTurnOf: shobu;
 		directAttackFrom: tulkTheOracle of: knight;
 		endTurnOf: knight
@@ -214,12 +214,12 @@ MatchUserStoryTest >> setUpFieldHavingCreaturesWithSamePower [
 
 	match
 		chargeManaWith: vorgBrawlerOfHell;
-		summon: darknessLeohl of: shobu tappingAll: ( Array with: march with: vorgBrawlerOfHell );
+		summon: darknessLeohl tappingAll: ( Array with: march with: vorgBrawlerOfHell );
 		endTurnOf: shobu.
 
 	match
 		chargeManaWith: tulkTheOracle;
-		summon: immortalBaronVorg of: knight tappingAll: ( Array with: vocalMegahit with: tulkTheOracle );
+		summon: immortalBaronVorg tappingAll: ( Array with: vocalMegahit with: tulkTheOracle );
 		endTurnOf: knight.
 
 	match
@@ -253,9 +253,9 @@ MatchUserStoryTest >> startManagingCivilizations [
 ]
 
 { #category : #'private - processing' }
-MatchUserStoryTest >> summon: aCreatureCard of: aPotentialPlayer tapping: aCard [
+MatchUserStoryTest >> summon: aCreatureCard tapping: aCard [
 
-	match summon: aCreatureCard of: aPotentialPlayer tappingAll: {aCard}
+	match summon: aCreatureCard tappingAll: { aCard }
 ]
 
 { #category : #'tests - attacking' }
@@ -287,7 +287,7 @@ MatchUserStoryTest >> test01PlayerCantSummonCreatureWithoutTappingMana [
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	self
-		should: [ match summon: tulkTheOracle of: shobu tappingAll: #() ]
+		should: [ match summon: tulkTheOracle tappingAll: #() ]
 		raise: IllegalPlay
 		withMessageText: 'Shobu: You can''t Summon a creature without tapping mana.'.
 
@@ -350,18 +350,18 @@ MatchUserStoryTest >> test02PlayerCantAttackWithCreatureNotBelongingToHim [
 	tulkTheOracle := self tulkTheOracle.
 
 	match chargeManaWith: march.
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 	match endTurnOf: shobu.
 
 	errorDescription := 'Knight: You can''t attack with Tulk, the Oracle because it''s not on your side of the field.'.
 
 	self
 		should: [ match directAttackFrom: tulkTheOracle of: knight ]
-			raise: IllegalPlay
-			withMessageText: errorDescription;
+		raise: IllegalPlay
+		withMessageText: errorDescription;
 		should: [ match attackFrom: tulkTheOracle of: knight to: self immortalBaronVorg ]
-			raise: IllegalPlay
-			withMessageText: errorDescription
+		raise: IllegalPlay
+		withMessageText: errorDescription
 ]
 
 { #category : #'tests - turn order' }
@@ -388,8 +388,7 @@ MatchUserStoryTest >> test02PlayerCantSummonCreatureWhenAtLeastOneCardToTapDoesN
 		assert: ( match tappedManaOf: shobu ) isEmpty;
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
-	self
-		should: [ self summon: tulkTheOracle of: shobu tapping: march ]
+	self should: [ self summon: tulkTheOracle tapping: march ]
 		raise: IllegalPlay
 		withMessageText: 'Shobu: You can''t tap March because it isn''t in your mana zone.'.
 
@@ -416,17 +415,17 @@ MatchUserStoryTest >> test03PlayerCantAttackWithCreatureHavingSummoningSickness 
 	tulkTheOracle := self tulkTheOracle.
 
 	match chargeManaWith: march.
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 
 	errorDescription := 'Shobu: You can''t attack with Tulk, the Oracle because it has summoning sickness.'.
 
 	self
 		should: [ match directAttackFrom: tulkTheOracle of: shobu ]
-			raise: IllegalPlay
-			withMessageText: errorDescription;
+		raise: IllegalPlay
+		withMessageText: errorDescription;
 		should: [ match attackFrom: tulkTheOracle of: shobu to: self immortalBaronVorg ]
-			raise: IllegalPlay
-			withMessageText: errorDescription
+		raise: IllegalPlay
+		withMessageText: errorDescription
 ]
 
 { #category : #'tests - summoning creatures' }
@@ -450,15 +449,14 @@ MatchUserStoryTest >> test03PlayerCantSummonCreatureWhenAtLeastOneCardToTapIsAlr
 		assert: ( match tappedManaOf: shobu ) isEmpty;
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
 		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle.
 
-	self
-		should: [ self summon: anotherTulkTheOracle of: shobu tapping: march ]
+	self should: [ self summon: anotherTulkTheOracle tapping: march ]
 		raise: IllegalPlay
 		withMessageText: 'Shobu: You can''t tap March because it is already tapped.'.
 
@@ -527,8 +525,7 @@ MatchUserStoryTest >> test04PlayerCantSummonSingleCivilizationCreatureWhenAtLeas
 		assert: ( match tappedManaOf: shobu ) isEmpty;
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
-	self
-		should: [ self summon: tulkTheOracle of: shobu tapping: immortalBaronVorg ]
+	self should: [ self summon: tulkTheOracle tapping: immortalBaronVorg ]
 		raise: IllegalPlay
 		withMessageText: 'Shobu: You don''t have Light civilization mana to summon Tulk, the Oracle.'.
 
@@ -579,11 +576,10 @@ MatchUserStoryTest >> test05PlayerCantSummonCreatureWhenTheManaNumberOfCardsToTa
 		assert: ( match tappedManaOf: shobu ) isEmpty;
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
-	self
-		should: [ self summon: immortalBaronVorg of: shobu tapping: vocalMegahit ]
+	self should: [ self summon: immortalBaronVorg tapping: vocalMegahit ]
 		raise: IllegalPlay
 		withMessageText:
-			'Shobu: You have to tap cards whose sum of mana number equals the mana cost of Immortal Baron, Vorg.'.
+		'Shobu: You have to tap cards whose sum of mana number equals the mana cost of Immortal Baron, Vorg.'.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: vocalMegahit;
@@ -608,7 +604,7 @@ MatchUserStoryTest >> test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTapp
 	tulkTheOracle := self tulkTheOracle.
 
 	match chargeManaWith: march.
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 	match
 		endTurnOf: shobu;
 		endTurnOf: knight.
@@ -650,7 +646,7 @@ MatchUserStoryTest >> test06PlayerCantSummonMultipleCivilizationCreatureWhenNone
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
 	self
-		should: [ match summon: vorgBrawlerOfHell of: shobu tappingAll: expectedMana ]
+		should: [ match summon: vorgBrawlerOfHell tappingAll: expectedMana ]
 		raise: IllegalPlay
 		withMessageText:
 			'Shobu: You don''t have Fire civilization and Darkness civilization mana to summon Vorg, Brawler of Hell.'.
@@ -753,7 +749,7 @@ MatchUserStoryTest >> test07WhenPlayerSummonsSingleCivilizationCreatureThenCards
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
 		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
 
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
@@ -835,7 +831,7 @@ MatchUserStoryTest >> test08WhenPlayerSummonsMultipleCivilizationCreatureThenCar
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
 		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
 
-	match summon: vorgBrawlerOfHell of: shobu tappingAll: expectedMana.
+	match summon: vorgBrawlerOfHell tappingAll: expectedMana.
 
 	self
 		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
@@ -853,13 +849,12 @@ MatchUserStoryTest >> test09PlayerCantAttackOpponentCreatureNotBelongingToOppone
 	tulkTheOracle := self tulkTheOracle.
 
 	match chargeManaWith: march.
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 	match
 		endTurnOf: shobu;
 		endTurnOf: knight.
 
-	self
-		should: [ match attackFrom: tulkTheOracle of: shobu to: self immortalBaronVorg ]
+	self should: [ match attackFrom: tulkTheOracle of: shobu to: self immortalBaronVorg ]
 		raise: IllegalPlay
 		withMessageText: 'Shobu: Immortal Baron, Vorg it''s not summoned.'
 ]
@@ -886,7 +881,7 @@ MatchUserStoryTest >> test09TappedManaIsUntappedAtTheBeginningOfThePlayerTurn [
 	match chargeManaWith: march.
 
 	self
-		summon: tulkTheOracle of: shobu tapping: march;
+		summon: tulkTheOracle tapping: march;
 		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march.
 
 	match endTurnOf: shobu.
@@ -912,7 +907,7 @@ MatchUserStoryTest >> test10CreaturesHaveSummoningSicknessOnTheTurnTheyAreSummon
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
 		assert: match creaturesHavingSummoningSickness isEmpty.
 
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
@@ -935,12 +930,12 @@ MatchUserStoryTest >> test10PlayerCantAttackOpponentCreatureWhenIsUntapped [
 		endTurnOf: shobu.
 
 	match chargeManaWith: anotherMarch.
-	self summon: tulkTheOracle of: knight tapping: anotherMarch.
+	self summon: tulkTheOracle tapping: anotherMarch.
 	match endTurnOf: knight.
 
 	match
 		chargeManaWith: vocalMegahit;
-		summon: immortalBaronVorg of: shobu tappingAll: ( Array with: march with: vocalMegahit );
+		summon: immortalBaronVorg tappingAll: ( Array with: march with: vocalMegahit );
 		endTurnOf: shobu.
 
 	self should: [ match attackFrom: tulkTheOracle of: knight to: immortalBaronVorg ]
@@ -958,11 +953,11 @@ MatchUserStoryTest >> test11PlayerCantAttackCreatureBelongingToHim [
 	anotherTulkTheOracle := self tulkTheOracle.
 
 	match chargeManaWith: march.
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 	match
 		endTurnOf: shobu;
 		endTurnOf: knight.
-	self summon: anotherTulkTheOracle of: shobu tapping: march.
+	self summon: anotherTulkTheOracle tapping: march.
 
 	self should: [ match attackFrom: tulkTheOracle of: shobu to: anotherTulkTheOracle ]
 		raise: IllegalPlay
@@ -980,7 +975,7 @@ MatchUserStoryTest >> test11SummoningSicknessEndsWhenPlayerEndsTurn [
 
 	match chargeManaWith: march.
 
-	self summon: tulkTheOracle of: shobu tapping: march.
+	self summon: tulkTheOracle tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
@@ -1013,28 +1008,6 @@ MatchUserStoryTest >> test12CreatureDestroysAnotherCreatureInBattleWhenItHasTheG
 		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: immortalBaronVorg;
 		assert: ( match summonedCreaturesOf: knight ) isEmpty;
 		assertTheOnlyOneIn: ( match graveyardOf: knight ) is: tulkTheOracle
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test12PlayerCantSummonCreatureOnOpponentsTurn [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	match
-		chargeManaWith: march;
-		endTurnOf: shobu.
-
-	self
-		assert: ( match isTurnOf: knight );
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		should: [ self summon: tulkTheOracle of: shobu tapping: march ]
-			raise: IllegalPlay
-			withMessageText: 'Shobu: You can''t summon creatures on your opponent''s turn.';
-		assert: ( match isTurnOf: knight );
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - attacking' }
@@ -1081,10 +1054,8 @@ MatchUserStoryTest >> test13PlayerCanSummonMoreThanOneCreaturePerTurn [
 
 	self assert: ( match summonedCreaturesOf: shobu ) isEmpty.
 
-	self summon: tulkTheOracle of: shobu tapping: march.
-	match summon: immortalBaronVorg
-		of: shobu
-		tappingAll: ( Array with: vorgBrawlerOfHell with: vocalMegahit ).
+	self summon: tulkTheOracle tapping: march.
+	match summon: immortalBaronVorg tappingAll: ( Array with: vorgBrawlerOfHell with: vocalMegahit ).
 
 	self assertCollection: ( match summonedCreaturesOf: shobu )
 		hasSameElements: ( Array with: tulkTheOracle with: immortalBaronVorg )

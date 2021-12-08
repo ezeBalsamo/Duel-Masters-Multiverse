@@ -40,9 +40,26 @@ MatchRequestTest >> knightDeck [
 ]
 
 { #category : #'private - accessing' }
+MatchRequestTest >> march [
+
+	^ CreatureCard named: 'March'
+		  from: ( Civilization named: 'Light' )
+		  ofType: ( SingleRace ofTypeNamed: '2016 Calendar' )
+		  costing: ( DMUnits mana with: 3 )
+		  providing: self oneMana
+		  with: ( DMUnits power with: 3000 )
+]
+
+{ #category : #'private - accessing' }
 MatchRequestTest >> nonTurnPlayer [
 
 	^ match opponentOf: self turnPlayer
+]
+
+{ #category : #'private - accessing' }
+MatchRequestTest >> oneMana [
+
+	^ DMUnits mana with: 1
 ]
 
 { #category : #running }
@@ -70,6 +87,17 @@ MatchRequestTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anErro
 			assert: signal player equals: aPlayer;
 			assert: signal errorDescription equals: anErrorDescription
 		]
+]
+
+{ #category : #'private - accessing' }
+MatchRequestTest >> tulkTheOracle [
+
+	^ CreatureCard named: 'Tulk, the Oracle'
+		  from: ( Civilization named: 'Light' )
+		  ofType: ( SingleRace ofTypeNamed: 'Light Bringer' )
+		  costing: self oneMana
+		  providing: self oneMana
+		  with: ( DMUnits power with: 500 )
 ]
 
 { #category : #'private - accessing' }

@@ -14,68 +14,75 @@ CreatureSummonAssertion class >> workingWith: aMatch [
 ]
 
 { #category : #'private - asserting' }
-CreatureSummonAssertion >> assert: aCard belongsToManaOf: aPlayer [
+CreatureSummonAssertion >> assertAllOfThemBelongsToUntappedMana: aCardCollection [
 
-	match
-		signalIllegalPlayFrom: aPlayer
-		because: [ 'You can''t tap <1p> because it isn''t in your mana zone.' expandMacrosWith: aCard ]
-		unless: ( match does: aCard belongToManaOf: aPlayer )
+	match signalIllegalPlayFrom: match currentPlayer
+		because: 'You can''t Summon a creature without tapping mana.'
+		unless: aCardCollection notEmpty.
+
+	aCardCollection do: [ :aCard | 
+		self
+			assertBelongsToMana: aCard;
+			assertBelongsToUntappedMana: aCard
+		]
 ]
 
 { #category : #'private - asserting' }
-CreatureSummonAssertion >> assert: aCard belongsToUntappedManaOf: aPlayer [
+CreatureSummonAssertion >> assertBelongsToMana: aCard [
 
-	match
-		signalIllegalPlayFrom: aPlayer
+	match signalIllegalPlayFrom: match currentPlayer
+		because: [ 'You can''t tap <1p> because it isn''t in your mana zone.' expandMacrosWith: aCard ]
+		unless: ( match does: aCard belongToManaOf: match currentPlayer )
+]
+
+{ #category : #'private - asserting' }
+CreatureSummonAssertion >> assertBelongsToUntappedMana: aCard [
+
+	match signalIllegalPlayFrom: match currentPlayer
 		because: [ 'You can''t tap <1p> because it is already tapped.' expandMacrosWith: aCard ]
-		unless: ( match does: aCard belongToUntappedManaOf: aPlayer )
+		unless: ( match does: aCard belongToUntappedManaOf: match currentPlayer )
 ]
 
 { #category : #'private - asserting' }
 CreatureSummonAssertion >> assertCardsIn: aCardCollection belongToUntappedManaOf: aPlayer [
 
-	match
-		signalIllegalPlayFrom: aPlayer
+	match signalIllegalPlayFrom: aPlayer
 		because: 'You can''t Summon a creature without tapping mana.'
 		unless: aCardCollection notEmpty.
 
-	aCardCollection
-		do: [ :aCard | 
-			self
-				assert: aCard belongsToManaOf: aPlayer;
-				assert: aCard belongsToUntappedManaOf: aPlayer
-			]
+	aCardCollection do: [ :aCard | 
+		self
+			assertBelongsToMana: aCard;
+			assertBelongsToUntappedMana: aCard
+		]
 ]
 
 { #category : #'private - asserting' }
-CreatureSummonAssertion >> assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfAll: aCardCollection from: aPlayer [
+CreatureSummonAssertion >> assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfAll: aCardCollection [
 
 	| creatureCivilizations |
 
 	creatureCivilizations := aCreatureCard civilizations.
 
 	match
-		signalIllegalPlayFrom: aPlayer
-		because: [ 'You don''t have <1s> mana to summon <2p>.'
-				expandMacrosWith: ( ( CollectionFormatter separatingWith: ', ' andLastWith: ' and ' ) format: creatureCivilizations )
+		signalIllegalPlayFrom: match currentPlayer
+		because: [ 
+			'You don''t have <1s> mana to summon <2p>.' expandMacrosWith:
+				( ( CollectionFormatter separatingWith: ', ' andLastWith: ' and ' ) format:
+					  creatureCivilizations )
 				with: aCreatureCard
 			]
 		unless: ( ( self civilizationsIn: aCardCollection ) includesAll: creatureCivilizations )
 ]
 
-{ #category : #'private - preconditions' }
-CreatureSummonAssertion >> assertIsTurnOf: aPlayer [
-
-	match ifIsNotTurnOf: aPlayer warnThat: 'You can''t summon creatures on your opponent''s turn.'
-]
-
 { #category : #'private - asserting' }
-CreatureSummonAssertion >> assertManaCostOf: aCreatureCard isLessThanOrEqualToThatOfAll: aCardCollection from: aPlayer [
+CreatureSummonAssertion >> assertManaCostOf: aCreatureCard isLessThanOrEqualToThatOfAll: aCardCollection [
 
 	match
-		signalIllegalPlayFrom: aPlayer
-		because: [ 'You have to tap cards whose sum of mana number equals the mana cost of <1p>.'
-				expandMacrosWith: aCreatureCard
+		signalIllegalPlayFrom: match currentPlayer
+		because: [ 
+			'You have to tap cards whose sum of mana number equals the mana cost of <1p>.' expandMacrosWith:
+				aCreatureCard
 			]
 		unless: aCreatureCard manaCost = ( self manaNumberToProvideByAll: aCardCollection )
 ]
@@ -101,13 +108,12 @@ CreatureSummonAssertion >> manaNumberToProvideByAll: aCardCollection [
 ]
 
 { #category : #validating }
-CreatureSummonAssertion >> validateSummoningOf: aCreatureCard from: aPlayer tappingAll: aCardCollection [
+CreatureSummonAssertion >> validateSummoningOf: aCreatureCard tappingAll: aCardCollection [
 
 	self
-		assertIsTurnOf: aPlayer;
-		assertCardsIn: aCardCollection belongToUntappedManaOf: aPlayer;
-		assertManaCostOf: aCreatureCard isLessThanOrEqualToThatOfAll: aCardCollection from: aPlayer;
-		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfAll: aCardCollection from: aPlayer
+		assertAllOfThemBelongsToUntappedMana: aCardCollection;
+		assertManaCostOf: aCreatureCard isLessThanOrEqualToThatOfAll: aCardCollection;
+		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfAll: aCardCollection
 ]
 
 { #category : #'private - accessing' }

@@ -410,16 +410,18 @@ Match >> signalIsNotValidPlayer: aNotValidPlayer [
 ]
 
 { #category : #processing }
-Match >> summon: aCreatureCard of: aPlayer tappingAll: aCardCollection [
+Match >> summon: aCreatureCard tappingAll: aCardCollection [
 
-	( CreatureSummonAssertion workingWith: self )
-		validateSummoningOf: aCreatureCard
-		from: aPlayer
+	| turnPlayer |
+
+	turnPlayer := self currentPlayer.
+
+	( CreatureSummonAssertion workingWith: self ) validateSummoningOf: aCreatureCard
 		tappingAll: aCardCollection.
 
-	( self tappedManaOf: aPlayer ) addAll: aCardCollection.
-	( self summonedCreaturesOf: aPlayer ) add: aCreatureCard.
-	creaturesHavingSummoningSickness add: aCreatureCard 
+	( self tappedManaOf: turnPlayer ) addAll: aCardCollection.
+	( self summonedCreaturesOf: turnPlayer ) add: aCreatureCard.
+	creaturesHavingSummoningSickness add: aCreatureCard
 ]
 
 { #category : #'private - accessing' }

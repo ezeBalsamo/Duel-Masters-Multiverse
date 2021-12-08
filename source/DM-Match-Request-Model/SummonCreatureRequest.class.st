@@ -15,6 +15,12 @@ SummonCreatureRequest class >> actionDescription [
 ]
 
 { #category : #'instance creation' }
+SummonCreatureRequest class >> summoning: aCreatureCard tapping: aCard [
+
+	^ self summoning: aCreatureCard tappingAll: { aCard }
+]
+
+{ #category : #'instance creation' }
 SummonCreatureRequest class >> summoning: aCreatureCard tappingAll: aCardCollection [
 
 	^ self new initializeSummoning: aCreatureCard tappingAll: aCardCollection
@@ -29,7 +35,7 @@ SummonCreatureRequest >> cardsToTap [
 { #category : #executing }
 SummonCreatureRequest >> executeOn: aMatch [
 
-	aMatch summon: creatureToSummon of: aMatch currentPlayer tappingAll: self cardsToTap
+	aMatch summon: creatureToSummon tappingAll: self cardsToTap
 ]
 
 { #category : #initialization }

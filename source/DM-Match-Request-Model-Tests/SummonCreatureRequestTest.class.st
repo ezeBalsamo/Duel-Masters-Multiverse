@@ -66,3 +66,21 @@ SummonCreatureRequestTest >> test04TurnPlayerCantSummonCreatureWithoutTappingMan
 		because: 'You can''t Summon a creature without tapping mana.';
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
+
+{ #category : #tests }
+SummonCreatureRequestTest >> test05TurnPlayerCantSummonCreatureWhenAtLeastOneCardToTapDoesNotBelongToMana [
+
+	| request |
+
+	request := SummonCreatureRequest summoning: self tulkTheOracle tapping: self march.
+
+	self
+		changeCurrentStepTo: MainStep new;
+		assertEmpty: ( match manaOf: self turnPlayer );
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t tap March because it isn''t in your mana zone.';
+		assertEmpty: ( match manaOf: self turnPlayer );
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
+]
