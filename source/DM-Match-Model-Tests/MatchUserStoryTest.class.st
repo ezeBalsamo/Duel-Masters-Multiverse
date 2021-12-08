@@ -382,44 +382,6 @@ MatchUserStoryTest >> test03PlayerCantAttackWithCreatureHavingSummoningSickness 
 		withMessageText: errorDescription
 ]
 
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test03PlayerCantSummonCreatureWhenAtLeastOneCardToTapIsAlreadyTapped [
-
-	| march tulkTheOracle anotherTulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-	anotherTulkTheOracle := self tulkTheOracle.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	match chargeManaWith: march.
-
-	self
-		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	self summon: tulkTheOracle tapping: march.
-
-	self
-		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle.
-
-	self should: [ self summon: anotherTulkTheOracle tapping: march ]
-		raise: IllegalPlay
-		withMessageText: 'Shobu: You can''t tap March because it is already tapped.'.
-
-	self
-		assertTheOnlyOneIn: ( match manaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march;
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle
-]
-
 { #category : #'tests - turn order' }
 MatchUserStoryTest >> test03PlayerNotBelongingToMatchCantEndOpponentsTurn [
 
@@ -631,40 +593,6 @@ MatchUserStoryTest >> test08WhenPlayerAttacksDirectlyAndOpponentHasNoShieldsLeft
 		assert: ( match shieldsOf: knight ) isEmpty;
 		assert: match hasEnded;
 		assert: match winner equals: shobu
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test08WhenPlayerSummonsMultipleCivilizationCreatureThenCardsToTapAreTapped [
-
-	| immortalBaronVorg darknessLeohl vorgBrawlerOfHell expectedMana |
-
-	immortalBaronVorg := self immortalBaronVorg.
-	darknessLeohl := self darknessLeohl.
-	vorgBrawlerOfHell := self vorgBrawlerOfHell.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
-
-	expectedMana := Array with: immortalBaronVorg with: darknessLeohl.
-
-	self chargeShobuManaWithAll: expectedMana.
-
-	self
-		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
-
-	match summon: vorgBrawlerOfHell tappingAll: expectedMana.
-
-	self
-		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
-		assertCollection: ( match tappedManaOf: shobu ) hasSameElements: expectedMana;
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: vorgBrawlerOfHell;
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty
 ]
 
 { #category : #'tests - attacking' }

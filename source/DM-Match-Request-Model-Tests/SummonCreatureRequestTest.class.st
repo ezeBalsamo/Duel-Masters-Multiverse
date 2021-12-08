@@ -180,3 +180,24 @@ SummonCreatureRequestTest >> test09SummonCreatureOfTurnPlayer [
 		assertTheOnlyOneIn: ( match tappedManaOf: self turnPlayer ) is: march;
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: self turnPlayer ) is: tulkTheOracle
 ]
+
+{ #category : #tests }
+SummonCreatureRequestTest >> test10TurnPlayerCantSummonCreatureWhenAtLeastOneCardToTapIsAlreadyTapped [
+
+	| tappedMana summonedCreatures request |
+
+	self test09SummonCreatureOfTurnPlayer.
+
+	tappedMana := match tappedManaOf: self turnPlayer.
+	summonedCreatures := match summonedCreaturesOf: self turnPlayer.
+
+	request := SummonCreatureRequest summoning: self tulkTheOracle tappingAll: tappedMana.
+
+	self
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because:
+			( 'You can''t tap <1p> because it is already tapped.' expandMacrosWith: tappedMana anyOne );
+		assertCollection: ( match tappedManaOf: self turnPlayer ) equals: tappedMana;
+		assertCollection: ( match summonedCreaturesOf: self turnPlayer ) equals: summonedCreatures
+]
