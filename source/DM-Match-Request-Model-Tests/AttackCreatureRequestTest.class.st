@@ -69,3 +69,24 @@ AttackCreatureRequestTest >> test05TurnPlayerCantAttackCreatureWithNotSummonedCr
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t attack with Immortal Baron, Vorg because it''s not summoned.'
 ]
+
+{ #category : #tests }
+AttackCreatureRequestTest >> test06TurnPlayerCantAttackCreatureWithNonBelongingCreature [
+
+	| march tulkTheOracle request |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	request := AttackCreatureRequest attacking: self vocalMegahit with: tulkTheOracle.
+
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march;
+		endTurn;
+		changeCurrentStepTo: AttackStep new;
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t attack with Tulk, the Oracle because it''s not yours.'
+]
