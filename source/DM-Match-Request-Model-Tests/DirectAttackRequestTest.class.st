@@ -41,3 +41,17 @@ DirectAttackRequestTest >> test03TurnPlayerCantAttackInTheChargeManaStep [
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Attack in the Charge Mana Step.'
 ]
+
+{ #category : #tests }
+DirectAttackRequestTest >> test04TurnPlayerCantAttackInTheMainStep [
+
+	| request |
+
+	request := DirectAttackRequest attackingWith: self immortalBaronVorg.
+
+	self
+		changeCurrentStepTo: MainStep new;
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Attack in the Main Step.'
+]
