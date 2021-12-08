@@ -337,29 +337,6 @@ MatchUserStoryTest >> test02CreaturesHaveSummoningSicknessOnTheTurnTheyAreSummon
 		assertTheOnlyOneIn: match creaturesThatHaveSummoningSickness is: tulkTheOracle
 ]
 
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test02PlayerCantAttackWithCreatureNotBelongingToHim [
-
-	| march tulkTheOracle errorDescription |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	match chargeManaWith: march.
-	self summon: tulkTheOracle tapping: march.
-	match endTurnOf: shobu.
-
-	errorDescription := 'Knight: You can''t attack with Tulk, the Oracle because it''s not yours.'.
-
-	self
-		should: [ match directAttackFrom: tulkTheOracle of: knight ]
-		raise: IllegalPlay
-		withMessageText: errorDescription;
-		should: [ match attackFrom: tulkTheOracle of: knight to: self immortalBaronVorg ]
-		raise: IllegalPlay
-		withMessageText: errorDescription
-]
-
 { #category : #'tests - turn order' }
 MatchUserStoryTest >> test02PlayerCantEndOpponentsTurn [
 
