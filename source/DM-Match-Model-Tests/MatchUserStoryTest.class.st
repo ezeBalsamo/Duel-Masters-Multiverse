@@ -480,37 +480,6 @@ MatchUserStoryTest >> test04PlayersBeginTheMatchWithoutSummonedCreatures [
 		assert: ( match summonedCreaturesOf: knight ) isEmpty
 ]
 
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test05PlayerCantSummonCreatureWhenTheManaNumberOfCardsToTapIsLessThanCreatureManaCost [
-
-	| immortalBaronVorg vocalMegahit |
-
-	immortalBaronVorg := self immortalBaronVorg.
-	vocalMegahit := self vocalMegahit.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	match chargeManaWith: vocalMegahit.
-
-	self
-		assertTheOnlyOneIn: ( match manaOf: shobu ) is: vocalMegahit;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	self should: [ self summon: immortalBaronVorg tapping: vocalMegahit ]
-		raise: IllegalPlay
-		withMessageText:
-		'Shobu: You have to tap cards whose sum of mana number equals the mana cost of Immortal Baron, Vorg.'.
-
-	self
-		assertTheOnlyOneIn: ( match manaOf: shobu ) is: vocalMegahit;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty
-]
-
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test05PlayersBeginTheMatchWithoutCardsInGraveyard [
 

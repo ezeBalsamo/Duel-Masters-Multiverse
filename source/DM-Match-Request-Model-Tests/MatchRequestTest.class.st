@@ -132,6 +132,17 @@ MatchRequestTest >> turnPlayer [
 ]
 
 { #category : #'private - accessing' }
+MatchRequestTest >> vocalMegahit [
+
+	^ CreatureCard named: 'Vocal Megahit'
+		  from: ( Civilization named: 'Fire' )
+		  ofType: ( SingleRace ofTypeNamed: 'Beat Jockey' )
+		  costing: ( DMUnits mana with: 5 )
+		  providing: self oneMana
+		  with: ( DMUnits power with: 5000 )
+]
+
+{ #category : #'private - accessing' }
 MatchRequestTest >> vorgBrawlerOfHell [
 
 	^ CreatureCard

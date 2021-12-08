@@ -132,3 +132,26 @@ SummonCreatureRequestTest >> test07TurnPlayerCantSummonMultipleCivilizationCreat
 		assertCollection: ( match manaOf: self turnPlayer ) hasSameElements: cardsToTap;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
+
+{ #category : #tests }
+SummonCreatureRequestTest >> test08TurnPlayerCantSummonCreatureWhenTheManaNumberOfCardsToTapIsLessThanCreatureManaCost [
+
+	| immortalBaronVorg vocalMegahit request |
+
+	immortalBaronVorg := self immortalBaronVorg.
+	vocalMegahit := self vocalMegahit.
+
+	request := SummonCreatureRequest summoning: immortalBaronVorg tapping: vocalMegahit.
+
+	self
+		chargeManaWith: vocalMegahit;
+		changeCurrentStepTo: MainStep new;
+		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: vocalMegahit;
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because:
+			'You have to tap cards whose sum of mana number equals the mana cost of Immortal Baron, Vorg.';
+		assertTheOnlyOneIn: ( match untappedManaOf: self turnPlayer ) is: vocalMegahit;
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
+]
