@@ -344,13 +344,13 @@ MatchUserStoryTest >> test02CreaturesHaveSummoningSicknessOnTheTurnTheyAreSummon
 
 	self
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		assert: match creaturesHavingSummoningSickness isEmpty.
+		assert: match creaturesThatHaveSummoningSickness isEmpty.
 
 	self summon: tulkTheOracle tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assertTheOnlyOneIn: match creaturesHavingSummoningSickness is: tulkTheOracle
+		assertTheOnlyOneIn: match creaturesThatHaveSummoningSickness is: tulkTheOracle
 ]
 
 { #category : #'tests - attacking' }
@@ -452,13 +452,13 @@ MatchUserStoryTest >> test03SummoningSicknessEndsWhenPlayerEndsTurn [
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assertTheOnlyOneIn: match creaturesHavingSummoningSickness is: tulkTheOracle.
+		assertTheOnlyOneIn: match creaturesThatHaveSummoningSickness is: tulkTheOracle.
 
 	match endTurnOf: shobu.
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assert: match creaturesHavingSummoningSickness isEmpty
+		assert: match creaturesThatHaveSummoningSickness isEmpty
 ]
 
 { #category : #'tests - attacking' }

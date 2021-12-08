@@ -165,9 +165,9 @@ Match >> chargeManaWith: aCard [
 ]
 
 { #category : #accessing }
-Match >> creaturesHavingSummoningSickness [
+Match >> creaturesThatHaveSummoningSickness [
 
-	^ turnContext creaturesHavingSummoningSickness
+	^ turnContext creaturesThatHaveSummoningSickness
 ]
 
 { #category : #'private - accessing' }
@@ -417,7 +417,7 @@ Match >> summon: aCreatureCard tappingAll: aCardCollection [
 
 	( self tappedManaOf: turnPlayer ) addAll: aCardCollection.
 	( self summonedCreaturesOf: turnPlayer ) add: aCreatureCard.
-	turnContext hasBeenSummoned: aCreatureCard
+	turnContext creatureWasSummoned: aCreatureCard
 ]
 
 { #category : #'private - accessing' }

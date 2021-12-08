@@ -6,7 +6,7 @@ Class {
 		'canCardBeDrawn',
 		'currentStep',
 		'canManaBeCharged',
-		'creaturesHavingSummoningSickness'
+		'creaturesThatHaveSummoningSickness'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -29,10 +29,16 @@ TurnContext >> changeCurrentStepTo: aTurnStep [
 	currentStep := aTurnStep
 ]
 
-{ #category : #accessing }
-TurnContext >> creaturesHavingSummoningSickness [
+{ #category : #processing }
+TurnContext >> creatureWasSummoned: aCreatureCard [
 
-	^ creaturesHavingSummoningSickness
+	creaturesThatHaveSummoningSickness add: aCreatureCard
+]
+
+{ #category : #accessing }
+TurnContext >> creaturesThatHaveSummoningSickness [
+
+	^ creaturesThatHaveSummoningSickness
 ]
 
 { #category : #accessing }
@@ -44,30 +50,24 @@ TurnContext >> currentStep [
 { #category : #processing }
 TurnContext >> endTurn [
 
-	creaturesHavingSummoningSickness removeAll.
+	creaturesThatHaveSummoningSickness removeAll.
 
 	self
 		changeCurrentStepTo: DrawCardStep new;
 		manaCanBeCharged
 ]
 
-{ #category : #processing }
-TurnContext >> hasBeenSummoned: aCreatureCard [
-
-	creaturesHavingSummoningSickness add: aCreatureCard
-]
-
 { #category : #testing }
 TurnContext >> hasSummoningSickness: aCreatureCard [
 
-	^ creaturesHavingSummoningSickness includes: aCreatureCard
+	^ creaturesThatHaveSummoningSickness includes: aCreatureCard
 ]
 
 { #category : #initialization }
 TurnContext >> initializeWithin: aMatch [
 
 	match := aMatch.
-	creaturesHavingSummoningSickness := OrderedCollection new.
+	creaturesThatHaveSummoningSickness := OrderedCollection new.
 
 	self
 		manaCanBeCharged;
