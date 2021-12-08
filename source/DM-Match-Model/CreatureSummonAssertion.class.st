@@ -44,20 +44,6 @@ CreatureSummonAssertion >> assertBelongsToUntappedMana: aCard [
 ]
 
 { #category : #'private - asserting' }
-CreatureSummonAssertion >> assertCardsIn: aCardCollection belongToUntappedManaOf: aPlayer [
-
-	match signalIllegalPlayFrom: aPlayer
-		because: 'You can''t Summon a creature without tapping mana.'
-		unless: aCardCollection notEmpty.
-
-	aCardCollection do: [ :aCard | 
-		self
-			assertBelongsToMana: aCard;
-			assertBelongsToUntappedMana: aCard
-		]
-]
-
-{ #category : #'private - asserting' }
 CreatureSummonAssertion >> assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfAll: aCardCollection [
 
 	| creatureCivilizations |
