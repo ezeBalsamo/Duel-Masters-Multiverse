@@ -41,3 +41,17 @@ AttackCreatureRequestTest >> test03TurnPlayerCantAttackCreatureInTheChargeManaSt
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Attack a creature in the Charge Mana Step.'
 ]
+
+{ #category : #tests }
+AttackCreatureRequestTest >> test04TurnPlayerCantAttackCreatureInTheMainStep [
+
+	| request |
+
+	request := AttackCreatureRequest attacking: self immortalBaronVorg with: self immortalBaronVorg.
+
+	self
+		changeCurrentStepTo: MainStep new;
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Attack a creature in the Main Step.'
+]
