@@ -292,6 +292,31 @@ MatchUserStoryTest >> test01PlayersTurnOrderIsCircular [
 	self assert: ( match isTurnOf: shobu )
 ]
 
+{ #category : #'tests - card conditions' }
+MatchUserStoryTest >> test01TappedManaIsUntappedAtTheBeginningOfThePlayerTurn [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	self assert: ( match tappedManaOf: shobu ) isEmpty.
+
+	match chargeManaWith: march.
+
+	self
+		summon: tulkTheOracle tapping: march;
+		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march.
+
+	match endTurnOf: shobu.
+
+	self assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march.
+
+	match endTurnOf: knight.
+
+	self assert: ( match tappedManaOf: shobu ) isEmpty
+]
+
 { #category : #'tests - winning conditions' }
 MatchUserStoryTest >> test01WhenPlayerDrawsHisLastCardThenLosesTheMatch [
 
@@ -316,6 +341,27 @@ MatchUserStoryTest >> test01WhenPlayerDrawsHisLastCardThenLosesTheMatch [
 		assert: shobu numberOfCardsInDeck isNothing;
 		assert: match hasEnded;
 		assert: match winner equals: knight
+]
+
+{ #category : #'tests - card conditions' }
+MatchUserStoryTest >> test02CreaturesHaveSummoningSicknessOnTheTurnTheyAreSummoned [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match chargeManaWith: march.
+
+	self
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assert: match creaturesHavingSummoningSickness isEmpty.
+
+	self summon: tulkTheOracle tapping: march.
+
+	self
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
+		assertTheOnlyOneIn: match creaturesHavingSummoningSickness is: tulkTheOracle
 ]
 
 { #category : #'tests - attacking' }
@@ -401,6 +447,29 @@ MatchUserStoryTest >> test03PlayersBeginTheMatchWithoutChargedMana [
 	self
 		assert: ( match manaOf: shobu ) isEmpty;
 		assert: ( match manaOf: knight ) isEmpty
+]
+
+{ #category : #'tests - card conditions' }
+MatchUserStoryTest >> test03SummoningSicknessEndsWhenPlayerEndsTurn [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	match chargeManaWith: march.
+
+	self summon: tulkTheOracle tapping: march.
+
+	self
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
+		assertTheOnlyOneIn: match creaturesHavingSummoningSickness is: tulkTheOracle.
+
+	match endTurnOf: shobu.
+
+	self
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
+		assert: match creaturesHavingSummoningSickness isEmpty
 ]
 
 { #category : #'tests - attacking' }
@@ -623,52 +692,6 @@ MatchUserStoryTest >> test09PlayerCantSeeOpponentCardsInHand [
 		withMessageText: 'Knight: You can''t see the cards in your opponent''s hand.'
 ]
 
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test09TappedManaIsUntappedAtTheBeginningOfThePlayerTurn [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	self assert: ( match tappedManaOf: shobu ) isEmpty.
-
-	match chargeManaWith: march.
-
-	self
-		summon: tulkTheOracle tapping: march;
-		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march.
-
-	match endTurnOf: shobu.
-
-	self assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march.
-
-	match endTurnOf: knight.
-
-	self assert: ( match tappedManaOf: shobu ) isEmpty
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test10CreaturesHaveSummoningSicknessOnTheTurnTheyAreSummoned [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	match chargeManaWith: march.
-
-	self
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		assert: match creaturesHavingSummoningSickness isEmpty.
-
-	self summon: tulkTheOracle tapping: march.
-
-	self
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assertTheOnlyOneIn: match creaturesHavingSummoningSickness is: tulkTheOracle
-]
-
 { #category : #'tests - attacking' }
 MatchUserStoryTest >> test10PlayerCantAttackOpponentCreatureWhenIsUntapped [
 
@@ -718,29 +741,6 @@ MatchUserStoryTest >> test11PlayerCantAttackCreatureBelongingToHim [
 		raise: IllegalPlay
 		withMessageText:
 		'Shobu: You can''t attack Tulk, the Oracle because it''s on your side of the field.'
-]
-
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test11SummoningSicknessEndsWhenPlayerEndsTurn [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	match chargeManaWith: march.
-
-	self summon: tulkTheOracle tapping: march.
-
-	self
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assertTheOnlyOneIn: match creaturesHavingSummoningSickness is: tulkTheOracle.
-
-	match endTurnOf: shobu.
-
-	self
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
-		assert: match creaturesHavingSummoningSickness isEmpty
 ]
 
 { #category : #'tests - attacking' }
