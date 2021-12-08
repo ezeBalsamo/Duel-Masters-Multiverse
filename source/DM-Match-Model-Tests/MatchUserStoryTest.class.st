@@ -33,17 +33,6 @@ MatchUserStoryTest >> calendar2016 [
 	^ SingleRace ofTypeNamed: '2016 Calendar'
 ]
 
-{ #category : #'private - processing' }
-MatchUserStoryTest >> chargeShobuManaWithAll: aCardCollection [
-
-	aCardCollection do: [ :aCard | 
-		match
-			chargeManaWith: aCard;
-			endTurnOf: shobu;
-			endTurnOf: knight
-		]
-]
-
 { #category : #'private - system accessing' }
 MatchUserStoryTest >> civilizationManagementSystem [
 
