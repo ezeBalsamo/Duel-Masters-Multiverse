@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-DirectAttackRequestTest >> test01NonTurnPlayerCantAttack [
+DirectAttackRequestTest >> test01NonTurnPlayerCantDirectAttack [
 
 	| request |
 
@@ -13,11 +13,11 @@ DirectAttackRequestTest >> test01NonTurnPlayerCantAttack [
 
 	self should: [ match execute: request requestedBy: self nonTurnPlayer ]
 		raiseIllegalPlayFrom: self nonTurnPlayer
-		because: 'You can''t Attack on your opponent''s turn.'
+		because: 'You can''t Direct attack on your opponent''s turn.'
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test02TurnPlayerCantAttackBeforeDrawingCard [
+DirectAttackRequestTest >> test02TurnPlayerCantDirectAttackBeforeDrawingCard [
 
 	| request |
 
@@ -27,11 +27,11 @@ DirectAttackRequestTest >> test02TurnPlayerCantAttackBeforeDrawingCard [
 
 	self should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Attack in the Draw Card Step.'
+		because: 'You can''t Direct attack in the Draw Card Step.'
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test03TurnPlayerCantAttackInTheChargeManaStep [
+DirectAttackRequestTest >> test03TurnPlayerCantDirectAttackInTheChargeManaStep [
 
 	| request |
 
@@ -39,11 +39,11 @@ DirectAttackRequestTest >> test03TurnPlayerCantAttackInTheChargeManaStep [
 
 	self should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Attack in the Charge Mana Step.'
+		because: 'You can''t Direct attack in the Charge Mana Step.'
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test04TurnPlayerCantAttackInTheMainStep [
+DirectAttackRequestTest >> test04TurnPlayerCantDirectAttackInTheMainStep [
 
 	| request |
 
@@ -53,11 +53,11 @@ DirectAttackRequestTest >> test04TurnPlayerCantAttackInTheMainStep [
 		changeCurrentStepTo: MainStep new;
 		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Attack in the Main Step.'
+		because: 'You can''t Direct attack in the Main Step.'
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test05TurnPlayerCantAttackWithNotSummonedCreature [
+DirectAttackRequestTest >> test05TurnPlayerCantDirectAttackWithNotSummonedCreature [
 
 	| request |
 
@@ -67,5 +67,5 @@ DirectAttackRequestTest >> test05TurnPlayerCantAttackWithNotSummonedCreature [
 		changeCurrentStepTo: AttackStep new;
 		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Attack with Immortal Baron, Vorg because it''s not summoned.'
+		because: 'You can''t Direct attack with Immortal Baron, Vorg because it''s not summoned.'
 ]

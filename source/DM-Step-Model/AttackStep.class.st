@@ -8,7 +8,7 @@ Class {
 AttackStep >> allowedActionDescriptions [
 
 	^ super allowedActionDescriptions
-		  add: PlayerActionDescriptions attack;
+		  add: PlayerActionDescriptions directAttack;
 		  yourself
 ]
 

@@ -50,7 +50,7 @@ Match >> assert: aPlayer canAttackWith: aCreatureCard [
 
 	errorDescriptionTemplate := [ :errorDescription | 
 	                            'You can''t <1s> with <2p> because <3s>' expandMacrosWith:
-		                            PlayerActionDescriptions attack
+		                            PlayerActionDescriptions directAttack
 		                            with: aCreatureCard
 		                            with: errorDescription
 	                            ].

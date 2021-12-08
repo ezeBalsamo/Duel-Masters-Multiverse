@@ -10,7 +10,7 @@ Class {
 { #category : #accessing }
 DirectAttackRequest class >> actionDescription [
 
-	^ PlayerActionDescriptions attack
+	^ PlayerActionDescriptions directAttack
 ]
 
 { #category : #'instance creation' }

@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #accessing }
-PlayerActionDescriptions class >> attack [
-
-	^ 'Attack'
-]
-
-{ #category : #accessing }
 PlayerActionDescriptions class >> attackCreature [
 
 	^ 'Attack a creature'
@@ -26,6 +20,12 @@ PlayerActionDescriptions class >> changeCurrentStep [
 PlayerActionDescriptions class >> chargeMana [
 
 	^ 'Charge mana'
+]
+
+{ #category : #accessing }
+PlayerActionDescriptions class >> directAttack [
+
+	^ 'Direct attack'
 ]
 
 { #category : #accessing }
