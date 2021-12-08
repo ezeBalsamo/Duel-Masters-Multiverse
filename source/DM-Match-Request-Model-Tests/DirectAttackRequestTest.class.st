@@ -29,3 +29,15 @@ DirectAttackRequestTest >> test02TurnPlayerCantAttackBeforeDrawingCard [
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Attack in the Draw Card Step.'
 ]
+
+{ #category : #tests }
+DirectAttackRequestTest >> test03TurnPlayerCantAttackInTheChargeManaStep [
+
+	| request |
+
+	request := DirectAttackRequest attackingWith: self immortalBaronVorg.
+
+	self should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Attack in the Charge Mana Step.'
+]
