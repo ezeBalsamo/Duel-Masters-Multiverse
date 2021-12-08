@@ -9,6 +9,7 @@ AttackStep >> allowedActionDescriptions [
 
 	^ super allowedActionDescriptions
 		  add: PlayerActionDescriptions directAttack;
+		  add: PlayerActionDescriptions attackCreature;
 		  yourself
 ]
 

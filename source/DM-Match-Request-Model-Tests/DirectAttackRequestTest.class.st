@@ -67,5 +67,5 @@ DirectAttackRequestTest >> test05TurnPlayerCantDirectAttackWithNotSummonedCreatu
 		changeCurrentStepTo: AttackStep new;
 		should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: 'You can''t Direct attack with Immortal Baron, Vorg because it''s not summoned.'
+		because: 'You can''t attack with Immortal Baron, Vorg because it''s not summoned.'
 ]

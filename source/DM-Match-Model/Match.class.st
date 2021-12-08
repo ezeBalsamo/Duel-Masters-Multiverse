@@ -49,11 +49,9 @@ Match >> assert: aPlayer canAttackWith: aCreatureCard [
 	| errorDescriptionTemplate |
 
 	errorDescriptionTemplate := [ :errorDescription | 
-	                            'You can''t <1s> with <2p> because <3s>' expandMacrosWith:
-		                            PlayerActionDescriptions directAttack
-		                            with: aCreatureCard
-		                            with: errorDescription
-	                            ].
+	                            'You can''t attack with <1p> because <2s>' expandMacrosWith:
+		                            aCreatureCard
+		                            with: errorDescription ].
 
 	self
 		signalIllegalPlayFrom: aPlayer
@@ -129,6 +127,12 @@ Match >> assertThatIsItsTurn: aPlayer inOrderToExecute: aRequest [
 		because:
 		( 'You can''t <1s> on your opponent''s turn.' expandMacrosWith: aRequest actionDescription )
 		unless: self currentPlayer = aPlayer
+]
+
+{ #category : #processing }
+Match >> attack: anOpponentCreatureCard with: aCreatureCard [
+
+	self assert: self currentPlayer canAttackWith: aCreatureCard
 ]
 
 { #category : #processing }

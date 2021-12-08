@@ -20,6 +20,12 @@ AttackCreatureRequest class >> attacking: anOpponentCreatureCard with: aCreature
 	^ self new initializeAttacking: anOpponentCreatureCard with: aCreatureCard
 ]
 
+{ #category : #executing }
+AttackCreatureRequest >> executeOn: aMatch [
+
+	aMatch attack: opponentCreatureCard with: creatureCard
+]
+
 { #category : #initialization }
 AttackCreatureRequest >> initializeAttacking: anOpponentCreatureCard with: aCreatureCard [
 

@@ -55,3 +55,17 @@ AttackCreatureRequestTest >> test04TurnPlayerCantAttackCreatureInTheMainStep [
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Attack a creature in the Main Step.'
 ]
+
+{ #category : #tests }
+AttackCreatureRequestTest >> test05TurnPlayerCantAttackCreatureWithNotSummonedCreature [
+
+	| request |
+
+	request := AttackCreatureRequest attacking: self vocalMegahit with: self immortalBaronVorg.
+
+	self
+		changeCurrentStepTo: AttackStep new;
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t attack with Immortal Baron, Vorg because it''s not summoned.'
+]
