@@ -787,35 +787,6 @@ MatchUserStoryTest >> test13CreatureIsDestroyedInBattleByAnotherCreatureWhenItHa
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: knight ) is: immortalBaronVorg
 ]
 
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test13PlayerCanSummonMoreThanOneCreaturePerTurn [
-
-	| march vorgBrawlerOfHell vocalMegahit tulkTheOracle immortalBaronVorg |
-
-	march := self march.
-	vorgBrawlerOfHell := self vorgBrawlerOfHell.
-	vocalMegahit := self vocalMegahit.
-	tulkTheOracle := self tulkTheOracle.
-	immortalBaronVorg := self immortalBaronVorg.
-
-	match
-		chargeManaWith: march;
-		endTurnOf: shobu;
-		endTurnOf: knight;
-		chargeManaWith: vorgBrawlerOfHell;
-		endTurnOf: shobu;
-		endTurnOf: knight;
-		chargeManaWith: vocalMegahit.
-
-	self assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	self summon: tulkTheOracle tapping: march.
-	match summon: immortalBaronVorg tappingAll: ( Array with: vorgBrawlerOfHell with: vocalMegahit ).
-
-	self assertCollection: ( match summonedCreaturesOf: shobu )
-		hasSameElements: ( Array with: tulkTheOracle with: immortalBaronVorg )
-]
-
 { #category : #'tests - attacking' }
 MatchUserStoryTest >> test14BothCreaturesAreDestroyedInBattleWhenTheyHaveTheSamePower [
 

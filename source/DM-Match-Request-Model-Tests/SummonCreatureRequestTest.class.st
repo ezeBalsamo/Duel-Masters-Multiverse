@@ -201,3 +201,38 @@ SummonCreatureRequestTest >> test10TurnPlayerCantSummonCreatureWhenAtLeastOneCar
 		assertCollection: ( match tappedManaOf: self turnPlayer ) equals: tappedMana;
 		assertCollection: ( match summonedCreaturesOf: self turnPlayer ) equals: summonedCreatures
 ]
+
+{ #category : #tests }
+SummonCreatureRequestTest >> test11TurnPlayerCanSummonMoreThanOneCreaturePerTurn [
+
+	| march vorgBrawlerOfHell vocalMegahit tulkTheOracle immortalBaronVorg cardsToTap request anotherRequest |
+
+	march := self march.
+	vorgBrawlerOfHell := self vorgBrawlerOfHell.
+	vocalMegahit := self vocalMegahit.
+	tulkTheOracle := self tulkTheOracle.
+	immortalBaronVorg := self immortalBaronVorg.
+
+	cardsToTap := Array with: march with: vorgBrawlerOfHell with: vocalMegahit.
+
+	request := SummonCreatureRequest summoning: tulkTheOracle tapping: march.
+	anotherRequest := SummonCreatureRequest summoning: immortalBaronVorg
+		                  tappingAll: ( Array with: vorgBrawlerOfHell with: vocalMegahit ).
+
+	self
+		chargeManaWithAll: cardsToTap;
+		changeCurrentStepTo: MainStep new;
+		assertCollection: ( match untappedManaOf: self turnPlayer ) hasSameElements: cardsToTap;
+		assertEmpty: ( match tappedManaOf: self turnPlayer );
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer ).
+
+	match
+		execute: request requestedBy: self turnPlayer;
+		execute: anotherRequest requestedBy: self turnPlayer.
+
+	self
+		assertEmpty: ( match untappedManaOf: self turnPlayer );
+		assertCollection: ( match tappedManaOf: self turnPlayer ) hasSameElements: cardsToTap;
+		assertCollection: ( match summonedCreaturesOf: self turnPlayer )
+		hasSameElements: ( Array with: tulkTheOracle with: immortalBaronVorg )
+]
