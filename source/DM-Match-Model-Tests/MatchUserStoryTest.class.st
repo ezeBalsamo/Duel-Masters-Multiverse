@@ -247,22 +247,6 @@ MatchUserStoryTest >> summon: aCreatureCard tapping: aCard [
 	match summon: aCreatureCard tappingAll: { aCard }
 ]
 
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test01NotSummonedCreatureCantAttack [
-
-	| errorDescription |
-
-	errorDescription := 'Shobu: Immortal Baron, Vorg it''s not summoned.'.
-
-	self
-		should: [ match directAttackFrom: self immortalBaronVorg of: shobu ]
-			raise: IllegalPlay
-			withMessageText: errorDescription;
-		should: [ match attackFrom: self immortalBaronVorg of: shobu to: self march ]
-			raise: IllegalPlay
-			withMessageText: errorDescription
-]
-
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test01PlayersBeginTheMatchWithFiveCardsInHand [
 

@@ -55,3 +55,17 @@ DirectAttackRequestTest >> test04TurnPlayerCantAttackInTheMainStep [
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Attack in the Main Step.'
 ]
+
+{ #category : #tests }
+DirectAttackRequestTest >> test05TurnPlayerCantAttackWithNotSummonedCreature [
+
+	| request |
+
+	request := DirectAttackRequest attackingWith: self immortalBaronVorg.
+
+	self
+		changeCurrentStepTo: AttackStep new;
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Attack with Immortal Baron, Vorg because it''s not summoned.'
+]

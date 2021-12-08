@@ -19,6 +19,12 @@ DirectAttackRequest class >> attackingWith: aCreatureCard [
 	^ self new initializeAttackingWith: aCreatureCard
 ]
 
+{ #category : #executing }
+DirectAttackRequest >> executeOn: aMatch [
+
+	aMatch directAttackFrom: creatureCard
+]
+
 { #category : #initialization }
 DirectAttackRequest >> initializeAttackingWith: aCreatureCard [
 

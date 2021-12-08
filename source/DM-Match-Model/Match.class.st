@@ -46,15 +46,24 @@ Match >> assert: aPlayer canAttack: aCreatureCard of: anOpponentPlayer [
 { #category : #'private - preconditions' }
 Match >> assert: aPlayer canAttackWith: aCreatureCard [
 
+	| errorDescriptionTemplate |
+
+	errorDescriptionTemplate := [ :errorDescription | 
+	                            'You can''t <1s> with <2p> because <3s>' expandMacrosWith:
+		                            PlayerActionDescriptions attack
+		                            with: aCreatureCard
+		                            with: errorDescription
+	                            ].
+
 	self
 		signalIllegalPlayFrom: aPlayer
-			because: [ '<1p> it''s not summoned.' expandMacrosWith: aCreatureCard ]
-			unless: ( self summonedCreatures includes: aCreatureCard );
-		signalIllegalPlayFrom: aPlayer
-			because: [ 'You can''t attack with <1p> because it''s not on your side of the field.'
-				expandMacrosWith: aCreatureCard
+		because: [ errorDescriptionTemplate value: 'it''s not summoned.' ]
+		unless: ( self summonedCreatures includes: aCreatureCard );
+		signalIllegalPlayFrom: aPlayer because: [ 
+			'You can''t attack with <1p> because it''s not on your side of the field.' expandMacrosWith:
+					aCreatureCard
 			]
-			unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard );
+		unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard );
 		assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer;
 		assertIsUntapped: aCreatureCard of: aPlayer
 ]
@@ -181,6 +190,12 @@ Match >> destroy: aCreatureCard of: aDuelist [
 
 	( self summonedCreaturesOf: aDuelist ) remove: aCreatureCard.
 	( self graveyardOf: aDuelist ) add: aCreatureCard
+]
+
+{ #category : #processing }
+Match >> directAttackFrom: aCreatureCard [
+
+	self assert: self currentPlayer canAttackWith: aCreatureCard
 ]
 
 { #category : #processing }
