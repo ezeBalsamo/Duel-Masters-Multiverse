@@ -63,7 +63,7 @@ CreatureSummonAssertion >> assertCivilizationOf: aCreatureCard isIncludedInCivil
 ]
 
 { #category : #'private - asserting' }
-CreatureSummonAssertion >> assertManaCostOf: aCreatureCard isLessThanOrEqualToThatOfAll: aCardCollection [
+CreatureSummonAssertion >> assertManaCostOf: aCreatureCard equalsManaNumberSumOfAll: aCardCollection [
 
 	match
 		signalIllegalPlayFrom: match currentPlayer
@@ -99,7 +99,7 @@ CreatureSummonAssertion >> validateSummoningOf: aCreatureCard tappingAll: aCardC
 
 	self
 		assertAllOfThemBelongsToUntappedMana: aCardCollection;
-		assertManaCostOf: aCreatureCard isLessThanOrEqualToThatOfAll: aCardCollection;
+		assertManaCostOf: aCreatureCard equalsManaNumberSumOfAll: aCardCollection;
 		assertCivilizationOf: aCreatureCard isIncludedInCivilizationsOfAll: aCardCollection
 ]
 

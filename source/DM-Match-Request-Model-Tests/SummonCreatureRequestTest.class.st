@@ -134,7 +134,7 @@ SummonCreatureRequestTest >> test07TurnPlayerCantSummonMultipleCivilizationCreat
 ]
 
 { #category : #tests }
-SummonCreatureRequestTest >> test08TurnPlayerCantSummonCreatureWhenTheManaNumberOfCardsToTapIsLessThanCreatureManaCost [
+SummonCreatureRequestTest >> test08TurnPlayerCantSummonCreatureWhenTheManaNumberSumOfCardsToTapIsNotEqualToCreatureManaCost [
 
 	| immortalBaronVorg vocalMegahit request |
 
