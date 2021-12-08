@@ -60,7 +60,9 @@ Match >> assert: aPlayer canAttackWith: aCreatureCard [
 		signalIllegalPlayFrom: aPlayer
 		because: [ errorDescriptionTemplate value: 'it''s not yours.' ]
 		unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard );
-		assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer;
+		signalIllegalPlayFrom: aPlayer
+		because: [ errorDescriptionTemplate value: 'it has summoning sickness.' ]
+		unless: ( turnContext hasSummoningSickness: aCreatureCard ) not;
 		assertIsUntapped: aCreatureCard of: aPlayer
 ]
 
@@ -70,15 +72,6 @@ Match >> assertCardCanBeDrawn [
 	self signalIllegalPlayFrom: self currentPlayer
 		because: 'Only one card can be drawn per turn.'
 		unless: self canCardBeDrawn
-]
-
-{ #category : #'private - preconditions' }
-Match >> assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer [
-
-	self signalIllegalPlayFrom: aPlayer
-		because: [ 
-		'You can''t attack with <1p> because it has summoning sickness.' expandMacrosWith: aCreatureCard ]
-		unless: ( turnContext hasSummoningSickness: aCreatureCard ) not
 ]
 
 { #category : #'private - asserting' }
