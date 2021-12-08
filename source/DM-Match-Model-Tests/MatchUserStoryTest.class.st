@@ -546,41 +546,6 @@ MatchUserStoryTest >> test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTapp
 		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: tulkTheOracle
 ]
 
-{ #category : #'tests - summoning creatures' }
-MatchUserStoryTest >> test06PlayerCantSummonMultipleCivilizationCreatureWhenNoneCardsToTapAreFromTheRequiredCivilization [
-
-	| march tulkTheOracle vorgBrawlerOfHell expectedMana |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-	vorgBrawlerOfHell := self vorgBrawlerOfHell.
-
-	self
-		assert: ( match manaOf: shobu ) isEmpty;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	expectedMana := Array with: march with: tulkTheOracle.
-
-	self chargeShobuManaWithAll: expectedMana.
-
-	self
-		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty.
-
-	self
-		should: [ match summon: vorgBrawlerOfHell tappingAll: expectedMana ]
-		raise: IllegalPlay
-		withMessageText:
-			'Shobu: You don''t have Fire civilization and Darkness civilization mana to summon Vorg, Brawler of Hell.'.
-
-	self
-		assertCollection: ( match manaOf: shobu ) hasSameElements: expectedMana;
-		assert: ( match tappedManaOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty
-]
-
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveCardsInHand [
 

@@ -28,6 +28,25 @@ MatchRequestTest >> chargeManaWith: aCard [
 	match execute: ( ChargeManaRequest chargingManaWith: aCard ) requestedBy: self turnPlayer
 ]
 
+{ #category : #'private - test support' }
+MatchRequestTest >> chargeManaWithAll: aCardCollection [
+
+	aCardCollection do: [ :aCard | 
+		self chargeManaWith: aCard.
+		2 timesRepeat: [ 
+			match endTurnOf: self turnPlayer.
+			self drawCard
+			].
+		self changeCurrentStepTo: ChargeManaStep new
+		]
+]
+
+{ #category : #'private - test support' }
+MatchRequestTest >> drawCard [
+
+	match execute: DrawCardRequest new requestedBy: self turnPlayer
+]
+
 { #category : #'private - accessing' }
 MatchRequestTest >> immortalBaronVorg [
 
@@ -110,4 +129,18 @@ MatchRequestTest >> tulkTheOracle [
 MatchRequestTest >> turnPlayer [
 
 	^ match currentPlayer
+]
+
+{ #category : #'private - accessing' }
+MatchRequestTest >> vorgBrawlerOfHell [
+
+	^ CreatureCard
+		  named: 'Vorg, Brawler of Hell'
+		  fromAll: ( Array with: ( Civilization named: 'Fire' ) with: ( Civilization named: 'Darkness' ) )
+		  ofType: ( MultipleRace conformedByAll: ( Array with: ( SingleRace ofTypeNamed: 'Human' )
+					      with: ( SingleRace ofTypeNamed: 'Beat Jockey' )
+					      with: ( SingleRace ofTypeNamed: 'Alien' ) ) )
+		  costing: ( DMUnits mana with: 2 )
+		  providing: self oneMana
+		  with: ( DMUnits power with: 4000 )
 ]

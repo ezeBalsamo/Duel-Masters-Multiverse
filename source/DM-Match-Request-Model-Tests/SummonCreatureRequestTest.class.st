@@ -106,3 +106,29 @@ SummonCreatureRequestTest >> test06TurnPlayerCantSummonSingleCivilizationCreatur
 		assertTheOnlyOneIn: ( match manaOf: self turnPlayer ) is: march;
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
 ]
+
+{ #category : #tests }
+SummonCreatureRequestTest >> test07TurnPlayerCantSummonMultipleCivilizationCreatureWhenAtLeastOneOfItsCivilizationsWontBeTapped [
+
+	| march tulkTheOracle vorgBrawlerOfHell cardsToTap request |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+	vorgBrawlerOfHell := self vorgBrawlerOfHell.
+
+	cardsToTap := Array with: march with: tulkTheOracle.
+
+	request := SummonCreatureRequest summoning: vorgBrawlerOfHell tappingAll: cardsToTap.
+
+	self
+		chargeManaWithAll: cardsToTap;
+		changeCurrentStepTo: MainStep new;
+		assertCollection: ( match manaOf: self turnPlayer ) hasSameElements: cardsToTap;
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
+		should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because:
+			'You can''t summon Vorg, Brawler of Hell without tapping at least one card from Fire civilization and Darkness civilization from your mana zone.';
+		assertCollection: ( match manaOf: self turnPlayer ) hasSameElements: cardsToTap;
+		assertEmpty: ( match summonedCreaturesOf: self turnPlayer )
+]
