@@ -108,7 +108,7 @@ SummonCreatureRequestTest >> test06TurnPlayerCantSummonSingleCivilizationCreatur
 ]
 
 { #category : #tests }
-SummonCreatureRequestTest >> test07TurnPlayerCantSummonMultipleCivilizationCreatureWhenAtLeastOneOfItsCivilizationsWontBeTapped [
+SummonCreatureRequestTest >> test07TurnPlayerCantSummonMultipleCivilizationCreatureWhenAtLeastOneOfItsCivilizationsIsntIncludedInThoseOfCardsToTap [
 
 	| march tulkTheOracle vorgBrawlerOfHell cardsToTap request |
 
