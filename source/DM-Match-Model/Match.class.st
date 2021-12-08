@@ -16,7 +16,6 @@ Class {
 		'summonedCreaturesByPlayer',
 		'tappedCreaturesByPlayer',
 		'status',
-		'creaturesHavingSummoningSickness',
 		'turnContext'
 	],
 	#category : #'DM-Match-Model'
@@ -71,10 +70,10 @@ Match >> assertCardCanBeDrawn [
 { #category : #'private - preconditions' }
 Match >> assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer [
 
-	self
-		signalIllegalPlayFrom: aPlayer
-		because: [ 'You can''t attack with <1p> because it has summoning sickness.' expandMacrosWith: aCreatureCard ]
-		unless: ( creaturesHavingSummoningSickness includes: aCreatureCard ) not
+	self signalIllegalPlayFrom: aPlayer
+		because: [ 
+		'You can''t attack with <1p> because it has summoning sickness.' expandMacrosWith: aCreatureCard ]
+		unless: ( turnContext hasSummoningSickness: aCreatureCard ) not
 ]
 
 { #category : #'private - asserting' }
@@ -168,7 +167,7 @@ Match >> chargeManaWith: aCard [
 { #category : #accessing }
 Match >> creaturesHavingSummoningSickness [
 
-	^ creaturesHavingSummoningSickness
+	^ turnContext creaturesHavingSummoningSickness
 ]
 
 { #category : #'private - accessing' }
@@ -242,8 +241,7 @@ Match >> endTurnOf: aPlayer [
 	turnContext endTurn.
 
 	( self tappedManaOf: self currentPlayer ) removeAll.
-	( self tappedCreaturesOf: self currentPlayer ) removeAll.
-	creaturesHavingSummoningSickness removeAll
+	( self tappedCreaturesOf: self currentPlayer ) removeAll
 ]
 
 { #category : #executing }
@@ -322,9 +320,7 @@ Match >> initializeCreaturesSummonedByPlayer [
 
 	tappedCreaturesByPlayer := Dictionary
 		with: firstPlayer -> OrderedCollection new
-		with: secondPlayer -> OrderedCollection new.
-
-	creaturesHavingSummoningSickness := OrderedCollection new
+		with: secondPlayer -> OrderedCollection new
 ]
 
 { #category : #initialization }
@@ -421,7 +417,7 @@ Match >> summon: aCreatureCard tappingAll: aCardCollection [
 
 	( self tappedManaOf: turnPlayer ) addAll: aCardCollection.
 	( self summonedCreaturesOf: turnPlayer ) add: aCreatureCard.
-	creaturesHavingSummoningSickness add: aCreatureCard
+	turnContext hasBeenSummoned: aCreatureCard
 ]
 
 { #category : #'private - accessing' }
