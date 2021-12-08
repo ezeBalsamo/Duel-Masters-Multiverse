@@ -29,3 +29,15 @@ AttackCreatureRequestTest >> test02TurnPlayerCantAttackCreatureBeforeDrawingCard
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t Attack a creature in the Draw Card Step.'
 ]
+
+{ #category : #tests }
+AttackCreatureRequestTest >> test03TurnPlayerCantAttackCreatureInTheChargeManaStep [
+
+	| request |
+
+	request := AttackCreatureRequest attacking: self immortalBaronVorg with: self immortalBaronVorg.
+
+	self should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t Attack a creature in the Charge Mana Step.'
+]
