@@ -574,25 +574,6 @@ MatchUserStoryTest >> test08WhenPlayerAttacksDirectlyAndOpponentHasNoShieldsLeft
 		assert: match winner equals: shobu
 ]
 
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test09PlayerCantAttackOpponentCreatureNotBelongingToOpponent [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	match chargeManaWith: march.
-	self summon: tulkTheOracle tapping: march.
-	match
-		endTurnOf: shobu;
-		endTurnOf: knight.
-
-	self should: [ match attackFrom: tulkTheOracle of: shobu to: self immortalBaronVorg ]
-		raise: IllegalPlay
-		withMessageText: 'Shobu: Immortal Baron, Vorg it''s not summoned.'
-]
-
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test09PlayerCantSeeOpponentCardsInHand [
 

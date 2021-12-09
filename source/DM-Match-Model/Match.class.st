@@ -28,19 +28,25 @@ Match class >> between: aPlayer and: anotherPlayer [
 ]
 
 { #category : #'private - preconditions' }
-Match >> assert: aPlayer canAttack: aCreatureCard of: anOpponentPlayer [
+Match >> assert: aPlayer canAttack: anOpponentCreatureCard of: anOpponentPlayer [
+
+	| errorDescriptionTemplate |
+
+	errorDescriptionTemplate := [ :reason | 
+	                            'You can''t attack <1p> because <2s>' expandMacrosWith:
+		                            anOpponentCreatureCard
+		                            with: reason ].
 
 	self
 		signalIllegalPlayFrom: aPlayer
-			because: [ '<1p> it''s not summoned.' expandMacrosWith: aCreatureCard ]
-			unless: ( self summonedCreatures includes: aCreatureCard );
+		because: [ errorDescriptionTemplate value: 'it''s not summoned.' ]
+		unless: ( self summonedCreatures includes: anOpponentCreatureCard );
 		signalIllegalPlayFrom: aPlayer
-			because:
-				[ 'You can''t attack <1p> because it''s on your side of the field.' expandMacrosWith: aCreatureCard ]
-			unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard ) not;
+		because: [ errorDescriptionTemplate value: 'it''s on your side of the field.' ]
+		unless: ( ( self summonedCreaturesOf: aPlayer ) includes: anOpponentCreatureCard ) not;
 		signalIllegalPlayFrom: aPlayer
-			because: [ 'You can''t attack <1p> because it''s untapped.' expandMacrosWith: aCreatureCard ]
-			unless: ( ( self tappedCreaturesOf: anOpponentPlayer ) includes: aCreatureCard )
+		because: [ errorDescriptionTemplate value: 'it''s untapped.' ]
+		unless: ( ( self tappedCreaturesOf: anOpponentPlayer ) includes: anOpponentCreatureCard )
 ]
 
 { #category : #'private - preconditions' }
@@ -123,7 +129,12 @@ Match >> assertThatIsItsTurn: aPlayer inOrderToExecute: aRequest [
 { #category : #processing }
 Match >> attack: anOpponentCreatureCard with: aCreatureCard [
 
-	self assert: self currentPlayer canAttackWith: aCreatureCard
+	| turnPlayer opponentPlayer |
+
+	turnPlayer := self currentPlayer.
+	self assert: turnPlayer canAttackWith: aCreatureCard.
+	opponentPlayer := self opponentOf: turnPlayer.
+	self assert: turnPlayer canAttack: anOpponentCreatureCard of: opponentPlayer
 ]
 
 { #category : #processing }
