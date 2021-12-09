@@ -613,28 +613,6 @@ MatchUserStoryTest >> test10PlayerCantAttackOpponentCreatureWhenIsUntapped [
 ]
 
 { #category : #'tests - attacking' }
-MatchUserStoryTest >> test11PlayerCantAttackCreatureBelongingToHim [
-
-	| march tulkTheOracle anotherTulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-	anotherTulkTheOracle := self tulkTheOracle.
-
-	match chargeManaWith: march.
-	self summon: tulkTheOracle tapping: march.
-	match
-		endTurnOf: shobu;
-		endTurnOf: knight.
-	self summon: anotherTulkTheOracle tapping: march.
-
-	self should: [ match attackFrom: tulkTheOracle of: shobu to: anotherTulkTheOracle ]
-		raise: IllegalPlay
-		withMessageText:
-		'Shobu: You can''t attack Tulk, the Oracle because it''s on your side of the field.'
-]
-
-{ #category : #'tests - attacking' }
 MatchUserStoryTest >> test12CreatureDestroysAnotherCreatureInBattleWhenItHasTheGreatestPower [
 
 	| immortalBaronVorg tulkTheOracle |

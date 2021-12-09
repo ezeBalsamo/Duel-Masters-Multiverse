@@ -42,7 +42,7 @@ Match >> assert: aPlayer canAttack: anOpponentCreatureCard of: anOpponentPlayer 
 		because: [ errorDescriptionTemplate value: 'it''s not summoned.' ]
 		unless: ( self summonedCreatures includes: anOpponentCreatureCard );
 		signalIllegalPlayFrom: aPlayer
-		because: [ errorDescriptionTemplate value: 'it''s on your side of the field.' ]
+		because: [ errorDescriptionTemplate value: 'it''s yours.' ]
 		unless: ( ( self summonedCreaturesOf: aPlayer ) includes: anOpponentCreatureCard ) not;
 		signalIllegalPlayFrom: aPlayer
 		because: [ errorDescriptionTemplate value: 'it''s untapped.' ]
