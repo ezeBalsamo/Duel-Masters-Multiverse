@@ -20,20 +20,22 @@ BattleResolver >> initializeWorkingWith: aMatch [
 ]
 
 { #category : #processing }
-BattleResolver >> resolveBattleBetween: aCreatureCard of: aDuelist and: anOpponentCreatureCard of: anOpponentDuelist [
+BattleResolver >> resolveBattleBetween: aCreatureCard of: aPlayer and: anOpponentCreatureCard of: anOpponentPlayer [
 
 	| creaturePower opponentCreaturePower |
 
 	creaturePower := aCreatureCard power.
 	opponentCreaturePower := anOpponentCreatureCard power.
 
-	creaturePower > opponentCreaturePower
-		then: [ match destroy: anOpponentCreatureCard of: anOpponentDuelist ]
-		otherwise: [ creaturePower = opponentCreaturePower
-				then: [ match
-						destroy: aCreatureCard of: aDuelist;
-						destroy: anOpponentCreatureCard of: anOpponentDuelist
+	creaturePower > opponentCreaturePower then: [ 
+		match destroy: anOpponentCreatureCard of: anOpponentPlayer ]
+		otherwise: [ 
+			creaturePower = opponentCreaturePower
+				then: [ 
+					match
+						destroy: aCreatureCard of: aPlayer;
+						destroy: anOpponentCreatureCard of: anOpponentPlayer
 					]
-				otherwise: [ match destroy: aCreatureCard of: aDuelist ]
+				otherwise: [ match destroy: aCreatureCard of: aPlayer ]
 			]
 ]

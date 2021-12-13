@@ -28,31 +28,11 @@ Match class >> between: aPlayer and: anotherPlayer [
 ]
 
 { #category : #'private - asserting' }
-Match >> assert: aPlayer canAttack: anOpponentCreatureCard of: anOpponentPlayer [
+Match >> assertCanAttackWith: aCreatureCard [
 
-	| errorDescriptionTemplate |
-
-	errorDescriptionTemplate := [ :reason | 
-	                            'You can''t attack <1p> because <2s>' expandMacrosWith:
-		                            anOpponentCreatureCard
-		                            with: reason ].
-
-	self
-		signalIllegalPlayFrom: aPlayer
-		because: [ errorDescriptionTemplate value: 'it''s not summoned.' ]
-		unless: ( self summonedCreatures includes: anOpponentCreatureCard );
-		signalIllegalPlayFrom: aPlayer
-		because: [ errorDescriptionTemplate value: 'it''s yours.' ]
-		unless: ( ( self summonedCreaturesOf: aPlayer ) includes: anOpponentCreatureCard ) not;
-		signalIllegalPlayFrom: aPlayer
-		because: [ errorDescriptionTemplate value: 'it''s untapped.' ]
-		unless: ( ( self tappedCreaturesOf: anOpponentPlayer ) includes: anOpponentCreatureCard )
-]
-
-{ #category : #'private - asserting' }
-Match >> assert: aPlayer canAttackWith: aCreatureCard [
-
-	| errorDescriptionTemplate |
+	| turnPlayer errorDescriptionTemplate |
+	
+	turnPlayer := self currentPlayer.
 
 	errorDescriptionTemplate := [ :reason | 
 	                            'You can''t attack with <1p> because <2s>' expandMacrosWith:
@@ -60,18 +40,42 @@ Match >> assert: aPlayer canAttackWith: aCreatureCard [
 		                            with: reason ].
 
 	self
-		signalIllegalPlayFrom: aPlayer
+		signalIllegalPlayFrom: turnPlayer
 		because: [ errorDescriptionTemplate value: 'it''s not summoned.' ]
 		unless: ( self summonedCreatures includes: aCreatureCard );
-		signalIllegalPlayFrom: aPlayer
+		signalIllegalPlayFrom: turnPlayer
 		because: [ errorDescriptionTemplate value: 'it''s not yours.' ]
-		unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard );
-		signalIllegalPlayFrom: aPlayer
+		unless: ( ( self summonedCreaturesOf: turnPlayer ) includes: aCreatureCard );
+		signalIllegalPlayFrom: turnPlayer
 		because: [ errorDescriptionTemplate value: 'it has summoning sickness.' ]
 		unless: ( turnContext hasSummoningSickness: aCreatureCard ) not;
-		signalIllegalPlayFrom: aPlayer
+		signalIllegalPlayFrom: turnPlayer
 		because: [ errorDescriptionTemplate value: 'it''s tapped.' ]
-		unless: ( ( self tappedCreaturesOf: aPlayer ) includes: aCreatureCard ) not
+		unless: ( ( self tappedCreaturesOf: turnPlayer ) includes: aCreatureCard ) not
+]
+
+{ #category : #'private - asserting' }
+Match >> assertCanBeAttacked: aCreatureCard [
+
+	| errorDescriptionTemplate turnPlayer opponentPlayer |
+
+	turnPlayer := self currentPlayer.
+	opponentPlayer := self opponentOf: turnPlayer.
+
+	errorDescriptionTemplate := [ :reason | 
+	                            'You can''t attack <1p> because <2s>' expandMacrosWith: aCreatureCard
+		                            with: reason ].
+
+	self
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it''s not summoned.' ]
+		unless: ( self summonedCreatures includes: aCreatureCard );
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it''s yours.' ]
+		unless: ( ( self summonedCreaturesOf: turnPlayer ) includes: aCreatureCard ) not;
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it''s untapped.' ]
+		unless: ( ( self tappedCreaturesOf: opponentPlayer ) includes: aCreatureCard )
 ]
 
 { #category : #'private - asserting' }
@@ -124,10 +128,11 @@ Match >> attack: anOpponentCreatureCard with: aCreatureCard [
 
 	| turnPlayer opponentPlayer |
 
+	self assertCanAttackWith: aCreatureCard.
+	self assertCanBeAttacked: anOpponentCreatureCard.
+
 	turnPlayer := self currentPlayer.
-	self assert: turnPlayer canAttackWith: aCreatureCard.
 	opponentPlayer := self opponentOf: turnPlayer.
-	self assert: turnPlayer canAttack: anOpponentCreatureCard of: opponentPlayer.
 
 	( self tappedCreaturesOf: turnPlayer ) add: aCreatureCard.
 
@@ -171,10 +176,10 @@ Match >> currentPlayer [
 ]
 
 { #category : #'private - processing' }
-Match >> destroy: aCreatureCard of: aDuelist [
+Match >> destroy: aCreatureCard of: aPlayer [
 
-	( self summonedCreaturesOf: aDuelist ) remove: aCreatureCard.
-	( self graveyardOf: aDuelist ) add: aCreatureCard
+	( self summonedCreaturesOf: aPlayer ) remove: aCreatureCard.
+	( self graveyardOf: aPlayer ) add: aCreatureCard
 ]
 
 { #category : #processing }
@@ -182,7 +187,7 @@ Match >> directAttackFrom: aCreatureCard [
 
 	| turnPlayer opponentPlayer |
 
-	self assert: self currentPlayer canAttackWith: aCreatureCard.
+	self assertCanAttackWith: aCreatureCard.
 
 	turnPlayer := self currentPlayer.
 
