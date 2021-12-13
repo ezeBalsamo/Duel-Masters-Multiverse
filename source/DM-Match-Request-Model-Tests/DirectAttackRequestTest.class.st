@@ -156,7 +156,8 @@ DirectAttackRequestTest >> test09TurnPlayerCantAttackDirectlyWithTappedCreature 
 
 	self should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer
-		because: ( 'You can''t attack with <1p> because is tapped.' expandMacrosWith: attackingCreature ).
+		because:
+		( 'You can''t attack with <1p> because it''s tapped.' expandMacrosWith: attackingCreature ).
 
 	self
 		assert: ( match shieldsOf: self nonTurnPlayer ) size equals: numberOfShields;
