@@ -21,6 +21,13 @@ MatchUserStoryTest >> alien [
 	^ SingleRace ofTypeNamed: 'Alien'
 ]
 
+{ #category : #'private - test support' }
+MatchUserStoryTest >> attack: anOpponentCreatureCard with: aCreatureCard [
+
+	match execute: ( AttackCreatureRequest attacking: anOpponentCreatureCard with: aCreatureCard )
+		requestedBy: self turnPlayer
+]
+
 { #category : #'private - accessing' }
 MatchUserStoryTest >> beatJockey [
 
@@ -31,6 +38,18 @@ MatchUserStoryTest >> beatJockey [
 MatchUserStoryTest >> calendar2016 [
 
 	^ SingleRace ofTypeNamed: '2016 Calendar'
+]
+
+{ #category : #'private - test support' }
+MatchUserStoryTest >> changeCurrentStepTo: aTurnStep [
+
+	match execute: ( ChangeCurrentStepRequest changingTo: aTurnStep ) requestedBy: self turnPlayer
+]
+
+{ #category : #'private - test support' }
+MatchUserStoryTest >> chargeManaWith: aCard [
+
+	match execute: ( ChargeManaRequest chargingManaWith: aCard ) requestedBy: self turnPlayer
 ]
 
 { #category : #'private - system accessing' }
@@ -55,6 +74,24 @@ MatchUserStoryTest >> darknessLeohl [
 		costing: ( DMUnits mana with: 2 )
 		providing: self oneMana
 		with: ( DMUnits power with: 2000 )
+]
+
+{ #category : #'private - test support' }
+MatchUserStoryTest >> directAttackFrom: aCreatureCard [
+
+	match execute: ( DirectAttackRequest attackingWith: aCreatureCard ) requestedBy: self turnPlayer
+]
+
+{ #category : #'private - test support' }
+MatchUserStoryTest >> drawCard [
+
+	match execute: DrawCardRequest new requestedBy: self turnPlayer
+]
+
+{ #category : #'private - test support' }
+MatchUserStoryTest >> endTurn [
+
+	match endTurnOf: self turnPlayer
 ]
 
 { #category : #'private - accessing' }
@@ -134,24 +171,30 @@ MatchUserStoryTest >> setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAn
 	anotherMarch := self march.
 	tulkTheOracle := self tulkTheOracle.
 
-	match chargeManaWith: march.
-	self summon: tulkTheOracle tapping: march.
-	match endTurnOf: shobu.
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march;
+		endTurn.
 
-	match
+	self
+		changeCurrentStepTo: ChargeManaStep new;
 		chargeManaWith: anotherMarch;
-		endTurnOf: knight;
-		endTurnOf: shobu.
+		endTurn;
+		endTurn.
 
-	match
+	self
+		changeCurrentStepTo: ChargeManaStep new;
 		chargeManaWith: vocalMegahit;
+		changeCurrentStepTo: MainStep new;
 		summon: immortalBaronVorg tappingAll: ( Array with: anotherMarch with: vocalMegahit );
-		endTurnOf: knight;
-		endTurnOf: shobu.
+		endTurn;
+		endTurn.
 
-	match
-		directAttackFrom: immortalBaronVorg of: knight;
-		endTurnOf: knight
+	self
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: immortalBaronVorg;
+		endTurn
 ]
 
 { #category : #'private - running' }
@@ -165,20 +208,26 @@ MatchUserStoryTest >> setUpFieldHavingCreatureMorePowerfulThanOpponentCreatureAn
 	anotherMarch := self march.
 	tulkTheOracle := self tulkTheOracle.
 
-	match
+	self
 		chargeManaWith: march;
-		endTurnOf: shobu.
+		endTurn.
 
-	match chargeManaWith: anotherMarch.
-	self summon: tulkTheOracle tapping: anotherMarch.
-	match endTurnOf: knight.
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: anotherMarch;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: anotherMarch;
+		endTurn.
 
-	match
+	self
+		changeCurrentStepTo: ChargeManaStep new;
 		chargeManaWith: vocalMegahit;
+		changeCurrentStepTo: MainStep new;
 		summon: immortalBaronVorg tappingAll: ( Array with: march with: vocalMegahit );
-		endTurnOf: shobu;
-		directAttackFrom: tulkTheOracle of: knight;
-		endTurnOf: knight
+		endTurn;
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: tulkTheOracle;
+		endTurn
 ]
 
 { #category : #'private - running' }
@@ -193,28 +242,34 @@ MatchUserStoryTest >> setUpFieldHavingCreaturesWithSamePower [
 	tulkTheOracle := self tulkTheOracle.
 	immortalBaronVorg := self immortalBaronVorg.
 
-	match
+	self
 		chargeManaWith: march;
-		endTurnOf: shobu.
+		endTurn.
 
-	match
+	self
+		changeCurrentStepTo: ChargeManaStep new;
 		chargeManaWith: vocalMegahit;
-		endTurnOf: knight.
+		endTurn.
 
-	match
+	self
+		changeCurrentStepTo: ChargeManaStep new;
 		chargeManaWith: vorgBrawlerOfHell;
+		changeCurrentStepTo: MainStep new;
 		summon: darknessLeohl tappingAll: ( Array with: march with: vorgBrawlerOfHell );
-		endTurnOf: shobu.
+		endTurn.
 
-	match
+	self
+		changeCurrentStepTo: ChargeManaStep new;
 		chargeManaWith: tulkTheOracle;
+		changeCurrentStepTo: MainStep new;
 		summon: immortalBaronVorg tappingAll: ( Array with: vocalMegahit with: tulkTheOracle );
-		endTurnOf: knight.
+		endTurn.
 
-	match
-		endTurnOf: shobu;
-		directAttackFrom: immortalBaronVorg of: knight;
-		endTurnOf: knight
+	self
+		endTurn;
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: immortalBaronVorg;
+		endTurn
 ]
 
 { #category : #'private - running' }
@@ -241,10 +296,17 @@ MatchUserStoryTest >> startManagingCivilizations [
 		storeCivilization: ( Civilization named: 'Darkness' )
 ]
 
-{ #category : #'private - processing' }
+{ #category : #'private - test support' }
 MatchUserStoryTest >> summon: aCreatureCard tapping: aCard [
 
-	match summon: aCreatureCard tappingAll: { aCard }
+	self summon: aCreatureCard tappingAll: { aCard }
+]
+
+{ #category : #'private - test support' }
+MatchUserStoryTest >> summon: aCreatureCard tappingAll: aCardCollection [
+
+	match execute: ( SummonCreatureRequest summoning: aCreatureCard tappingAll: aCardCollection )
+		requestedBy: self turnPlayer
 ]
 
 { #category : #'tests - battle' }
@@ -253,15 +315,17 @@ MatchUserStoryTest >> test01AttackingCreatureDestroysInBattleAnotherCreatureWhen
 	| immortalBaronVorg tulkTheOracle |
 
 	self setUpFieldHavingCreatureMorePowerfulThanOpponentCreatureAndReadyToAttackIt.
-	
-	immortalBaronVorg := self theOnlyOneIn: (match summonedCreaturesOf: shobu).
-	tulkTheOracle := self theOnlyOneIn: (match summonedCreaturesOf: knight).
+
+	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
+	tulkTheOracle := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
 
 	self
 		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
 		assert: ( match graveyardOf: knight ) isEmpty.
 
-	match attackFrom: immortalBaronVorg of: shobu to: tulkTheOracle.
+	self
+		changeCurrentStepTo: AttackStep new;
+		attack: tulkTheOracle with: immortalBaronVorg.
 
 	self
 		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: immortalBaronVorg;
@@ -280,11 +344,12 @@ MatchUserStoryTest >> test01PlayersBeginTheMatchWithFiveCardsInHand [
 { #category : #'tests - turn order' }
 MatchUserStoryTest >> test01PlayersTurnOrderIsCircular [
 
-	self assert: ( match isTurnOf: shobu ).
-	match endTurnOf: shobu.
-	self assert: ( match isTurnOf: knight ).
-	match endTurnOf: knight.
-	self assert: ( match isTurnOf: shobu )
+	self
+		assert: ( match isTurnOf: shobu );
+		endTurn;
+		assert: ( match isTurnOf: knight );
+		endTurn;
+		assert: ( match isTurnOf: shobu )
 ]
 
 { #category : #'tests - card conditions' }
@@ -295,42 +360,42 @@ MatchUserStoryTest >> test01TappedManaIsUntappedAtTheBeginningOfThePlayerTurn [
 	march := self march.
 	tulkTheOracle := self tulkTheOracle.
 
-	self assert: ( match tappedManaOf: shobu ) isEmpty.
-
-	match chargeManaWith: march.
+	self assertEmpty: ( match tappedManaOf: shobu ).
 
 	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
 		summon: tulkTheOracle tapping: march;
 		assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march.
 
-	match endTurnOf: shobu.
+	self endTurn.
 
 	self assertTheOnlyOneIn: ( match tappedManaOf: shobu ) is: march.
 
-	match endTurnOf: knight.
+	self endTurn.
 
-	self assert: ( match tappedManaOf: shobu ) isEmpty
+	self assertEmpty: ( match tappedManaOf: shobu )
 ]
 
 { #category : #'tests - winning conditions' }
 MatchUserStoryTest >> test01WhenPlayerDrawsHisLastCardThenLosesTheMatch [
 
-	match
-		endTurnOf: shobu;
-		endTurnOf: knight.
+	self
+		endTurn;
+		endTurn.
 
 	shobu numberOfCardsInDeck - 1 timesRepeat: [ 
-		match
+		self
 			drawCard;
-			endTurnOf: shobu;
-			endTurnOf: knight
+			endTurn;
+			endTurn
 		].
 
 	self
 		assert: shobu numberOfCardsInDeck equals: 1;
 		deny: match hasEnded.
 
-	match drawCard.
+	self drawCard.
 
 	self
 		assert: shobu numberOfCardsInDeck isNothing;
@@ -352,7 +417,9 @@ MatchUserStoryTest >> test02AttackingCreatureIsDestroyedInBattleByAnotherCreatur
 		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
 		assert: ( match graveyardOf: knight ) isEmpty.
 
-	match attackFrom: tulkTheOracle of: shobu to: immortalBaronVorg.
+	self
+		changeCurrentStepTo: AttackStep new;
+		attack: immortalBaronVorg with: tulkTheOracle.
 
 	self
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
@@ -368,13 +435,15 @@ MatchUserStoryTest >> test02CreaturesHaveSummoningSicknessOnTheTurnTheyAreSummon
 	march := self march.
 	tulkTheOracle := self tulkTheOracle.
 
-	match chargeManaWith: march.
+	self chargeManaWith: march.
 
 	self
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
 		assert: match creaturesThatHaveSummoningSickness isEmpty.
 
-	self summon: tulkTheOracle tapping: march.
+	self
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
@@ -410,27 +479,29 @@ MatchUserStoryTest >> test02WhenPlayerAttacksDirectlyAndOpponentHasNoShieldsLeft
 
 	tulkTheOracle := self theOnlyOneIn: ( match tappedCreaturesOf: shobu ).
 
-	( match shieldsOf: knight ) size
-		timesRepeat: [ match
-				endTurnOf: shobu;
-				endTurnOf: knight;
-				directAttackFrom: tulkTheOracle of: shobu
-			].
+	( match shieldsOf: knight ) size timesRepeat: [ 
+		self
+			endTurn;
+			endTurn;
+			changeCurrentStepTo: AttackStep new;
+			directAttackFrom: tulkTheOracle
+		].
 
 	self
 		assert: ( match shieldsOf: knight ) isEmpty;
 		deny: match hasEnded;
 		should: [ match winner ]
-			raise: Error
-			withMessageText: 'Can''t know the winner until the game has ended.'.
-
-	match
-		endTurnOf: shobu;
-		endTurnOf: knight;
-		directAttackFrom: tulkTheOracle of: shobu.
+		raise: Error
+		withMessageText: 'Can''t know the winner until the game has ended.'.
 
 	self
-		assert: ( match shieldsOf: knight ) isEmpty;
+		endTurn;
+		endTurn;
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: tulkTheOracle.
+
+	self
+		assertEmpty: ( match shieldsOf: knight );
 		assert: match hasEnded;
 		assert: match winner equals: shobu
 ]
@@ -450,7 +521,9 @@ MatchUserStoryTest >> test03BothCreaturesAreDestroyedInBattleWhenTheyHaveTheSame
 		assert: ( match graveyardOf: shobu ) isEmpty;
 		assert: ( match graveyardOf: knight ) isEmpty.
 
-	match attackFrom: darknessLeohl of: shobu to: immortalBaronVorg.
+	self
+		changeCurrentStepTo: AttackStep new;
+		attack: immortalBaronVorg with: darknessLeohl.
 
 	self
 		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
@@ -488,15 +561,16 @@ MatchUserStoryTest >> test03SummoningSicknessEndsWhenPlayerEndsTurn [
 	march := self march.
 	tulkTheOracle := self tulkTheOracle.
 
-	match chargeManaWith: march.
-
-	self summon: tulkTheOracle tapping: march.
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march.
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
 		assertTheOnlyOneIn: match creaturesThatHaveSummoningSickness is: tulkTheOracle.
 
-	match endTurnOf: shobu.
+	self endTurn.
 
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
@@ -540,18 +614,21 @@ MatchUserStoryTest >> test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTapp
 	march := self march.
 	tulkTheOracle := self tulkTheOracle.
 
-	match chargeManaWith: march.
-	self summon: tulkTheOracle tapping: march.
-	match
-		endTurnOf: shobu;
-		endTurnOf: knight.
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march;
+		endTurn;
+		endTurn.
 
 	self
 		assert: ( match shieldsOf: knight ) size equals: 5;
 		assert: ( match numberOfCardsInHandOf: knight ) equals: 5;
 		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
 
-	match directAttackFrom: tulkTheOracle of: shobu.
+	self
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: tulkTheOracle.
 
 	self
 		assert: ( match shieldsOf: knight ) size equals: 4;
@@ -582,17 +659,15 @@ MatchUserStoryTest >> test06TappedCreatureCantAttack [
 
 	errorDescription := 'Shobu: You can''t attack with Tulk, the Oracle because is tapped.'.
 
-	self
-		withTheOnlyOneIn: ( match tappedCreaturesOf: shobu )
-		do: [ :tappedCreature | 
-			self
-				should: [ match directAttackFrom: tappedCreature of: shobu ]
-					raise: IllegalPlay
-					withMessageText: errorDescription;
-				should: [ match attackFrom: tappedCreature of: shobu to: self immortalBaronVorg ]
-					raise: IllegalPlay
-					withMessageText: errorDescription
-			]
+	self withTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) do: [ :tappedCreature | 
+		self
+			should: [ self directAttackFrom: tappedCreature ]
+			raise: IllegalPlay
+			withMessageText: errorDescription;
+			should: [ self attack: self immortalBaronVorg with: tappedCreature ]
+			raise: IllegalPlay
+			withMessageText: errorDescription
+		]
 ]
 
 { #category : #'tests - field setup' }
@@ -618,15 +693,14 @@ MatchUserStoryTest >> test07TappedCreatureRemainsTappedUntilTheBeginningOfItsOwn
 
 	tulkTheOracle := self theOnlyOneIn: ( match tappedCreaturesOf: shobu ).
 
-	self assert: ( match isTurnOf: shobu ).
-	match endTurnOf: shobu.
-	self
-		assert: ( match isTurnOf: knight );
-		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: tulkTheOracle.
-	match endTurnOf: knight.
 	self
 		assert: ( match isTurnOf: shobu );
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty
+		endTurn;
+		assert: ( match isTurnOf: knight );
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: tulkTheOracle;
+		endTurn;
+		assert: ( match isTurnOf: shobu );
+		assertEmpty: ( match tappedCreaturesOf: shobu )
 ]
 
 { #category : #'tests - field setup' }
@@ -662,20 +736,26 @@ MatchUserStoryTest >> test10PlayerCantAttackOpponentCreatureWhenIsUntapped [
 	anotherMarch := self march.
 	tulkTheOracle := self tulkTheOracle.
 
-	match
+	self
 		chargeManaWith: march;
-		endTurnOf: shobu.
+		endTurn.
 
-	match chargeManaWith: anotherMarch.
-	self summon: tulkTheOracle tapping: anotherMarch.
-	match endTurnOf: knight.
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: anotherMarch;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: anotherMarch;
+		endTurn.
 
-	match
+	self
+		changeCurrentStepTo: ChargeManaStep new;
 		chargeManaWith: vocalMegahit;
+		changeCurrentStepTo: MainStep new;
 		summon: immortalBaronVorg tappingAll: ( Array with: march with: vocalMegahit );
-		endTurnOf: shobu.
+		endTurn;
+		changeCurrentStepTo: AttackStep new.
 
-	self should: [ match attackFrom: tulkTheOracle of: knight to: immortalBaronVorg ]
+	self should: [ self attack: immortalBaronVorg with: tulkTheOracle ]
 		raise: IllegalPlay
 		withMessageText: 'Knight: You can''t attack Immortal Baron, Vorg because it''s untapped.'
 ]
@@ -690,6 +770,12 @@ MatchUserStoryTest >> tulkTheOracle [
 		costing: self oneMana
 		providing: self oneMana
 		with: ( DMUnits power with: 500 )
+]
+
+{ #category : #'private - accessing' }
+MatchUserStoryTest >> turnPlayer [
+
+	^ match currentPlayer
 ]
 
 { #category : #'private - creature accessing' }

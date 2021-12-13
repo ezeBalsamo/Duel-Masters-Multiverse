@@ -25,7 +25,7 @@ ChargeManaRequestTest >> test02TurnPlayerCantChargeManaBeforeDrawingCard [
 
 	request := ChargeManaRequest chargingManaWith: self immortalBaronVorg.
 
-	match endTurnOf: self turnPlayer.
+	self endTurn.
 
 	self
 		should: [ match execute: request requestedBy: self turnPlayer ]
@@ -70,7 +70,7 @@ ChargeManaRequestTest >> test05PlayerCanChargeManaEveryTurn [
 
 	self test03ChargeManaOfTurnPlayer.
 
-	2 timesRepeat: [ match endTurnOf: self turnPlayer ].
+	2 timesRepeat: [ self endTurn ].
 
 	match execute: DrawCardRequest new requestedBy: self turnPlayer.
 	self changeCurrentStepTo: ChargeManaStep new.

@@ -43,7 +43,7 @@ DrawCardRequestTest >> test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst [
 
 	request := DrawCardRequest new.
 
-	match endTurnOf: self turnPlayer.
+	self endTurn.
 	numberOfCardsInHand := match numberOfCardsInHandOf: self turnPlayer.
 	match execute: request requestedBy: self turnPlayer.
 	self assert: ( match numberOfCardsInHandOf: self turnPlayer ) equals: numberOfCardsInHand + 1
@@ -72,7 +72,7 @@ DrawCardRequestTest >> test05PlayerCanDrawCardEveryTurn [
 
 	self test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst.
 
-	2 timesRepeat: [ match endTurnOf: self turnPlayer ].
+	2 timesRepeat: [ self endTurn ].
 
 	self test03DrawCardForTurnPlayerOnAnyTurnExceptTheFirst
 ]

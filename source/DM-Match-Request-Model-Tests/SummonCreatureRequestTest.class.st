@@ -26,7 +26,7 @@ SummonCreatureRequestTest >> test02TurnPlayerCantSummonCreatureBeforeDrawingCard
 
 	request := SummonCreatureRequest summoning: self immortalBaronVorg tappingAll: #(  ).
 
-	match endTurnOf: self turnPlayer.
+	self endTurn.
 
 	self
 		assertEmpty: ( match summonedCreaturesOf: self turnPlayer );
@@ -253,7 +253,7 @@ SummonCreatureRequestTest >> test12TurnPlayerCanSummonEveryTurn [
 
 	request := SummonCreatureRequest summoning: immortalBaronVorg tappingAll: cardsToTap.
 
-	2 timesRepeat: [ match endTurnOf: self turnPlayer ].
+	2 timesRepeat: [ self endTurn ].
 
 	self
 		drawCard;

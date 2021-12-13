@@ -23,7 +23,7 @@ DirectAttackRequestTest >> test02TurnPlayerCantAttackDirectlyBeforeDrawingCard [
 
 	request := DirectAttackRequest attackingWith: self immortalBaronVorg.
 
-	match endTurnOf: self turnPlayer.
+	self endTurn.
 
 	self should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer

@@ -134,26 +134,12 @@ Match >> attack: anOpponentCreatureCard with: aCreatureCard [
 	turnPlayer := self currentPlayer.
 	self assert: turnPlayer canAttackWith: aCreatureCard.
 	opponentPlayer := self opponentOf: turnPlayer.
-	self assert: turnPlayer canAttack: anOpponentCreatureCard of: opponentPlayer
-]
+	self assert: turnPlayer canAttack: anOpponentCreatureCard of: opponentPlayer.
 
-{ #category : #processing }
-Match >> attackFrom: aCreatureCard of: aPlayer to: anOpponentCreatureCard [
+	( self tappedCreaturesOf: turnPlayer ) add: aCreatureCard.
 
-	| opponentPlayer |
-
-	self
-		ifIsNotTurnOf: aPlayer warnThat: 'You can''t attack on your opponent''s turn.';
-		assert: aPlayer canAttackWith: aCreatureCard.
-
-	opponentPlayer := self opponentOf: aPlayer.
-	self assert: aPlayer canAttack: anOpponentCreatureCard of: opponentPlayer.
-
-	( self tappedCreaturesOf: aPlayer ) add: aCreatureCard.
-
-	( BattleResolver workingWith: self )
-		resolveBattleBetween: aCreatureCard
-		of: aPlayer
+	( BattleResolver workingWith: self ) resolveBattleBetween: aCreatureCard
+		of: turnPlayer
 		and: anOpponentCreatureCard
 		of: opponentPlayer
 ]
@@ -214,27 +200,6 @@ Match >> directAttackFrom: aCreatureCard [
 		ifNotEmpty: [ :opponentShields | 
 			| brokenShield |
 
-			brokenShield := opponentShields anyOne.
-			opponentShields remove: brokenShield.
-			( self handOf: opponentPlayer ) add: brokenShield
-			]
-]
-
-{ #category : #processing }
-Match >> directAttackFrom: aCreatureCard of: aPlayer [
-
-	| opponentPlayer brokenShield |
-
-	self
-		ifIsNotTurnOf: aPlayer warnThat: 'You can''t attack on your opponent''s turn.';
-		assert: aPlayer canAttackWith: aCreatureCard.
-
-	( self tappedCreaturesOf: aPlayer ) add: aCreatureCard.
-
-	opponentPlayer := self opponentOf: aPlayer.
-	( self shieldsOf: opponentPlayer )
-		ifEmpty: [ status := GameEnded wonBy: aPlayer ]
-		ifNotEmpty: [ :opponentShields | 
 			brokenShield := opponentShields anyOne.
 			opponentShields remove: brokenShield.
 			( self handOf: opponentPlayer ) add: brokenShield

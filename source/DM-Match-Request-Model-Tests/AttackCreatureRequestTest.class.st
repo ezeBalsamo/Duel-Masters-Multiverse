@@ -23,7 +23,7 @@ AttackCreatureRequestTest >> test02TurnPlayerCantAttackCreatureBeforeDrawingCard
 
 	request := AttackCreatureRequest attacking: self immortalBaronVorg with: self immortalBaronVorg.
 
-	match endTurnOf: self turnPlayer.
+	self endTurn.
 
 	self should: [ match execute: request requestedBy: self turnPlayer ]
 		raiseIllegalPlayFrom: self turnPlayer

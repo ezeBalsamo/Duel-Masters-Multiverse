@@ -37,8 +37,9 @@ MatchRequestTest >> chargeManaWithAll: aCardCollection [
 	aCardCollection do: [ :aCard | 
 		self chargeManaWith: aCard.
 		2 timesRepeat: [ 
-			match endTurnOf: self turnPlayer.
-			self drawCard
+			self
+				endTurn;
+				drawCard
 			].
 		self changeCurrentStepTo: ChargeManaStep new
 		]
