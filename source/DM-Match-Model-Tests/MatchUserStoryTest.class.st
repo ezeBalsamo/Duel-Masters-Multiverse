@@ -356,6 +356,41 @@ MatchUserStoryTest >> test02PlayersBeginTheMatchWithFiveShields [
 		assert: ( match shieldsOf: knight ) size equals: 5
 ]
 
+{ #category : #'tests - winning conditions' }
+MatchUserStoryTest >> test02WhenPlayerAttacksDirectlyAndOpponentHasNoShieldsLeftThenPlayerWinsTheMatch [
+
+	| tulkTheOracle |
+
+	self
+		test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand.
+
+	tulkTheOracle := self theOnlyOneIn: ( match tappedCreaturesOf: shobu ).
+
+	( match shieldsOf: knight ) size
+		timesRepeat: [ match
+				endTurnOf: shobu;
+				endTurnOf: knight;
+				directAttackFrom: tulkTheOracle of: shobu
+			].
+
+	self
+		assert: ( match shieldsOf: knight ) isEmpty;
+		deny: match hasEnded;
+		should: [ match winner ]
+			raise: Error
+			withMessageText: 'Can''t know the winner until the game has ended.'.
+
+	match
+		endTurnOf: shobu;
+		endTurnOf: knight;
+		directAttackFrom: tulkTheOracle of: shobu.
+
+	self
+		assert: ( match shieldsOf: knight ) isEmpty;
+		assert: match hasEnded;
+		assert: match winner equals: shobu
+]
+
 { #category : #'tests - turn order' }
 MatchUserStoryTest >> test03PlayerNotBelongingToMatchCantEndOpponentsTurn [
 
@@ -537,41 +572,6 @@ MatchUserStoryTest >> test08PlayerNotBelongingToMatchCantHaveChargedMana [
 		should: [ match manaOf: intruder ]
 		raise: Error
 		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test08WhenPlayerAttacksDirectlyAndOpponentHasNoShieldsLeftThenPlayerWinsTheMatch [
-
-	| tulkTheOracle |
-
-	self
-		test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand.
-
-	tulkTheOracle := self theOnlyOneIn: ( match tappedCreaturesOf: shobu ).
-
-	( match shieldsOf: knight ) size
-		timesRepeat: [ match
-				endTurnOf: shobu;
-				endTurnOf: knight;
-				directAttackFrom: tulkTheOracle of: shobu
-			].
-
-	self
-		assert: ( match shieldsOf: knight ) isEmpty;
-		deny: match hasEnded;
-		should: [ match winner ]
-			raise: Error
-			withMessageText: 'Can''t know the winner until the game has ended.'.
-
-	match
-		endTurnOf: shobu;
-		endTurnOf: knight;
-		directAttackFrom: tulkTheOracle of: shobu.
-
-	self
-		assert: ( match shieldsOf: knight ) isEmpty;
-		assert: match hasEnded;
-		assert: match winner equals: shobu
 ]
 
 { #category : #'tests - field setup' }
