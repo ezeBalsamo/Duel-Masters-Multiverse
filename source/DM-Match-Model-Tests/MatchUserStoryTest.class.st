@@ -247,6 +247,28 @@ MatchUserStoryTest >> summon: aCreatureCard tapping: aCard [
 	match summon: aCreatureCard tappingAll: { aCard }
 ]
 
+{ #category : #'tests - battle' }
+MatchUserStoryTest >> test01AttackingCreatureDestroysInBattleAnotherCreatureWhenItHasTheGreatestPower [
+
+	| immortalBaronVorg tulkTheOracle |
+
+	self setUpFieldHavingCreatureMorePowerfulThanOpponentCreatureAndReadyToAttackIt.
+	
+	immortalBaronVorg := self theOnlyOneIn: (match summonedCreaturesOf: shobu).
+	tulkTheOracle := self theOnlyOneIn: (match summonedCreaturesOf: knight).
+
+	self
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
+		assert: ( match graveyardOf: knight ) isEmpty.
+
+	match attackFrom: immortalBaronVorg of: shobu to: tulkTheOracle.
+
+	self
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: immortalBaronVorg;
+		assert: ( match summonedCreaturesOf: knight ) isEmpty;
+		assertTheOnlyOneIn: ( match graveyardOf: knight ) is: tulkTheOracle
+]
+
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test01PlayersBeginTheMatchWithFiveCardsInHand [
 
@@ -314,6 +336,28 @@ MatchUserStoryTest >> test01WhenPlayerDrawsHisLastCardThenLosesTheMatch [
 		assert: shobu numberOfCardsInDeck isNothing;
 		assert: match hasEnded;
 		assert: match winner equals: knight
+]
+
+{ #category : #'tests - battle' }
+MatchUserStoryTest >> test02AttackingCreatureIsDestroyedInBattleByAnotherCreatureWhenItHasLessPower [
+
+	| tulkTheOracle immortalBaronVorg |
+
+	self setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAndReadyToAttackIt.
+
+	tulkTheOracle := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
+	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
+
+	self
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
+		assert: ( match graveyardOf: knight ) isEmpty.
+
+	match attackFrom: tulkTheOracle of: shobu to: immortalBaronVorg.
+
+	self
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assertTheOnlyOneIn: ( match graveyardOf: shobu ) is: tulkTheOracle;
+		assertTheOnlyOneIn: ( match summonedCreaturesOf: knight ) is: immortalBaronVorg
 ]
 
 { #category : #'tests - card conditions' }
@@ -389,6 +433,30 @@ MatchUserStoryTest >> test02WhenPlayerAttacksDirectlyAndOpponentHasNoShieldsLeft
 		assert: ( match shieldsOf: knight ) isEmpty;
 		assert: match hasEnded;
 		assert: match winner equals: shobu
+]
+
+{ #category : #'tests - battle' }
+MatchUserStoryTest >> test03BothCreaturesAreDestroyedInBattleWhenTheyHaveTheSamePower [
+
+	| darknessLeohl immortalBaronVorg |
+
+	self setUpFieldHavingCreaturesWithSamePower.
+
+	darknessLeohl := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
+	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
+
+	self
+		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
+		assert: ( match graveyardOf: shobu ) isEmpty;
+		assert: ( match graveyardOf: knight ) isEmpty.
+
+	match attackFrom: darknessLeohl of: shobu to: immortalBaronVorg.
+
+	self
+		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
+		assert: ( match summonedCreaturesOf: knight ) isEmpty;
+		assertTheOnlyOneIn: ( match graveyardOf: shobu ) is: darknessLeohl;
+		assertTheOnlyOneIn: ( match graveyardOf: knight ) is: immortalBaronVorg
 ]
 
 { #category : #'tests - turn order' }
@@ -610,74 +678,6 @@ MatchUserStoryTest >> test10PlayerCantAttackOpponentCreatureWhenIsUntapped [
 	self should: [ match attackFrom: tulkTheOracle of: knight to: immortalBaronVorg ]
 		raise: IllegalPlay
 		withMessageText: 'Knight: You can''t attack Immortal Baron, Vorg because it''s untapped.'
-]
-
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test12CreatureDestroysAnotherCreatureInBattleWhenItHasTheGreatestPower [
-
-	| immortalBaronVorg tulkTheOracle |
-
-	self setUpFieldHavingCreatureMorePowerfulThanOpponentCreatureAndReadyToAttackIt.
-	
-	immortalBaronVorg := self theOnlyOneIn: (match summonedCreaturesOf: shobu).
-	tulkTheOracle := self theOnlyOneIn: (match summonedCreaturesOf: knight).
-
-	self
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
-		assert: ( match graveyardOf: knight ) isEmpty.
-
-	match attackFrom: immortalBaronVorg of: shobu to: tulkTheOracle.
-
-	self
-		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: immortalBaronVorg;
-		assert: ( match summonedCreaturesOf: knight ) isEmpty;
-		assertTheOnlyOneIn: ( match graveyardOf: knight ) is: tulkTheOracle
-]
-
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test13CreatureIsDestroyedInBattleByAnotherCreatureWhenItHasLessPower [
-
-	| tulkTheOracle immortalBaronVorg |
-
-	self setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAndReadyToAttackIt.
-
-	tulkTheOracle := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
-	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
-
-	self
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
-		assert: ( match graveyardOf: knight ) isEmpty.
-
-	match attackFrom: tulkTheOracle of: shobu to: immortalBaronVorg.
-
-	self
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		assertTheOnlyOneIn: ( match graveyardOf: shobu ) is: tulkTheOracle;
-		assertTheOnlyOneIn: ( match summonedCreaturesOf: knight ) is: immortalBaronVorg
-]
-
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test14BothCreaturesAreDestroyedInBattleWhenTheyHaveTheSamePower [
-
-	| darknessLeohl immortalBaronVorg |
-
-	self setUpFieldHavingCreaturesWithSamePower.
-
-	darknessLeohl := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
-	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
-
-	self
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
-		assert: ( match graveyardOf: shobu ) isEmpty;
-		assert: ( match graveyardOf: knight ) isEmpty.
-
-	match attackFrom: darknessLeohl of: shobu to: immortalBaronVorg.
-
-	self
-		assert: ( match summonedCreaturesOf: shobu ) isEmpty;
-		assert: ( match summonedCreaturesOf: knight ) isEmpty;
-		assertTheOnlyOneIn: ( match graveyardOf: shobu ) is: darknessLeohl;
-		assertTheOnlyOneIn: ( match graveyardOf: knight ) is: immortalBaronVorg
 ]
 
 { #category : #'private - creature accessing' }
