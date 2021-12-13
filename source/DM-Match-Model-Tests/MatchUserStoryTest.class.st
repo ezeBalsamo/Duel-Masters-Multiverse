@@ -490,33 +490,30 @@ MatchUserStoryTest >> test02PlayersBeginTheMatchWithFiveShields [
 { #category : #'tests - winning conditions' }
 MatchUserStoryTest >> test02WhenPlayerAttacksDirectlyAndOpponentHasNoShieldsLeftThenPlayerWinsTheMatch [
 
-	| tulkTheOracle |
+	| tulkTheOracle attackingBlock |
 
-	self
-		test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand.
+	self setUpBattleZoneInWhichTheTurnPlayerHasOneTappedCreatureDueToDirectAttack.
 
 	tulkTheOracle := self theOnlyOneIn: ( match tappedCreaturesOf: shobu ).
 
-	( match shieldsOf: knight ) size timesRepeat: [ 
-		self
-			endTurn;
-			endTurn;
-			changeCurrentStepTo: AttackStep new;
-			directAttackFrom: tulkTheOracle
-		].
+	attackingBlock := [ 
+	                  self
+		                  endTurn;
+		                  endTurn;
+		                  changeCurrentStepTo: AttackStep new;
+		                  directAttackFrom: tulkTheOracle
+	                  ].
+
+	( match shieldsOf: knight ) size timesRepeat: attackingBlock.
 
 	self
-		assert: ( match shieldsOf: knight ) isEmpty;
+		assertEmpty: ( match shieldsOf: knight );
 		deny: match hasEnded;
 		should: [ match winner ]
 		raise: Error
 		withMessageText: 'Can''t know the winner until the game has ended.'.
 
-	self
-		endTurn;
-		endTurn;
-		changeCurrentStepTo: AttackStep new;
-		directAttackFrom: tulkTheOracle.
+	attackingBlock value.
 
 	self
 		assertEmpty: ( match shieldsOf: knight );
