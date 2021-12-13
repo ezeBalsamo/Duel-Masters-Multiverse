@@ -27,7 +27,7 @@ Match class >> between: aPlayer and: anotherPlayer [
 	^ self new initializeBetween: aPlayer and: anotherPlayer
 ]
 
-{ #category : #'private - preconditions' }
+{ #category : #'private - asserting' }
 Match >> assert: aPlayer canAttack: anOpponentCreatureCard of: anOpponentPlayer [
 
 	| errorDescriptionTemplate |
@@ -49,7 +49,7 @@ Match >> assert: aPlayer canAttack: anOpponentCreatureCard of: anOpponentPlayer 
 		unless: ( ( self tappedCreaturesOf: anOpponentPlayer ) includes: anOpponentCreatureCard )
 ]
 
-{ #category : #'private - preconditions' }
+{ #category : #'private - asserting' }
 Match >> assert: aPlayer canAttackWith: aCreatureCard [
 
 	| errorDescriptionTemplate |
@@ -95,7 +95,7 @@ Match >> assertIsAllowedInCurrentStep: aRequest [
 		unless: ( currentStep allowsActionDescribedAs: aRequest actionDescription )
 ]
 
-{ #category : #'private - preconditions' }
+{ #category : #'private - asserting' }
 Match >> assertIsValidPlayer: aPotentialPlayer [
 
 	^ [ self signalIsNotValidPlayer: aPotentialPlayer ]
@@ -279,7 +279,7 @@ Match >> hasEnded [
 	^ status hasEnded
 ]
 
-{ #category : #'private - preconditions' }
+{ #category : #'private - asserting' }
 Match >> ifIsNotTurnOf: aPotentialPlayer warnThat: anErrorDescription [
 
 	self
