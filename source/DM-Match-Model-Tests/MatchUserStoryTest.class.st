@@ -161,95 +161,7 @@ MatchUserStoryTest >> setUp [
 ]
 
 { #category : #'private - running' }
-MatchUserStoryTest >> setUpBattleZoneInWhichTheTurnPlayerHasOneTappedCreatureDueToDirectAttack [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	self
-		chargeManaWith: march;
-		changeCurrentStepTo: MainStep new;
-		summon: tulkTheOracle tapping: march;
-		endTurn;
-		endTurn;
-		changeCurrentStepTo: AttackStep new;
-		directAttackFrom: tulkTheOracle
-]
-
-{ #category : #'private - running' }
-MatchUserStoryTest >> setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAndReadyToAttackIt [
-
-	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle |
-
-	march := self march.
-	vocalMegahit := self vocalMegahit.
-	immortalBaronVorg := self immortalBaronVorg.
-	anotherMarch := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	self
-		chargeManaWith: march;
-		changeCurrentStepTo: MainStep new;
-		summon: tulkTheOracle tapping: march;
-		endTurn.
-
-	self
-		changeCurrentStepTo: ChargeManaStep new;
-		chargeManaWith: anotherMarch;
-		endTurn;
-		endTurn.
-
-	self
-		changeCurrentStepTo: ChargeManaStep new;
-		chargeManaWith: vocalMegahit;
-		changeCurrentStepTo: MainStep new;
-		summon: immortalBaronVorg tappingAll: ( Array with: anotherMarch with: vocalMegahit );
-		endTurn;
-		endTurn.
-
-	self
-		changeCurrentStepTo: AttackStep new;
-		directAttackFrom: immortalBaronVorg;
-		endTurn
-]
-
-{ #category : #'private - running' }
-MatchUserStoryTest >> setUpFieldHavingCreatureMorePowerfulThanOpponentCreatureAndReadyToAttackIt [
-
-	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle |
-
-	march := self march.
-	vocalMegahit := self vocalMegahit.
-	immortalBaronVorg := self immortalBaronVorg.
-	anotherMarch := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	self
-		chargeManaWith: march;
-		endTurn.
-
-	self
-		changeCurrentStepTo: ChargeManaStep new;
-		chargeManaWith: anotherMarch;
-		changeCurrentStepTo: MainStep new;
-		summon: tulkTheOracle tapping: anotherMarch;
-		endTurn.
-
-	self
-		changeCurrentStepTo: ChargeManaStep new;
-		chargeManaWith: vocalMegahit;
-		changeCurrentStepTo: MainStep new;
-		summon: immortalBaronVorg tappingAll: ( Array with: march with: vocalMegahit );
-		endTurn;
-		changeCurrentStepTo: AttackStep new;
-		directAttackFrom: tulkTheOracle;
-		endTurn
-]
-
-{ #category : #'private - running' }
-MatchUserStoryTest >> setUpFieldHavingCreaturesWithSamePower [
+MatchUserStoryTest >> setUpBattleZoneInWhichBothPlayersHaveCreaturesWithTheSamePower [
 
 	| march vorgBrawlerOfHell darknessLeohl vocalMegahit tulkTheOracle immortalBaronVorg |
 
@@ -287,6 +199,94 @@ MatchUserStoryTest >> setUpFieldHavingCreaturesWithSamePower [
 		endTurn;
 		changeCurrentStepTo: AttackStep new;
 		directAttackFrom: immortalBaronVorg;
+		endTurn
+]
+
+{ #category : #'private - running' }
+MatchUserStoryTest >> setUpBattleZoneInWhichTheTurnPlayerHasOneTappedCreatureDueToDirectAttack [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march;
+		endTurn;
+		endTurn;
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: tulkTheOracle
+]
+
+{ #category : #'private - running' }
+MatchUserStoryTest >> setUpBattleZoneInWhichTurnPlayerHasOneCreatureLessPowerfulThanOpponentCreatureAndIsReadyToAttackIt [
+
+	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle |
+
+	march := self march.
+	vocalMegahit := self vocalMegahit.
+	immortalBaronVorg := self immortalBaronVorg.
+	anotherMarch := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: anotherMarch;
+		endTurn;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: vocalMegahit;
+		changeCurrentStepTo: MainStep new;
+		summon: immortalBaronVorg tappingAll: ( Array with: anotherMarch with: vocalMegahit );
+		endTurn;
+		endTurn.
+
+	self
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: immortalBaronVorg;
+		endTurn
+]
+
+{ #category : #'private - running' }
+MatchUserStoryTest >> setUpBattleZoneInWhichTurnPlayerHasOneCreatureMorePowerfulThanOpponentCreatureAndIsReadyToAttackIt [
+
+	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle |
+
+	march := self march.
+	vocalMegahit := self vocalMegahit.
+	immortalBaronVorg := self immortalBaronVorg.
+	anotherMarch := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	self
+		chargeManaWith: march;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: anotherMarch;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: anotherMarch;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: vocalMegahit;
+		changeCurrentStepTo: MainStep new;
+		summon: immortalBaronVorg tappingAll: ( Array with: march with: vocalMegahit );
+		endTurn;
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: tulkTheOracle;
 		endTurn
 ]
 
@@ -332,7 +332,8 @@ MatchUserStoryTest >> test01AttackingCreatureDestroysInBattleAnotherCreatureWhen
 
 	| immortalBaronVorg tulkTheOracle |
 
-	self setUpFieldHavingCreatureMorePowerfulThanOpponentCreatureAndReadyToAttackIt.
+	self
+		setUpBattleZoneInWhichTurnPlayerHasOneCreatureMorePowerfulThanOpponentCreatureAndIsReadyToAttackIt.
 
 	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
 	tulkTheOracle := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
@@ -426,7 +427,8 @@ MatchUserStoryTest >> test02AttackingCreatureIsDestroyedInBattleByAnotherCreatur
 
 	| tulkTheOracle immortalBaronVorg |
 
-	self setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAndReadyToAttackIt.
+	self
+		setUpBattleZoneInWhichTurnPlayerHasOneCreatureLessPowerfulThanOpponentCreatureAndIsReadyToAttackIt.
 
 	tulkTheOracle := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
 	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
@@ -526,7 +528,7 @@ MatchUserStoryTest >> test03BothCreaturesAreDestroyedInBattleWhenTheyHaveTheSame
 
 	| darknessLeohl immortalBaronVorg |
 
-	self setUpFieldHavingCreaturesWithSamePower.
+	self setUpBattleZoneInWhichBothPlayersHaveCreaturesWithTheSamePower.
 
 	darknessLeohl := self theOnlyOneIn: ( match summonedCreaturesOf: shobu ).
 	immortalBaronVorg := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
