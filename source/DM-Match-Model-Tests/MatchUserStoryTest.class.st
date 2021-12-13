@@ -161,6 +161,24 @@ MatchUserStoryTest >> setUp [
 ]
 
 { #category : #'private - running' }
+MatchUserStoryTest >> setUpBattleZoneInWhichTheTurnPlayerHasOneTappedCreatureDueToDirectAttack [
+
+	| march tulkTheOracle |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march;
+		endTurn;
+		endTurn;
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: tulkTheOracle
+]
+
+{ #category : #'private - running' }
 MatchUserStoryTest >> setUpFieldHavingCreatureLessPowerfulThanOpponentCreatureAndReadyToAttackIt [
 
 	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle |
@@ -598,42 +616,31 @@ MatchUserStoryTest >> test04PlayersBeginTheMatchWithoutSummonedCreatures [
 		assert: ( match summonedCreaturesOf: knight ) isEmpty
 ]
 
+{ #category : #'tests - card conditions' }
+MatchUserStoryTest >> test04TappedCreatureRemainsTappedUntilTheBeginningOfItsOwnerTurn [
+
+	| tulkTheOracle |
+
+	self setUpBattleZoneInWhichTheTurnPlayerHasOneTappedCreatureDueToDirectAttack.
+
+	tulkTheOracle := self theOnlyOneIn: ( match tappedCreaturesOf: shobu ).
+
+	self
+		assert: ( match isTurnOf: shobu );
+		endTurn;
+		assert: ( match isTurnOf: knight );
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: tulkTheOracle;
+		endTurn;
+		assert: ( match isTurnOf: shobu );
+		assertEmpty: ( match tappedCreaturesOf: shobu )
+]
+
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test05PlayersBeginTheMatchWithoutCardsInGraveyard [
 
 	self
 		assert: ( match graveyardOf: shobu ) isEmpty;
 		assert: ( match graveyardOf: knight ) isEmpty
-]
-
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand [
-
-	| march tulkTheOracle |
-
-	march := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	self
-		chargeManaWith: march;
-		changeCurrentStepTo: MainStep new;
-		summon: tulkTheOracle tapping: march;
-		endTurn;
-		endTurn.
-
-	self
-		assert: ( match shieldsOf: knight ) size equals: 5;
-		assert: ( match numberOfCardsInHandOf: knight ) equals: 5;
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty.
-
-	self
-		changeCurrentStepTo: AttackStep new;
-		directAttackFrom: tulkTheOracle.
-
-	self
-		assert: ( match shieldsOf: knight ) size equals: 4;
-		assert: ( match numberOfCardsInHandOf: knight ) equals: 6;
-		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: tulkTheOracle
 ]
 
 { #category : #'tests - field setup' }
@@ -660,26 +667,6 @@ MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveShields [
 		should: [ match shieldsOf: intruder ]
 		raise: Error
 		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test07TappedCreatureRemainsTappedUntilTheBeginningOfItsOwnerTurn [
-
-	| tulkTheOracle |
-
-	self
-		test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand.
-
-	tulkTheOracle := self theOnlyOneIn: ( match tappedCreaturesOf: shobu ).
-
-	self
-		assert: ( match isTurnOf: shobu );
-		endTurn;
-		assert: ( match isTurnOf: knight );
-		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: tulkTheOracle;
-		endTurn;
-		assert: ( match isTurnOf: shobu );
-		assertEmpty: ( match tappedCreaturesOf: shobu )
 ]
 
 { #category : #'tests - field setup' }
