@@ -35,6 +35,12 @@ PlayerActionDescriptions class >> drawCard [
 ]
 
 { #category : #accessing }
+PlayerActionDescriptions class >> endTurn [
+
+	^ 'End turn'
+]
+
+{ #category : #accessing }
 PlayerActionDescriptions class >> summonCreature [
 
 	^ 'Summon a creature'
