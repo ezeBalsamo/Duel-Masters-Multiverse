@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-DirectAttackRequestTest >> test01NonTurnPlayerCantDirectAttack [
+DirectAttackRequestTest >> test01NonTurnPlayerCantDirectlyAttack [
 
 	| request |
 
@@ -17,7 +17,7 @@ DirectAttackRequestTest >> test01NonTurnPlayerCantDirectAttack [
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test02TurnPlayerCantDirectAttackBeforeDrawingCard [
+DirectAttackRequestTest >> test02TurnPlayerCantDirectlyAttackBeforeDrawingCard [
 
 	| request |
 
@@ -31,7 +31,7 @@ DirectAttackRequestTest >> test02TurnPlayerCantDirectAttackBeforeDrawingCard [
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test03TurnPlayerCantDirectAttackInTheChargeManaStep [
+DirectAttackRequestTest >> test03TurnPlayerCantDirectlyAttackInTheChargeManaStep [
 
 	| request |
 
@@ -43,7 +43,7 @@ DirectAttackRequestTest >> test03TurnPlayerCantDirectAttackInTheChargeManaStep [
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test04TurnPlayerCantDirectAttackInTheMainStep [
+DirectAttackRequestTest >> test04TurnPlayerCantDirectlyAttackInTheMainStep [
 
 	| request |
 
@@ -57,7 +57,7 @@ DirectAttackRequestTest >> test04TurnPlayerCantDirectAttackInTheMainStep [
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test05TurnPlayerCantDirectAttackWithNotSummonedCreature [
+DirectAttackRequestTest >> test05TurnPlayerCantDirectlyAttackWithNotSummonedCreature [
 
 	| request |
 
@@ -71,7 +71,7 @@ DirectAttackRequestTest >> test05TurnPlayerCantDirectAttackWithNotSummonedCreatu
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test06TurnPlayerCantDirectAttackWithNonBelongingCreature [
+DirectAttackRequestTest >> test06TurnPlayerCantDirectlyAttackWithNonBelongingCreature [
 
 	| march tulkTheOracle request |
 
@@ -92,7 +92,7 @@ DirectAttackRequestTest >> test06TurnPlayerCantDirectAttackWithNonBelongingCreat
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test07TurnPlayerCantDirectAttackWithCreatureThatHasSummoningSickness [
+DirectAttackRequestTest >> test07TurnPlayerCantDirectlyAttackWithCreatureThatHasSummoningSickness [
 
 	| march tulkTheOracle request |
 
