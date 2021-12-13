@@ -139,3 +139,27 @@ DirectAttackRequestTest >> test08TurnPlayerAttacksDirectly [
 		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: 6;
 		assertTheOnlyOneIn: ( match tappedCreaturesOf: self turnPlayer ) is: tulkTheOracle
 ]
+
+{ #category : #tests }
+DirectAttackRequestTest >> test09TurnPlayerCantAttackDirectlyWithTappedCreature [
+
+	| numberOfShields numberOfCardsInHand tappedCreatures attackingCreature request |
+
+	self test08TurnPlayerAttacksDirectly.
+
+	numberOfShields := ( match shieldsOf: self nonTurnPlayer ) size.
+	numberOfCardsInHand := match numberOfCardsInHandOf: self nonTurnPlayer.
+	tappedCreatures := match tappedCreaturesOf: self turnPlayer.
+	attackingCreature := tappedCreatures anyOne.
+
+	request := DirectAttackRequest attackingWith: attackingCreature.
+
+	self should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: ( 'You can''t attack with <1p> because is tapped.' expandMacrosWith: attackingCreature ).
+
+	self
+		assert: ( match shieldsOf: self nonTurnPlayer ) size equals: numberOfShields;
+		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: numberOfCardsInHand;
+		assertCollection: ( match tappedCreaturesOf: self turnPlayer ) hasSameElements: tappedCreatures
+]
