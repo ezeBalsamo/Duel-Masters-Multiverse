@@ -649,27 +649,6 @@ MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveCardsInHand [
 		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test06TappedCreatureCantAttack [
-
-	| errorDescription |
-
-	self
-		test05WhenPlayerAttacksDirectlyThenAttackingCreatureIsTappedAndOneOpponentsShieldIsBrokenAndGoesToOpponentsHand.
-
-	errorDescription := 'Shobu: You can''t attack with Tulk, the Oracle because is tapped.'.
-
-	self withTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) do: [ :tappedCreature | 
-		self
-			should: [ self directAttackFrom: tappedCreature ]
-			raise: IllegalPlay
-			withMessageText: errorDescription;
-			should: [ self attack: self immortalBaronVorg with: tappedCreature ]
-			raise: IllegalPlay
-			withMessageText: errorDescription
-		]
-]
-
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveShields [
 
