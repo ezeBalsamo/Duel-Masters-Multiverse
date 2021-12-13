@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #tests }
-DirectAttackRequestTest >> test01NonTurnPlayerCantDirectlyAttack [
+DirectAttackRequestTest >> test01NonTurnPlayerCantAttackDirectly [
 
 	| request |
 
@@ -17,7 +17,7 @@ DirectAttackRequestTest >> test01NonTurnPlayerCantDirectlyAttack [
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test02TurnPlayerCantDirectlyAttackBeforeDrawingCard [
+DirectAttackRequestTest >> test02TurnPlayerCantAttackDirectlyBeforeDrawingCard [
 
 	| request |
 
@@ -31,7 +31,7 @@ DirectAttackRequestTest >> test02TurnPlayerCantDirectlyAttackBeforeDrawingCard [
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test03TurnPlayerCantDirectlyAttackInTheChargeManaStep [
+DirectAttackRequestTest >> test03TurnPlayerCantAttackDirectlyInTheChargeManaStep [
 
 	| request |
 
@@ -43,7 +43,7 @@ DirectAttackRequestTest >> test03TurnPlayerCantDirectlyAttackInTheChargeManaStep
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test04TurnPlayerCantDirectlyAttackInTheMainStep [
+DirectAttackRequestTest >> test04TurnPlayerCantAttackDirectlyInTheMainStep [
 
 	| request |
 
@@ -57,7 +57,7 @@ DirectAttackRequestTest >> test04TurnPlayerCantDirectlyAttackInTheMainStep [
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test05TurnPlayerCantDirectlyAttackWithNotSummonedCreature [
+DirectAttackRequestTest >> test05TurnPlayerCantAttackDirectlyWithNotSummonedCreature [
 
 	| request |
 
@@ -71,7 +71,7 @@ DirectAttackRequestTest >> test05TurnPlayerCantDirectlyAttackWithNotSummonedCrea
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test06TurnPlayerCantDirectlyAttackWithNonBelongingCreature [
+DirectAttackRequestTest >> test06TurnPlayerCantAttackDirectlyWithNonBelongingCreature [
 
 	| march tulkTheOracle request |
 
@@ -92,7 +92,7 @@ DirectAttackRequestTest >> test06TurnPlayerCantDirectlyAttackWithNonBelongingCre
 ]
 
 { #category : #tests }
-DirectAttackRequestTest >> test07TurnPlayerCantDirectlyAttackWithCreatureThatHasSummoningSickness [
+DirectAttackRequestTest >> test07TurnPlayerCantAttackDirectlyWithCreatureThatHasSummoningSickness [
 
 	| march tulkTheOracle request |
 
