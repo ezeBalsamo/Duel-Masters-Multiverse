@@ -100,13 +100,6 @@ Match >> assertIsAllowedInCurrentStep: aRequest [
 ]
 
 { #category : #'private - asserting' }
-Match >> assertIsValidPlayer: aPotentialPlayer [
-
-	^ [ self signalIsNotValidPlayer: aPotentialPlayer ]
-		unless: ( playersTurn includes: aPotentialPlayer )
-]
-
-{ #category : #'private - asserting' }
 Match >> assertManaCanBeCharged [
 
 	self signalIllegalPlayFrom: self currentPlayer
@@ -263,9 +256,7 @@ Match >> graveyardOf: aPlayer [
 { #category : #'private - accessing' }
 Match >> handOf: aPotentialPlayer [
 
-	^ cardsInHandByPlayer
-		at: aPotentialPlayer
-		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ cardsInHandByPlayer at: aPotentialPlayer
 ]
 
 { #category : #accessing }
@@ -362,16 +353,13 @@ Match >> initializeShieldsByPlayer [
 { #category : #testing }
 Match >> isTurnOf: aPotentialPlayer [
 
-	self assertIsValidPlayer: aPotentialPlayer.
 	^ self currentPlayer = aPotentialPlayer
 ]
 
 { #category : #accessing }
 Match >> manaOf: aPotentialPlayer [
 
-	^ manaByPlayer
-		at: aPotentialPlayer
-		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ manaByPlayer at: aPotentialPlayer
 ]
 
 { #category : #accessing }
@@ -389,7 +377,7 @@ Match >> opponentOf: aPlayer [
 { #category : #accessing }
 Match >> shieldsOf: aPotentialPlayer [
 
-	^ shieldsByPlayer at: aPotentialPlayer ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ shieldsByPlayer at: aPotentialPlayer
 ]
 
 { #category : #'private - signaling' }
@@ -397,12 +385,6 @@ Match >> signalIllegalPlayFrom: aPotentialPlayer because: anErrorDescriptionOrBl
 
 	[ IllegalPlay from: aPotentialPlayer because: anErrorDescriptionOrBlock value ]
 		unless: aConditionToBeSatisfied
-]
-
-{ #category : #'private - signaling' }
-Match >> signalIsNotValidPlayer: aNotValidPlayer [
-
-	Error signal: ( '<1s> is not a valid player in this match.' expandMacrosWith: aNotValidPlayer )
 ]
 
 { #category : #processing }
@@ -435,17 +417,13 @@ Match >> summonedCreaturesOf: aPlayer [
 { #category : #accessing }
 Match >> tappedCreaturesOf: aPotentialPlayer [
 
-	^ tappedCreaturesByPlayer
-		at: aPotentialPlayer
-		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ tappedCreaturesByPlayer at: aPotentialPlayer
 ]
 
 { #category : #accessing }
 Match >> tappedManaOf: aPotentialPlayer [
 
-	^ tappedManaByPlayer
-		at: aPotentialPlayer
-		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ tappedManaByPlayer at: aPotentialPlayer
 ]
 
 { #category : #'private - accessing' }

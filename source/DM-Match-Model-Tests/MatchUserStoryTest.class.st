@@ -113,12 +113,6 @@ MatchUserStoryTest >> immortalBaronVorg [
 ]
 
 { #category : #'private - accessing' }
-MatchUserStoryTest >> intruder [
-
-	^ 'Intruder'
-]
-
-{ #category : #'private - accessing' }
 MatchUserStoryTest >> knightDeck [
 
 	^ ( ( 1 to: 15 ) collect: #asString ) asOrderedCollection
@@ -549,19 +543,6 @@ MatchUserStoryTest >> test03BothCreaturesAreDestroyedInBattleWhenTheyHaveTheSame
 		assertTheOnlyOneIn: ( match graveyardOf: knight ) is: immortalBaronVorg
 ]
 
-{ #category : #'tests - turn order' }
-MatchUserStoryTest >> test03PlayerNotBelongingToMatchCantEndOpponentsTurn [
-
-	| intruder |
-
-	intruder := self intruder.
-
-	self
-		should: [ match endTurnOf: intruder ]
-		raise: Error
-		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
 { #category : #'tests - field setup' }
 MatchUserStoryTest >> test03PlayersBeginTheMatchWithoutChargedMana [
 
@@ -592,19 +573,6 @@ MatchUserStoryTest >> test03SummoningSicknessEndsWhenPlayerEndsTurn [
 	self
 		assertTheOnlyOneIn: ( match summonedCreaturesOf: shobu ) is: tulkTheOracle;
 		assert: match creaturesThatHaveSummoningSickness isEmpty
-]
-
-{ #category : #'tests - turn order' }
-MatchUserStoryTest >> test04PlayerNotBelongingToMatchDontHaveTurn [
-
-	| intruder |
-
-	intruder := self intruder.
-
-	self
-		should: [ match isTurnOf: intruder ]
-		raise: Error
-		withMessageText: 'Intruder is not a valid player in this match.'
 ]
 
 { #category : #'tests - field setup' }
@@ -643,46 +611,7 @@ MatchUserStoryTest >> test05PlayersBeginTheMatchWithoutCardsInGraveyard [
 ]
 
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test06PlayerNotBelongingToMatchCantHaveCardsInHand [
-
-	| intruder |
-
-	intruder := self intruder.
-
-	self
-		should: [ match handOf: intruder requestedBy: intruder ]
-		raise: Error
-		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
-{ #category : #'tests - field setup' }
-MatchUserStoryTest >> test07PlayerNotBelongingToMatchCantHaveShields [
-
-	| intruder |
-
-	intruder := self intruder.
-
-	self
-		should: [ match shieldsOf: intruder ]
-		raise: Error
-		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
-{ #category : #'tests - field setup' }
-MatchUserStoryTest >> test08PlayerNotBelongingToMatchCantHaveChargedMana [
-
-	| intruder |
-
-	intruder := self intruder.
-
-	self
-		should: [ match manaOf: intruder ]
-		raise: Error
-		withMessageText: 'Intruder is not a valid player in this match.'
-]
-
-{ #category : #'tests - field setup' }
-MatchUserStoryTest >> test09PlayerCantSeeOpponentCardsInHand [
+MatchUserStoryTest >> test08PlayerCantSeeOpponentCardsInHand [
 
 	self
 		should: [ match handOf: shobu requestedBy: knight ]
