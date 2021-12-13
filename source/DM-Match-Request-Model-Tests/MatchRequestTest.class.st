@@ -46,6 +46,12 @@ MatchRequestTest >> chargeManaWithAll: aCardCollection [
 ]
 
 { #category : #'private - test support' }
+MatchRequestTest >> directAttackFrom: aCreatureCard [
+
+	match execute: ( DirectAttackRequest attackingWith: aCreatureCard ) requestedBy: self turnPlayer
+]
+
+{ #category : #'private - test support' }
 MatchRequestTest >> drawCard [
 
 	match execute: DrawCardRequest new requestedBy: self turnPlayer

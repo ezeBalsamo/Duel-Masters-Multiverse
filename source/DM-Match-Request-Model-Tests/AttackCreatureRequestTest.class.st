@@ -191,3 +191,52 @@ AttackCreatureRequestTest >> test10TurnPlayerCantAttackCreatureWhenIsUntapped [
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t attack Immortal Baron, Vorg because it''s untapped.'
 ]
+
+{ #category : #tests }
+AttackCreatureRequestTest >> test11TurnPlayerAttacksCreature [
+
+	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle request |
+
+	march := self march.
+	vocalMegahit := self vocalMegahit.
+	immortalBaronVorg := self immortalBaronVorg.
+	anotherMarch := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	request := AttackCreatureRequest attacking: tulkTheOracle with: immortalBaronVorg.
+
+	self
+		chargeManaWith: march;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: anotherMarch;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: anotherMarch;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: vocalMegahit;
+		changeCurrentStepTo: MainStep new;
+		summon: immortalBaronVorg tappingAll: ( Array with: march with: vocalMegahit );
+		endTurn.
+
+	self
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: tulkTheOracle;
+		endTurn.
+
+	self
+		assertEmpty: ( match tappedCreaturesOf: self turnPlayer );
+		assertEmpty: ( match graveyardOf: self nonTurnPlayer );
+		changeCurrentStepTo: AttackStep new.
+
+	match execute: request requestedBy: self turnPlayer.
+
+	self
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: self turnPlayer ) is: immortalBaronVorg;
+		assertEmpty: ( match summonedCreaturesOf: self nonTurnPlayer );
+		assertTheOnlyOneIn: ( match graveyardOf: self nonTurnPlayer ) is: tulkTheOracle
+]

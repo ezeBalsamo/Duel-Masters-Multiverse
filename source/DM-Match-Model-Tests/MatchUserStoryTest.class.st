@@ -338,8 +338,8 @@ MatchUserStoryTest >> test01AttackingCreatureDestroysInBattleAnotherCreatureWhen
 	tulkTheOracle := self theOnlyOneIn: ( match summonedCreaturesOf: knight ).
 
 	self
-		assert: ( match tappedCreaturesOf: shobu ) isEmpty;
-		assert: ( match graveyardOf: knight ) isEmpty.
+		assertEmpty: ( match tappedCreaturesOf: shobu );
+		assertEmpty: ( match graveyardOf: knight ).
 
 	self
 		changeCurrentStepTo: AttackStep new;
@@ -347,7 +347,7 @@ MatchUserStoryTest >> test01AttackingCreatureDestroysInBattleAnotherCreatureWhen
 
 	self
 		assertTheOnlyOneIn: ( match tappedCreaturesOf: shobu ) is: immortalBaronVorg;
-		assert: ( match summonedCreaturesOf: knight ) isEmpty;
+		assertEmpty: ( match summonedCreaturesOf: knight );
 		assertTheOnlyOneIn: ( match graveyardOf: knight ) is: tulkTheOracle
 ]
 
