@@ -240,3 +240,64 @@ AttackCreatureRequestTest >> test11TurnPlayerAttacksCreature [
 		assertEmpty: ( match summonedCreaturesOf: self nonTurnPlayer );
 		assertTheOnlyOneIn: ( match graveyardOf: self nonTurnPlayer ) is: tulkTheOracle
 ]
+
+{ #category : #tests }
+AttackCreatureRequestTest >> test12TurnPlayerCantAttackCreatureWithTappedCreature [
+
+	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle anotherTulkTheOracle firstAttackRequest secondAttackRequest |
+
+	march := self march.
+	vocalMegahit := self vocalMegahit.
+	immortalBaronVorg := self immortalBaronVorg.
+	anotherMarch := self march.
+	tulkTheOracle := self tulkTheOracle.
+	anotherTulkTheOracle := self tulkTheOracle.
+
+	firstAttackRequest := AttackCreatureRequest attacking: tulkTheOracle with: immortalBaronVorg.
+	secondAttackRequest := AttackCreatureRequest attacking: anotherTulkTheOracle
+		                       with: immortalBaronVorg.
+
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: anotherMarch;
+		endTurn.
+
+	self
+		changeCurrentStepTo: MainStep new;
+		summon: anotherTulkTheOracle tapping: march;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: vocalMegahit;
+		changeCurrentStepTo: MainStep new;
+		summon: immortalBaronVorg tappingAll: ( Array with: anotherMarch with: vocalMegahit );
+		endTurn.
+
+	self
+		changeCurrentStepTo: AttackStep new;
+		directAttackFrom: tulkTheOracle;
+		directAttackFrom: anotherTulkTheOracle;
+		endTurn.
+
+	self changeCurrentStepTo: AttackStep new.
+	match execute: firstAttackRequest requestedBy: self turnPlayer.
+
+	self
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: self turnPlayer ) is: immortalBaronVorg;
+		assertTheOnlyOneIn: ( match graveyardOf: self nonTurnPlayer ) is: tulkTheOracle.
+
+	self should: [ match execute: secondAttackRequest requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t attack with Immortal Baron, Vorg because it''s tapped.'.
+
+	self
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: self turnPlayer ) is: immortalBaronVorg;
+		assertTheOnlyOneIn: ( match graveyardOf: self nonTurnPlayer ) is: tulkTheOracle
+]

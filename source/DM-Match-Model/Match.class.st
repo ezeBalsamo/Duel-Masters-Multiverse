@@ -69,7 +69,9 @@ Match >> assert: aPlayer canAttackWith: aCreatureCard [
 		signalIllegalPlayFrom: aPlayer
 		because: [ errorDescriptionTemplate value: 'it has summoning sickness.' ]
 		unless: ( turnContext hasSummoningSickness: aCreatureCard ) not;
-		assertIsUntapped: aCreatureCard of: aPlayer
+		signalIllegalPlayFrom: aPlayer
+		because: [ errorDescriptionTemplate value: 'it''s tapped.' ]
+		unless: ( ( self tappedCreaturesOf: aPlayer ) includes: aCreatureCard ) not
 ]
 
 { #category : #'private - asserting' }
@@ -91,15 +93,6 @@ Match >> assertIsAllowedInCurrentStep: aRequest [
 		because:
 		( 'You can''t <1s> in the <2p>.' expandMacrosWith: aRequest actionDescription with: currentStep )
 		unless: ( currentStep allowsActionDescribedAs: aRequest actionDescription )
-]
-
-{ #category : #'private - preconditions' }
-Match >> assertIsUntapped: aCreatureCard of: aPlayer [
-
-	self
-		signalIllegalPlayFrom: aPlayer
-		because: [ 'You can''t attack with <1p> because is tapped.' expandMacrosWith: aCreatureCard ]
-		unless: ( ( self tappedCreaturesOf: aPlayer ) includes: aCreatureCard ) not
 ]
 
 { #category : #'private - preconditions' }
