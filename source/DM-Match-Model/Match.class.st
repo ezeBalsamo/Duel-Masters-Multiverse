@@ -201,7 +201,23 @@ Match >> destroy: aCreatureCard of: aDuelist [
 { #category : #processing }
 Match >> directAttackFrom: aCreatureCard [
 
-	self assert: self currentPlayer canAttackWith: aCreatureCard
+	| turnPlayer opponentPlayer |
+
+	self assert: self currentPlayer canAttackWith: aCreatureCard.
+
+	turnPlayer := self currentPlayer.
+
+	( self tappedCreaturesOf: turnPlayer ) add: aCreatureCard.
+
+	opponentPlayer := self opponentOf: turnPlayer.
+	( self shieldsOf: opponentPlayer ) ifEmpty: [ status := GameEnded wonBy: turnPlayer ]
+		ifNotEmpty: [ :opponentShields | 
+			| brokenShield |
+
+			brokenShield := opponentShields anyOne.
+			opponentShields remove: brokenShield.
+			( self handOf: opponentPlayer ) add: brokenShield
+			]
 ]
 
 { #category : #processing }

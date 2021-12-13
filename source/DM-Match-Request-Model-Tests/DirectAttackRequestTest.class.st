@@ -110,3 +110,32 @@ DirectAttackRequestTest >> test07TurnPlayerCantAttackDirectlyWithCreatureThatHas
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t attack with Tulk, the Oracle because it has summoning sickness.'
 ]
+
+{ #category : #tests }
+DirectAttackRequestTest >> test08TurnPlayerAttacksDirectly [
+
+	| march tulkTheOracle request |
+
+	march := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	request := DirectAttackRequest attackingWith: tulkTheOracle.
+
+	self
+		chargeManaWith: march;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: march;
+		endTurn;
+		endTurn;
+		changeCurrentStepTo: AttackStep new;
+		assert: ( match shieldsOf: self nonTurnPlayer ) size equals: 5;
+		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: 5;
+		assertEmpty: ( match tappedCreaturesOf: self turnPlayer ).
+
+	match execute: request requestedBy: self turnPlayer.
+
+	self
+		assert: ( match shieldsOf: self nonTurnPlayer ) size equals: 4;
+		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: 6;
+		assertTheOnlyOneIn: ( match tappedCreaturesOf: self turnPlayer ) is: tulkTheOracle
+]
