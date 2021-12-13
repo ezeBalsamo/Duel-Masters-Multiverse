@@ -704,41 +704,6 @@ MatchUserStoryTest >> test09PlayerCantSeeOpponentCardsInHand [
 		withMessageText: 'Knight: You can''t see the cards in your opponent''s hand.'
 ]
 
-{ #category : #'tests - attacking' }
-MatchUserStoryTest >> test10PlayerCantAttackOpponentCreatureWhenIsUntapped [
-
-	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle |
-
-	march := self march.
-	vocalMegahit := self vocalMegahit.
-	immortalBaronVorg := self immortalBaronVorg.
-	anotherMarch := self march.
-	tulkTheOracle := self tulkTheOracle.
-
-	self
-		chargeManaWith: march;
-		endTurn.
-
-	self
-		changeCurrentStepTo: ChargeManaStep new;
-		chargeManaWith: anotherMarch;
-		changeCurrentStepTo: MainStep new;
-		summon: tulkTheOracle tapping: anotherMarch;
-		endTurn.
-
-	self
-		changeCurrentStepTo: ChargeManaStep new;
-		chargeManaWith: vocalMegahit;
-		changeCurrentStepTo: MainStep new;
-		summon: immortalBaronVorg tappingAll: ( Array with: march with: vocalMegahit );
-		endTurn;
-		changeCurrentStepTo: AttackStep new.
-
-	self should: [ self attack: immortalBaronVorg with: tulkTheOracle ]
-		raise: IllegalPlay
-		withMessageText: 'Knight: You can''t attack Immortal Baron, Vorg because it''s untapped.'
-]
-
 { #category : #'private - creature accessing' }
 MatchUserStoryTest >> tulkTheOracle [
 

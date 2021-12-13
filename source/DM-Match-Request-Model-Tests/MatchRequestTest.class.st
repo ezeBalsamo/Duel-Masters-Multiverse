@@ -136,7 +136,13 @@ MatchRequestTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anErro
 { #category : #'private - test support' }
 MatchRequestTest >> summon: aCreatureCard tapping: aCard [
 
-	match execute: ( SummonCreatureRequest summoning: aCreatureCard tapping: aCard )
+	self summon: aCreatureCard tappingAll: { aCard }
+]
+
+{ #category : #'private - test support' }
+MatchRequestTest >> summon: aCreatureCard tappingAll: aCardCollection [
+
+	match execute: ( SummonCreatureRequest summoning: aCreatureCard tappingAll: aCardCollection )
 		requestedBy: self turnPlayer
 ]
 

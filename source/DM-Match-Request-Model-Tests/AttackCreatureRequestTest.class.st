@@ -154,3 +154,40 @@ AttackCreatureRequestTest >> test09TurnPlayerCantAttackCreatureWhenItDoesntBelon
 		raiseIllegalPlayFrom: self turnPlayer
 		because: 'You can''t attack Tulk, the Oracle because it''s yours.'
 ]
+
+{ #category : #tests }
+AttackCreatureRequestTest >> test10TurnPlayerCantAttackCreatureWhenIsUntapped [
+
+	| march vocalMegahit immortalBaronVorg anotherMarch tulkTheOracle request |
+
+	march := self march.
+	vocalMegahit := self vocalMegahit.
+	immortalBaronVorg := self immortalBaronVorg.
+	anotherMarch := self march.
+	tulkTheOracle := self tulkTheOracle.
+
+	request := AttackCreatureRequest attacking: immortalBaronVorg with: tulkTheOracle.
+
+	self
+		chargeManaWith: march;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: anotherMarch;
+		changeCurrentStepTo: MainStep new;
+		summon: tulkTheOracle tapping: anotherMarch;
+		endTurn.
+
+	self
+		changeCurrentStepTo: ChargeManaStep new;
+		chargeManaWith: vocalMegahit;
+		changeCurrentStepTo: MainStep new;
+		summon: immortalBaronVorg tappingAll: ( Array with: march with: vocalMegahit );
+		endTurn;
+		changeCurrentStepTo: AttackStep new.
+
+	self should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t attack Immortal Baron, Vorg because it''s untapped.'
+]
