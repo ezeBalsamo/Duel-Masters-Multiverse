@@ -4,11 +4,11 @@ A TurnContextTest is a test class for testing the behavior of TurnContext
 Class {
 	#name : #MatchRequestTest,
 	#superclass : #TestCase,
+	#traits : 'TestCreatureCardProvider + RequestExecutionTestAssistant',
+	#classTraits : 'TestCreatureCardProvider classTrait + RequestExecutionTestAssistant classTrait',
 	#instVars : [
 		'match',
-		'lightCivilization',
-		'fireCivilization',
-		'darknessCivilization'
+		'cardProvider'
 	],
 	#category : #'DM-Match-Request-Model-Tests'
 }
@@ -65,31 +65,15 @@ MatchRequestTest >> endTurn [
 ]
 
 { #category : #'private - accessing' }
-MatchRequestTest >> immortalBaronVorg [
-
-	^ CreatureCard named: 'Immortal Baron, Vorg'
-		  from: fireCivilization
-		  ofType: ( SingleRace ofTypeNamed: 'Human' )
-		  costing: ( DMUnits mana with: 2 )
-		  providing: ( DMUnits mana with: 1 )
-		  with: ( DMUnits power with: 2000 )
-]
-
-{ #category : #'private - accessing' }
 MatchRequestTest >> knightDeck [
 
 	^ ( ( 1 to: 15 ) collect: #asString ) asOrderedCollection
 ]
 
 { #category : #'private - accessing' }
-MatchRequestTest >> march [
+MatchRequestTest >> match [
 
-	^ CreatureCard named: 'March'
-		  from: lightCivilization
-		  ofType: ( SingleRace ofTypeNamed: '2016 Calendar' )
-		  costing: ( DMUnits mana with: 3 )
-		  providing: self oneMana
-		  with: ( DMUnits power with: 3000 )
+	^ match
 ]
 
 { #category : #'private - accessing' }
@@ -98,30 +82,15 @@ MatchRequestTest >> nonTurnPlayer [
 	^ match opponentOf: self turnPlayer
 ]
 
-{ #category : #'private - accessing' }
-MatchRequestTest >> oneMana [
-
-	^ DMUnits mana with: 1
-]
-
 { #category : #running }
 MatchRequestTest >> setUp [
 
 	| shobu knight |
 
 	super setUp.
-	self setUpCivilizations.
 	shobu := Duelist named: 'Shobu' using: self shobuDeck.
 	knight := Duelist named: 'Knight' using: self knightDeck.
 	match := Match between: shobu and: knight
-]
-
-{ #category : #'private - running' }
-MatchRequestTest >> setUpCivilizations [
-
-	lightCivilization := Civilization named: 'Light'.
-	fireCivilization := Civilization named: 'Fire'.
-	darknessCivilization := Civilization named: 'Darkness'
 ]
 
 { #category : #'private - accessing' }
@@ -151,46 +120,4 @@ MatchRequestTest >> summon: aCreatureCard tappingAll: aCardCollection [
 
 	match execute: ( SummonCreatureRequest summoning: aCreatureCard tappingAll: aCardCollection )
 		requestedBy: self turnPlayer
-]
-
-{ #category : #'private - accessing' }
-MatchRequestTest >> tulkTheOracle [
-
-	^ CreatureCard named: 'Tulk, the Oracle'
-		  from: lightCivilization
-		  ofType: ( SingleRace ofTypeNamed: 'Light Bringer' )
-		  costing: self oneMana
-		  providing: self oneMana
-		  with: ( DMUnits power with: 500 )
-]
-
-{ #category : #'private - accessing' }
-MatchRequestTest >> turnPlayer [
-
-	^ match currentPlayer
-]
-
-{ #category : #'private - accessing' }
-MatchRequestTest >> vocalMegahit [
-
-	^ CreatureCard named: 'Vocal Megahit'
-		  from: fireCivilization
-		  ofType: ( SingleRace ofTypeNamed: 'Beat Jockey' )
-		  costing: ( DMUnits mana with: 5 )
-		  providing: self oneMana
-		  with: ( DMUnits power with: 5000 )
-]
-
-{ #category : #'private - accessing' }
-MatchRequestTest >> vorgBrawlerOfHell [
-
-	^ CreatureCard
-		  named: 'Vorg, Brawler of Hell'
-		  fromAll: ( Array with: fireCivilization with: darknessCivilization )
-		  ofType: ( MultipleRace conformedByAll: ( Array with: ( SingleRace ofTypeNamed: 'Human' )
-					      with: ( SingleRace ofTypeNamed: 'Beat Jockey' )
-					      with: ( SingleRace ofTypeNamed: 'Alien' ) ) )
-		  costing: ( DMUnits mana with: 2 )
-		  providing: self oneMana
-		  with: ( DMUnits power with: 4000 )
 ]

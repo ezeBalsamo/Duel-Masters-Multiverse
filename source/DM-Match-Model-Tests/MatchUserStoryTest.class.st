@@ -4,6 +4,8 @@ A MatchTest is a test class for testing the behavior of Match
 Class {
 	#name : #MatchUserStoryTest,
 	#superclass : #PersistentSystemBasedUserStoryTest,
+	#traits : 'TestCreatureCardProvider + RequestExecutionTestAssistant',
+	#classTraits : 'TestCreatureCardProvider classTrait + RequestExecutionTestAssistant classTrait',
 	#instVars : [
 		'shobu',
 		'knight',
@@ -16,127 +18,18 @@ Class {
 }
 
 { #category : #'private - accessing' }
-MatchUserStoryTest >> alien [
-
-	^ SingleRace ofTypeNamed: 'Alien'
-]
-
-{ #category : #'private - test support' }
-MatchUserStoryTest >> attack: anOpponentCreatureCard with: aCreatureCard [
-
-	match execute: ( AttackCreatureRequest attacking: anOpponentCreatureCard with: aCreatureCard )
-		requestedBy: self turnPlayer
-]
-
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> beatJockey [
-
-	^ SingleRace ofTypeNamed: 'Beat Jockey'
-]
-
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> calendar2016 [
-
-	^ SingleRace ofTypeNamed: '2016 Calendar'
-]
-
-{ #category : #'private - test support' }
-MatchUserStoryTest >> changeCurrentStepTo: aTurnStep [
-
-	match execute: ( ChangeCurrentStepRequest changingTo: aTurnStep ) requestedBy: self turnPlayer
-]
-
-{ #category : #'private - test support' }
-MatchUserStoryTest >> chargeManaWith: aCard [
-
-	match execute: ( ChargeManaRequest chargingManaWith: aCard ) requestedBy: self turnPlayer
-]
-
-{ #category : #'private - system accessing' }
-MatchUserStoryTest >> civilizationManagementSystem [
-
-	^ rootSystem >> #CivilizationManagementSystemInterface
-]
-
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> darkMonster [
-
-	^ SingleRace ofTypeNamed: 'Dark Monster'
-]
-
-{ #category : #'private - creature accessing' }
-MatchUserStoryTest >> darknessLeohl [
-
-	^ CreatureCard
-		named: 'Darkness Leohl'
-		from: self civilizationManagementSystem darknessCivilization
-		ofType: self darkMonster
-		costing: ( DMUnits mana with: 2 )
-		providing: self oneMana
-		with: ( DMUnits power with: 2000 )
-]
-
-{ #category : #'private - test support' }
-MatchUserStoryTest >> directAttackFrom: aCreatureCard [
-
-	match execute: ( DirectAttackRequest attackingWith: aCreatureCard ) requestedBy: self turnPlayer
-]
-
-{ #category : #'private - test support' }
-MatchUserStoryTest >> drawCard [
-
-	match execute: DrawCardRequest new requestedBy: self turnPlayer
-]
-
-{ #category : #'private - test support' }
-MatchUserStoryTest >> endTurn [
-
-	match execute: EndTurnRequest new requestedBy: self turnPlayer
-]
-
-{ #category : #'private - accessing' }
-MatchUserStoryTest >> human [
-
-	^ SingleRace ofTypeNamed: 'Human'
-]
-
-{ #category : #'private - creature accessing' }
-MatchUserStoryTest >> immortalBaronVorg [
-
-	^ CreatureCard
-		named: 'Immortal Baron, Vorg'
-		from: self civilizationManagementSystem fireCivilization
-		ofType: self human
-		costing: ( DMUnits mana with: 2 )
-		providing: self oneMana
-		with: ( DMUnits power with: 2000 )
-]
-
-{ #category : #'private - accessing' }
 MatchUserStoryTest >> knightDeck [
 
 	^ ( ( 1 to: 40 ) collect: #asString ) asOrderedCollection
 ]
 
 { #category : #'private - accessing' }
-MatchUserStoryTest >> lightBringer [
+MatchUserStoryTest >> match [
 
-	^ SingleRace ofTypeNamed: 'Light Bringer'
+	^ match
 ]
 
-{ #category : #'private - creature accessing' }
-MatchUserStoryTest >> march [
-
-	^ CreatureCard
-		named: 'March'
-		from: self civilizationManagementSystem lightCivilization
-		ofType: self calendar2016
-		costing: ( DMUnits mana with: 3 )
-		providing: self oneMana
-		with: ( DMUnits power with: 3000 )
-]
-
-{ #category : #'private - accessing' }
+{ #category : #'private - providing creatures' }
 MatchUserStoryTest >> oneMana [
 
 	^ DMUnits mana with: 1
@@ -149,9 +42,7 @@ MatchUserStoryTest >> setUp [
 
 	shobu := Duelist named: 'Shobu' using: self shobuDeck.
 	knight := Duelist named: 'Knight' using: self knightDeck.
-	match := Match between: shobu and: knight.
-
-	self startManagingCivilizations
+	match := Match between: shobu and: knight
 ]
 
 { #category : #'private - running' }
@@ -333,30 +224,6 @@ MatchUserStoryTest >> setUpRequirements [
 MatchUserStoryTest >> shobuDeck [
 
 	^ ( ( 1 to: 40 ) collect: #asString ) asOrderedCollection
-]
-
-{ #category : #'private - running' }
-MatchUserStoryTest >> startManagingCivilizations [
-
-	( rootSystem >> #CivilizationManagementSystemInterface )
-		storeCivilization: ( Civilization named: 'Fire' );
-		storeCivilization: ( Civilization named: 'Water' );
-		storeCivilization: ( Civilization named: 'Nature' );
-		storeCivilization: ( Civilization named: 'Light' );
-		storeCivilization: ( Civilization named: 'Darkness' )
-]
-
-{ #category : #'private - test support' }
-MatchUserStoryTest >> summon: aCreatureCard tapping: aCard [
-
-	self summon: aCreatureCard tappingAll: { aCard }
-]
-
-{ #category : #'private - test support' }
-MatchUserStoryTest >> summon: aCreatureCard tappingAll: aCardCollection [
-
-	match execute: ( SummonCreatureRequest summoning: aCreatureCard tappingAll: aCardCollection )
-		requestedBy: self turnPlayer
 ]
 
 { #category : #'tests - battle' }
@@ -660,47 +527,8 @@ MatchUserStoryTest >> test06PlayerCantSeeOpponentCardsInHand [
 		withMessageText: 'Knight: You can''t see the cards in your opponent''s hand.'
 ]
 
-{ #category : #'private - creature accessing' }
-MatchUserStoryTest >> tulkTheOracle [
-
-	^ CreatureCard
-		named: 'Tulk, the Oracle'
-		from: self civilizationManagementSystem lightCivilization
-		ofType: self lightBringer
-		costing: self oneMana
-		providing: self oneMana
-		with: ( DMUnits power with: 500 )
-]
-
 { #category : #'private - accessing' }
 MatchUserStoryTest >> turnPlayer [
 
 	^ match currentPlayer
-]
-
-{ #category : #'private - creature accessing' }
-MatchUserStoryTest >> vocalMegahit [
-
-	^ CreatureCard
-		named: 'Vocal Megahit'
-		from: self civilizationManagementSystem fireCivilization
-		ofType: self beatJockey
-		costing: ( DMUnits mana with: 5 )
-		providing: self oneMana
-		with: ( DMUnits power with: 5000 )
-]
-
-{ #category : #'private - creature accessing' }
-MatchUserStoryTest >> vorgBrawlerOfHell [
-
-	^ CreatureCard
-		named: 'Vorg, Brawler of Hell'
-		fromAll:
-			( Array
-				with: self civilizationManagementSystem fireCivilization
-				with: self civilizationManagementSystem darknessCivilization )
-		ofType: ( MultipleRace conformedByAll: ( Array with: self human with: self beatJockey with: self alien ) )
-		costing: ( DMUnits mana with: 2 )
-		providing: self oneMana
-		with: ( DMUnits power with: 4000 )
 ]
