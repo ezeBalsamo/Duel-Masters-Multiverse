@@ -39,9 +39,10 @@ MatchRequestTest >> chargeManaWithAll: aCardCollection [
 		2 timesRepeat: [ 
 			self
 				endTurn;
-				drawCard
-			].
-		self changeCurrentStepTo: ChargeManaStep new
+				changeCurrentStepTo: DrawCardStep new;
+				drawCard;
+				changeCurrentStepTo: ChargeManaStep new
+			]
 		]
 ]
 
@@ -60,7 +61,7 @@ MatchRequestTest >> drawCard [
 { #category : #'private - test support' }
 MatchRequestTest >> endTurn [
 
-	match endTurnOf: self turnPlayer
+	match execute: EndTurnRequest new requestedBy: self turnPlayer
 ]
 
 { #category : #'private - accessing' }

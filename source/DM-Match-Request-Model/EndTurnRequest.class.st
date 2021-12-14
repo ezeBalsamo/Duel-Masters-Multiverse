@@ -9,3 +9,9 @@ EndTurnRequest class >> actionDescription [
 
 	^ PlayerActionDescriptions endTurn
 ]
+
+{ #category : #executing }
+EndTurnRequest >> executeOn: aMatch [
+
+	aMatch endTurn
+]

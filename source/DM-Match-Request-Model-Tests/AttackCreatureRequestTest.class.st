@@ -126,6 +126,9 @@ AttackCreatureRequestTest >> test08TurnPlayerCantAttackCreatureWhenIsNotSummoned
 		changeCurrentStepTo: MainStep new;
 		summon: tulkTheOracle tapping: march;
 		endTurn;
+		changeCurrentStepTo: DrawCardStep new;
+		drawCard;
+		changeCurrentStepTo: ChargeManaStep new;
 		endTurn;
 		changeCurrentStepTo: AttackStep new;
 		should: [ match execute: request requestedBy: self turnPlayer ]
@@ -148,6 +151,9 @@ AttackCreatureRequestTest >> test09TurnPlayerCantAttackCreatureWhenItDoesntBelon
 		changeCurrentStepTo: MainStep new;
 		summon: tulkTheOracle tapping: march;
 		endTurn;
+		changeCurrentStepTo: DrawCardStep new;
+		drawCard;
+		changeCurrentStepTo: ChargeManaStep new;
 		endTurn;
 		changeCurrentStepTo: AttackStep new;
 		should: [ match execute: request requestedBy: self turnPlayer ]

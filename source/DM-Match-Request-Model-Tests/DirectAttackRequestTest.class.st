@@ -126,17 +126,20 @@ DirectAttackRequestTest >> test08TurnPlayerAttacksDirectly [
 		changeCurrentStepTo: MainStep new;
 		summon: tulkTheOracle tapping: march;
 		endTurn;
+		changeCurrentStepTo: DrawCardStep new;
+		drawCard;
+		changeCurrentStepTo: ChargeManaStep new;
 		endTurn;
 		changeCurrentStepTo: AttackStep new;
 		assert: ( match shieldsOf: self nonTurnPlayer ) size equals: 5;
-		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: 5;
+		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: 6;
 		assertEmpty: ( match tappedCreaturesOf: self turnPlayer ).
 
 	match execute: request requestedBy: self turnPlayer.
 
 	self
 		assert: ( match shieldsOf: self nonTurnPlayer ) size equals: 4;
-		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: 6;
+		assert: ( match numberOfCardsInHandOf: self nonTurnPlayer ) equals: 7;
 		assertTheOnlyOneIn: ( match tappedCreaturesOf: self turnPlayer ) is: tulkTheOracle
 ]
 

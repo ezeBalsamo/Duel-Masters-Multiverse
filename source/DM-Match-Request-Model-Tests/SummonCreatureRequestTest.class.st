@@ -253,7 +253,12 @@ SummonCreatureRequestTest >> test12TurnPlayerCanSummonEveryTurn [
 
 	request := SummonCreatureRequest summoning: immortalBaronVorg tappingAll: cardsToTap.
 
-	2 timesRepeat: [ self endTurn ].
+	self
+		endTurn;
+		changeCurrentStepTo: DrawCardStep new;
+		drawCard;
+		changeCurrentStepTo: ChargeManaStep new;
+		endTurn.
 
 	self
 		drawCard;

@@ -8,6 +8,7 @@ Class {
 DrawCardStep >> allowedActionDescriptions [
 
 	^ super allowedActionDescriptions
+		  remove: PlayerActionDescriptions endTurn;
 		  add: PlayerActionDescriptions drawCard;
 		  yourself
 ]

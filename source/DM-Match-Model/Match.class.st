@@ -225,14 +225,11 @@ Match >> drawCard [
 ]
 
 { #category : #processing }
-Match >> endTurnOf: aPlayer [
-
-	self ifIsNotTurnOf: aPlayer warnThat: 'You can''t end your opponent''s turn.'.
+Match >> endTurn [
 
 	canCardBeDrawn := true.
 	playersTurn next.
 	turnContext endTurn.
-
 	( self tappedManaOf: self currentPlayer ) removeAll.
 	( self tappedCreaturesOf: self currentPlayer ) removeAll
 ]

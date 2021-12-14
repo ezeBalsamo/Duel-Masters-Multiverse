@@ -8,6 +8,7 @@ Class {
 TurnStep >> allowedActionDescriptions [
 
 	^ OrderedCollection with: PlayerActionDescriptions changeCurrentStep
+		  with: PlayerActionDescriptions endTurn
 ]
 
 { #category : #testing }

@@ -70,7 +70,12 @@ ChargeManaRequestTest >> test05PlayerCanChargeManaEveryTurn [
 
 	self test03ChargeManaOfTurnPlayer.
 
-	2 timesRepeat: [ self endTurn ].
+	self
+		endTurn;
+		changeCurrentStepTo: DrawCardStep new;
+		drawCard;
+		changeCurrentStepTo: ChargeManaStep new;
+		endTurn.
 
 	match execute: DrawCardRequest new requestedBy: self turnPlayer.
 	self changeCurrentStepTo: ChargeManaStep new.
