@@ -32,3 +32,24 @@ EndTurnRequestTest >> test02TurnPlayerEndsTurn [
 		assert: currentNonTurnPlayer equals: self turnPlayer;
 		assert: currentTurnPlayer equals: self nonTurnPlayer
 ]
+
+{ #category : #tests }
+EndTurnRequestTest >> test03TurnPlayerCantEndTurnBeforeDrawingCard [
+
+	| request currentTurnPlayer currentNonTurnPlayer |
+
+	self test02TurnPlayerEndsTurn.
+
+	request := EndTurnRequest new.
+
+	currentTurnPlayer := self turnPlayer.
+	currentNonTurnPlayer := self nonTurnPlayer.
+
+	self should: [ match execute: request requestedBy: self turnPlayer ]
+		raiseIllegalPlayFrom: self turnPlayer
+		because: 'You can''t End turn in the Draw Card Step.'.
+
+	self
+		assert: currentNonTurnPlayer equals: self nonTurnPlayer;
+		assert: currentTurnPlayer equals: self turnPlayer
+]
