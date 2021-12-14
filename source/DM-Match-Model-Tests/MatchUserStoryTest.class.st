@@ -652,7 +652,7 @@ MatchUserStoryTest >> test05PlayersBeginTheMatchWithoutCardsInGraveyard [
 ]
 
 { #category : #'tests - field setup' }
-MatchUserStoryTest >> test08PlayerCantSeeOpponentCardsInHand [
+MatchUserStoryTest >> test06PlayerCantSeeOpponentCardsInHand [
 
 	self
 		should: [ match handOf: shobu requestedBy: knight ]
