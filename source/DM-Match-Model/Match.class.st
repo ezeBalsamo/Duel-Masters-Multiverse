@@ -272,15 +272,6 @@ Match >> hasEnded [
 	^ status hasEnded
 ]
 
-{ #category : #'private - asserting' }
-Match >> ifIsNotTurnOf: aPotentialPlayer warnThat: anErrorDescription [
-
-	self
-		signalIllegalPlayFrom: aPotentialPlayer
-		because: anErrorDescription
-		unless: ( self isTurnOf: aPotentialPlayer )
-]
-
 { #category : #initialization }
 Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 
