@@ -60,7 +60,7 @@ PersistentSystemBasedUserStoryTest >> setUp [
 ]
 
 { #category : #'private - running' }
-PersistentSystemBasedUserStoryTest >> setUpRequirements [ 
+PersistentSystemBasedUserStoryTest >> setUpRequirements [
 
 	self requiresRepositoryProviderModule
 ]

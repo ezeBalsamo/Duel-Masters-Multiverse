@@ -75,21 +75,24 @@ ClassIntegrityTest >> recompile: aSelector from: aClass loggingFailuresOn: aStre
 
 	| failureLoggingBlock methodDefinition newMethodDefinition |
 
-	failureLoggingBlock := [ self
-		log: ( '<1p> has changed after recompiling, so it''s bad compiled.' expandMacrosWith: aSelector )
-		on: aStream
-	].
+	failureLoggingBlock := [ 
+	                       self
+		                       log:
+			                       ( '<1p>>><2p> has changed after recompiling, so it''s bad compiled.' 
+				                         expandMacrosWith: aClass
+				                         with: aSelector )
+		                       on: aStream
+	                       ].
 
 	methodDefinition := aClass compiledMethodAt: aSelector.
 	newMethodDefinition := aClass compiler
-		source: ( aClass sourceCodeAt: aSelector );
-		class: aClass;
-		failBlock: failureLoggingBlock;
-		compiledMethodTrailer: methodDefinition trailer;
-		compile.
+		                       source: ( aClass sourceCodeAt: aSelector );
+		                       class: aClass;
+		                       failBlock: failureLoggingBlock;
+		                       compiledMethodTrailer: methodDefinition trailer;
+		                       compile.
 
-	methodDefinition = newMethodDefinition
-		ifFalse: failureLoggingBlock
+	methodDefinition = newMethodDefinition ifFalse: failureLoggingBlock
 ]
 
 { #category : #tests }

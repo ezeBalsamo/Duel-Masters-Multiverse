@@ -16,7 +16,7 @@ Class {
 		'summonedCreaturesByPlayer',
 		'tappedCreaturesByPlayer',
 		'status',
-		'creaturesHavingSummoningSickness'
+		'turnContext'
 	],
 	#category : #'DM-Match-Model'
 }
@@ -27,126 +27,139 @@ Match class >> between: aPlayer and: anotherPlayer [
 	^ self new initializeBetween: aPlayer and: anotherPlayer
 ]
 
-{ #category : #'private - preconditions' }
-Match >> assert: aPlayer canAttack: aCreatureCard of: anOpponentPlayer [
+{ #category : #'private - asserting' }
+Match >> assertCanAttackWith: aCreatureCard [
+
+	| turnPlayer errorDescriptionTemplate |
+	
+	turnPlayer := self currentPlayer.
+
+	errorDescriptionTemplate := [ :reason | 
+	                            'You can''t attack with <1p> because <2s>' expandMacrosWith:
+		                            aCreatureCard
+		                            with: reason ].
 
 	self
-		signalIllegalPlayFrom: aPlayer
-			because: [ '<1p> it''s not summoned.' expandMacrosWith: aCreatureCard ]
-			unless: ( self summonedCreatures includes: aCreatureCard );
-		signalIllegalPlayFrom: aPlayer
-			because:
-				[ 'You can''t attack <1p> because it''s on your side of the field.' expandMacrosWith: aCreatureCard ]
-			unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard ) not;
-		signalIllegalPlayFrom: aPlayer
-			because: [ 'You can''t attack <1p> because it''s untapped.' expandMacrosWith: aCreatureCard ]
-			unless: ( ( self tappedCreaturesOf: anOpponentPlayer ) includes: aCreatureCard )
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it''s not summoned.' ]
+		unless: ( self summonedCreatures includes: aCreatureCard );
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it''s not yours.' ]
+		unless: ( ( self summonedCreaturesOf: turnPlayer ) includes: aCreatureCard );
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it has summoning sickness.' ]
+		unless: ( turnContext hasSummoningSickness: aCreatureCard ) not;
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it''s tapped.' ]
+		unless: ( ( self tappedCreaturesOf: turnPlayer ) includes: aCreatureCard ) not
 ]
 
-{ #category : #'private - preconditions' }
-Match >> assert: aPlayer canAttackWith: aCreatureCard [
+{ #category : #'private - asserting' }
+Match >> assertCanBeAttacked: aCreatureCard [
+
+	| errorDescriptionTemplate turnPlayer opponentPlayer |
+
+	turnPlayer := self currentPlayer.
+	opponentPlayer := self opponentOf: turnPlayer.
+
+	errorDescriptionTemplate := [ :reason | 
+	                            'You can''t attack <1p> because <2s>' expandMacrosWith: aCreatureCard
+		                            with: reason ].
 
 	self
-		signalIllegalPlayFrom: aPlayer
-			because: [ '<1p> it''s not summoned.' expandMacrosWith: aCreatureCard ]
-			unless: ( self summonedCreatures includes: aCreatureCard );
-		signalIllegalPlayFrom: aPlayer
-			because: [ 'You can''t attack with <1p> because it''s not on your side of the field.'
-				expandMacrosWith: aCreatureCard
-			]
-			unless: ( ( self summonedCreaturesOf: aPlayer ) includes: aCreatureCard );
-		assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer;
-		assertIsUntapped: aCreatureCard of: aPlayer
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it''s not summoned.' ]
+		unless: ( self summonedCreatures includes: aCreatureCard );
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it''s yours.' ]
+		unless: ( ( self summonedCreaturesOf: turnPlayer ) includes: aCreatureCard ) not;
+		signalIllegalPlayFrom: turnPlayer
+		because: [ errorDescriptionTemplate value: 'it''s untapped.' ]
+		unless: ( ( self tappedCreaturesOf: opponentPlayer ) includes: aCreatureCard )
 ]
 
-{ #category : #'private - preconditions' }
-Match >> assertCardHasNotBeenDrawnYet [
+{ #category : #'private - asserting' }
+Match >> assertCardCanBeDrawn [
 
-	self
-		signalIllegalPlayFrom: self currentPlayer
+	self signalIllegalPlayFrom: self currentPlayer
 		because: 'Only one card can be drawn per turn.'
-		unless: canCardBeDrawn
+		unless: self canCardBeDrawn
 ]
 
-{ #category : #'private - preconditions' }
-Match >> assertDoesNotHaveSummoningSickness: aCreatureCard of: aPlayer [
+{ #category : #'private - asserting' }
+Match >> assertIsAllowedInCurrentStep: aRequest [
 
-	self
-		signalIllegalPlayFrom: aPlayer
-		because: [ 'You can''t attack with <1p> because it has summoning sickness.' expandMacrosWith: aCreatureCard ]
-		unless: ( creaturesHavingSummoningSickness includes: aCreatureCard ) not
+	| currentStep |
+
+	currentStep := turnContext currentStep.
+
+	self signalIllegalPlayFrom: self currentPlayer
+		because:
+		( 'You can''t <1s> in the <2p>.' expandMacrosWith: aRequest actionDescription with: currentStep )
+		unless: ( currentStep allowsActionDescribedAs: aRequest actionDescription )
 ]
 
-{ #category : #'private - preconditions' }
-Match >> assertIsNotFirstTurn [
+{ #category : #'private - asserting' }
+Match >> assertManaCanBeCharged [
 
-	self
-		signalIllegalPlayFrom: self currentPlayer
-		because: 'You can''t draw card in your first turn.'
-		unless: hasFirstTurnEnded
-]
-
-{ #category : #'private - preconditions' }
-Match >> assertIsUntapped: aCreatureCard of: aPlayer [
-
-	self
-		signalIllegalPlayFrom: aPlayer
-		because: [ 'You can''t attack with <1p> because is tapped.' expandMacrosWith: aCreatureCard ]
-		unless: ( ( self tappedCreaturesOf: aPlayer ) includes: aCreatureCard ) not
-]
-
-{ #category : #'private - preconditions' }
-Match >> assertIsValidPlayer: aPotentialPlayer [
-
-	^ [ self signalIsNotValidPlayer: aPotentialPlayer ]
-		unless: ( playersTurn includes: aPotentialPlayer )
-]
-
-{ #category : #'private - preconditions' }
-Match >> assertManaHasNotBeenChargedYet [
-
-	self
-		signalIllegalPlayFrom: self currentPlayer
+	self signalIllegalPlayFrom: self currentPlayer
 		because: 'Mana can only be charged once per turn.'
-		unless: canManaBeCharged
+		unless: turnContext canManaBeCharged
+]
+
+{ #category : #'private - asserting' }
+Match >> assertThatIsItsTurn: aPlayer inOrderToExecute: aRequest [
+
+	self signalIllegalPlayFrom: aPlayer
+		because:
+		( 'You can''t <1s> on your opponent''s turn.' expandMacrosWith: aRequest actionDescription )
+		unless: self currentPlayer = aPlayer
 ]
 
 { #category : #processing }
-Match >> attackFrom: aCreatureCard of: aPlayer to: anOpponentCreatureCard [
+Match >> attack: anOpponentCreatureCard with: aCreatureCard [
 
-	| opponentPlayer |
+	| turnPlayer opponentPlayer |
 
-	self
-		ifIsNotTurnOf: aPlayer warnThat: 'You can''t attack on your opponent''s turn.';
-		assert: aPlayer canAttackWith: aCreatureCard.
+	self assertCanAttackWith: aCreatureCard.
+	self assertCanBeAttacked: anOpponentCreatureCard.
 
-	opponentPlayer := self opponentOf: aPlayer.
-	self assert: aPlayer canAttack: anOpponentCreatureCard of: opponentPlayer.
+	turnPlayer := self currentPlayer.
+	opponentPlayer := self opponentOf: turnPlayer.
 
-	( self tappedCreaturesOf: aPlayer ) add: aCreatureCard.
+	( self tappedCreaturesOf: turnPlayer ) add: aCreatureCard.
 
-	( BattleResolver workingWith: self )
-		resolveBattleBetween: aCreatureCard
-		of: aPlayer
+	( BattleResolver workingWith: self ) resolveBattleBetween: aCreatureCard
+		of: turnPlayer
 		and: anOpponentCreatureCard
 		of: opponentPlayer
 ]
 
+{ #category : #testing }
+Match >> canCardBeDrawn [
+
+	^ canCardBeDrawn
+]
+
 { #category : #processing }
-Match >> chargeManaOf: aPlayer with: aCard [
+Match >> changeCurrentStepTo: aTurnStep [
 
-	self
-		ifIsNotTurnOf: aPlayer warnThat: 'You can''t charge mana on your opponent''s turn.';
-		assertManaHasNotBeenChargedYet.
+	turnContext changeCurrentStepTo: aTurnStep
+]
 
-	( self manaOf: aPlayer ) add: aCard.
-	canManaBeCharged := false
+{ #category : #processing }
+Match >> chargeManaWith: aCard [
+
+	self assertManaCanBeCharged.
+
+	( self manaOf: self currentPlayer ) add: aCard.
+	turnContext manaHasBeenCharged
 ]
 
 { #category : #accessing }
-Match >> creaturesHavingSummoningSickness [
+Match >> creaturesThatHaveSummoningSickness [
 
-	^ creaturesHavingSummoningSickness
+	^ turnContext creaturesThatHaveSummoningSickness
 ]
 
 { #category : #'private - accessing' }
@@ -156,27 +169,28 @@ Match >> currentPlayer [
 ]
 
 { #category : #'private - processing' }
-Match >> destroy: aCreatureCard of: aDuelist [
+Match >> destroy: aCreatureCard of: aPlayer [
 
-	( self summonedCreaturesOf: aDuelist ) remove: aCreatureCard.
-	( self graveyardOf: aDuelist ) add: aCreatureCard
+	( self summonedCreaturesOf: aPlayer ) remove: aCreatureCard.
+	( self graveyardOf: aPlayer ) add: aCreatureCard
 ]
 
 { #category : #processing }
-Match >> directAttackFrom: aCreatureCard of: aPlayer [
+Match >> directAttackFrom: aCreatureCard [
 
-	| opponentPlayer brokenShield |
+	| turnPlayer opponentPlayer |
 
-	self
-		ifIsNotTurnOf: aPlayer warnThat: 'You can''t attack on your opponent''s turn.';
-		assert: aPlayer canAttackWith: aCreatureCard.
+	self assertCanAttackWith: aCreatureCard.
 
-	( self tappedCreaturesOf: aPlayer ) add: aCreatureCard.
+	turnPlayer := self currentPlayer.
 
-	opponentPlayer := self opponentOf: aPlayer.
-	( self shieldsOf: opponentPlayer )
-		ifEmpty: [ status := GameEnded wonBy: aPlayer ]
+	( self tappedCreaturesOf: turnPlayer ) add: aCreatureCard.
+
+	opponentPlayer := self opponentOf: turnPlayer.
+	( self shieldsOf: opponentPlayer ) ifEmpty: [ status := GameEnded wonBy: turnPlayer ]
 		ifNotEmpty: [ :opponentShields | 
+			| brokenShield |
+
 			brokenShield := opponentShields anyOne.
 			opponentShields remove: brokenShield.
 			( self handOf: opponentPlayer ) add: brokenShield
@@ -196,33 +210,38 @@ Match >> does: aCard belongToUntappedManaOf: aPlayer [
 ]
 
 { #category : #processing }
-Match >> drawCardFor: aPlayer [
+Match >> drawCard [
 
-	self
-		ifIsNotTurnOf: aPlayer warnThat: 'You can''t draw a card on your opponent''s turn.';
-		assertIsNotFirstTurn;
-		assertCardHasNotBeenDrawnYet.
+	| turnPlayer |
 
-	( self handOf: aPlayer ) add: aPlayer drawCard.
+	self assertCardCanBeDrawn.
+
+	turnPlayer := self currentPlayer.
+
+	( self handOf: turnPlayer ) add: turnPlayer drawCard.
 	canCardBeDrawn := false.
 
-	aPlayer isDeckEmpty then: [ status := GameEnded wonBy: ( self opponentOf: aPlayer ) ]
+	turnPlayer isDeckEmpty then: [ status := GameEnded wonBy: ( self opponentOf: turnPlayer ) ]
 ]
 
 { #category : #processing }
-Match >> endTurnOf: aPlayer [
+Match >> endTurn [
 
-	self ifIsNotTurnOf: aPlayer warnThat: 'You can''t end your opponent''s turn.'.
-
-	canManaBeCharged := true.
 	canCardBeDrawn := true.
-	hasFirstTurnEnded
-		ifFalse: [ hasFirstTurnEnded := true ].
 	playersTurn next.
-
+	turnContext endTurn.
 	( self tappedManaOf: self currentPlayer ) removeAll.
-	( self tappedCreaturesOf: self currentPlayer ) removeAll.
-	creaturesHavingSummoningSickness removeAll
+	( self tappedCreaturesOf: self currentPlayer ) removeAll
+]
+
+{ #category : #executing }
+Match >> execute: aRequest requestedBy: aPlayer [
+
+	self
+		assertThatIsItsTurn: aPlayer inOrderToExecute: aRequest;
+		assertIsAllowedInCurrentStep: aRequest.
+
+	aRequest executeOn: self
 ]
 
 { #category : #accessing }
@@ -234,9 +253,7 @@ Match >> graveyardOf: aPlayer [
 { #category : #'private - accessing' }
 Match >> handOf: aPotentialPlayer [
 
-	^ cardsInHandByPlayer
-		at: aPotentialPlayer
-		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ cardsInHandByPlayer at: aPotentialPlayer
 ]
 
 { #category : #accessing }
@@ -255,25 +272,15 @@ Match >> hasEnded [
 	^ status hasEnded
 ]
 
-{ #category : #'private - preconditions' }
-Match >> ifIsNotTurnOf: aPotentialPlayer warnThat: anErrorDescription [
-
-	self
-		signalIllegalPlayFrom: aPotentialPlayer
-		because: anErrorDescription
-		unless: ( self isTurnOf: aPotentialPlayer )
-]
-
 { #category : #initialization }
 Match >> initializeBetween: aFirstPlayer and: aSecondPlayer [
 
 	playersTurn := CircularIterator cyclingOver: ( Array with: aFirstPlayer with: aSecondPlayer ).
 	firstPlayer := aFirstPlayer.
 	secondPlayer := aSecondPlayer.
-	canManaBeCharged := true.
 	canCardBeDrawn := false.
-	hasFirstTurnEnded := false.
 	status := GameInProgress new.
+	turnContext := TurnContext within: self.
 
 	self
 		initializeShieldsByPlayer;
@@ -292,9 +299,7 @@ Match >> initializeCreaturesSummonedByPlayer [
 
 	tappedCreaturesByPlayer := Dictionary
 		with: firstPlayer -> OrderedCollection new
-		with: secondPlayer -> OrderedCollection new.
-
-	creaturesHavingSummoningSickness := OrderedCollection new
+		with: secondPlayer -> OrderedCollection new
 ]
 
 { #category : #initialization }
@@ -336,16 +341,13 @@ Match >> initializeShieldsByPlayer [
 { #category : #testing }
 Match >> isTurnOf: aPotentialPlayer [
 
-	self assertIsValidPlayer: aPotentialPlayer.
 	^ self currentPlayer = aPotentialPlayer
 ]
 
 { #category : #accessing }
 Match >> manaOf: aPotentialPlayer [
 
-	^ manaByPlayer
-		at: aPotentialPlayer
-		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ manaByPlayer at: aPotentialPlayer
 ]
 
 { #category : #accessing }
@@ -363,7 +365,7 @@ Match >> opponentOf: aPlayer [
 { #category : #accessing }
 Match >> shieldsOf: aPotentialPlayer [
 
-	^ shieldsByPlayer at: aPotentialPlayer ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ shieldsByPlayer at: aPotentialPlayer
 ]
 
 { #category : #'private - signaling' }
@@ -373,23 +375,19 @@ Match >> signalIllegalPlayFrom: aPotentialPlayer because: anErrorDescriptionOrBl
 		unless: aConditionToBeSatisfied
 ]
 
-{ #category : #'private - signaling' }
-Match >> signalIsNotValidPlayer: aNotValidPlayer [
-
-	Error signal: ( '<1s> is not a valid player in this match.' expandMacrosWith: aNotValidPlayer )
-]
-
 { #category : #processing }
-Match >> summon: aCreatureCard of: aPlayer tappingAll: aCardCollection [
+Match >> summon: aCreatureCard tappingAll: aCardCollection [
 
-	( CreatureSummonAssertion workingWith: self )
-		validateSummoningOf: aCreatureCard
-		from: aPlayer
+	| turnPlayer |
+
+	turnPlayer := self currentPlayer.
+
+	( CreatureSummonAssertion workingWith: self ) validateSummoningOf: aCreatureCard
 		tappingAll: aCardCollection.
 
-	( self tappedManaOf: aPlayer ) addAll: aCardCollection.
-	( self summonedCreaturesOf: aPlayer ) add: aCreatureCard.
-	creaturesHavingSummoningSickness add: aCreatureCard
+	( self tappedManaOf: turnPlayer ) addAll: aCardCollection.
+	( self summonedCreaturesOf: turnPlayer ) add: aCreatureCard.
+	turnContext creatureWasSummoned: aCreatureCard
 ]
 
 { #category : #'private - accessing' }
@@ -407,17 +405,13 @@ Match >> summonedCreaturesOf: aPlayer [
 { #category : #accessing }
 Match >> tappedCreaturesOf: aPotentialPlayer [
 
-	^ tappedCreaturesByPlayer
-		at: aPotentialPlayer
-		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ tappedCreaturesByPlayer at: aPotentialPlayer
 ]
 
 { #category : #accessing }
 Match >> tappedManaOf: aPotentialPlayer [
 
-	^ tappedManaByPlayer
-		at: aPotentialPlayer
-		ifAbsent: [ self signalIsNotValidPlayer: aPotentialPlayer ]
+	^ tappedManaByPlayer at: aPotentialPlayer
 ]
 
 { #category : #'private - accessing' }

@@ -233,13 +233,16 @@ BaselineOfDuelMasters >> developmentSupportPackageNames [
 BaselineOfDuelMasters >> developmentSupportPackages [
 
 	^ OrderedCollection
-		with:
-			( self
-				packageNamed: 'DM-Development-Support'
-				requiringAll:
-					( Array
-						with: ( self testsPackageNameFor: ( self modelPackageNameFor: 'DM-Repository-Provider-System' ) )
-						with: ( self modelPackageNameFor: 'DM-Exception' ) ) )
+		  with: ( self packageNamed: 'DM-Development-Support' requiringAll: ( Array with:
+					      ( self testsPackageNameFor: ( self modelPackageNameFor: 'DM-Repository-Provider-System' ) )
+					      with: ( self modelPackageNameFor: 'DM-Exception' ) ) )
+		  with: ( self packageNamed: 'DM-Match-Tests-Support'
+				    requiringAll: ( Array with: ( self modelPackageNameFor: 'DM-Card' )
+						      with: ( self modelPackageNameFor: 'DM-Race' )
+						      with: ( self modelPackageNameFor: 'DM-Civilization' )
+						      with: ( self modelPackageNameFor: 'DM-Match-Request' )
+						      with: ( self modelPackageNameFor: 'DM-Match' )
+						      with: ( self modelPackageNameFor: 'DM-Step' ) ) )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -378,7 +381,9 @@ BaselineOfDuelMasters >> matchModelPackage [
 		requiringAll:
 			( Array
 				with: ( self modelPackageNameFor: 'DM-Exception' )
-				with: ( self modelPackageNameFor: 'DM-Card' ) )
+				with: ( self modelPackageNameFor: 'DM-Card' )
+				with: ( self modelPackageNameFor: 'DM-Step' )
+				with: ( self modelPackageNameFor: 'DM-Request' ) )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -387,19 +392,45 @@ BaselineOfDuelMasters >> matchModelTestsPackage [
 	| matchModelPackageName |
 
 	matchModelPackageName := self modelPackageNameFor: 'DM-Match'.
-	^ self
-		testsPackageNamed: matchModelPackageName
-		requiringAll:
-			( OrderedCollection new
-				add: matchModelPackageName;
-				add: 'DM-SUnit';
-				add: ( self modelPackageNameFor: 'DM-Race' );
-				add: ( self modelPackageNameFor: 'DM-Civilization' );
-				add: ( self modelPackageNameFor: 'DM-Card' );
-				add: ( self modelPackageNameFor: 'DM-Exception' );
-				add: ( self systemModelPackageNameFor: 'DM-Civilization-Management' );
-				add: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) );
-				yourself )
+	^ self testsPackageNamed: matchModelPackageName requiringAll: ( OrderedCollection new
+			    add: matchModelPackageName;
+			    add: 'DM-SUnit';
+			    add: ( self modelPackageNameFor: 'DM-Step' );
+			    add: ( self modelPackageNameFor: 'DM-Card' );
+			    add: ( self modelPackageNameFor: 'DM-Exception' );
+			    add: 'DM-Match-Tests-Support';
+			    add: ( self systemModelPackageNameFor: 'DM-Civilization-Management' );
+			    add:
+				    ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) );
+			    yourself )
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> matchRequestModelPackage [
+
+	^ self 
+		modelPackageNamed: 'DM-Match-Request'
+		requiringAll: ( 
+			Array
+				with: ( self modelPackageNameFor: 'DM-Player-Action-Descriptions' )
+				with: ( self modelPackageNameFor: 'DM-Request' )
+				with: ( self modelPackageNameFor: 'DM-Match' ) )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> matchRequestModelTestsPackage [
+
+	| matchModelPackageName |
+
+	matchModelPackageName := self modelPackageNameFor: 'DM-Match-Request'.
+	^ self testsPackageNamed: matchModelPackageName requiringAll: ( OrderedCollection new
+			    add: matchModelPackageName;
+			    add: 'DM-SUnit';
+			    add: ( self modelPackageNameFor: 'DM-Match' );
+			    add: ( self modelPackageNameFor: 'DM-Step' );
+			    add: ( self modelPackageNameFor: 'DM-Exception' );
+			    add: 'DM-Match-Tests-Support';
+			    yourself )
 ]
 
 { #category : #'private - model package accessing' }
@@ -460,21 +491,25 @@ BaselineOfDuelMasters >> modelPackageNames [
 BaselineOfDuelMasters >> modelPackages [
 
 	^ OrderedCollection new
-		add: self civilizationModelPackage;
-		add: self raceModelPackage;
-		add: self cardModelPackage;
-		add: self matchModelPackage;
-		add: self repositoryProviderSystemModelPackage;
-		add: self civilizationManagementSystemModelPackage;
-		add: self raceManagementSystemModelPackage;
-		add: self cardManagementSystemModelPackage;
-		add: self cardModuleModelPackage;
-		add: self repositoryProviderModuleModelPackage;
-		add: self installationModelPackage;
-		add: self exceptionModelPackage;
-		add: self metaprogrammingModelPackage;
-		add: self wikitextParsingModelPackage;
-		yourself
+		  add: self civilizationModelPackage;
+		  add: self raceModelPackage;
+		  add: self cardModelPackage;
+		  add: self playerActionDescriptionsModelPackage;
+		  add: self requestModelPackage;
+		  add: self matchRequestModelPackage;
+		  add: self stepModelPackage;
+		  add: self matchModelPackage;
+		  add: self repositoryProviderSystemModelPackage;
+		  add: self civilizationManagementSystemModelPackage;
+		  add: self raceManagementSystemModelPackage;
+		  add: self cardManagementSystemModelPackage;
+		  add: self cardModuleModelPackage;
+		  add: self repositoryProviderModuleModelPackage;
+		  add: self installationModelPackage;
+		  add: self exceptionModelPackage;
+		  add: self metaprogrammingModelPackage;
+		  add: self wikitextParsingModelPackage;
+		  yourself
 ]
 
 { #category : #'private - model package accessing' }
@@ -529,6 +564,21 @@ BaselineOfDuelMasters >> packages [
 		addAll: self dependentSUnitExtensionsPackages;
 		addAll: self testPackages;
 		yourself
+]
+
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> playerActionDescriptionsModelPackage [
+
+	^ self modelPackageNamed: 'DM-Player-Action-Descriptions' requiringAll: #(  )
+]
+
+{ #category : #'private - test packages accessing' }
+BaselineOfDuelMasters >> playerActionDescriptionsModelTestsPackage [
+
+	| modelPackageName |
+
+	modelPackageName := self modelPackageNameFor: 'DM-Player-Action-Descriptions'.
+	^ self testsPackageNamed: modelPackageName requiring: modelPackageName
 ]
 
 { #category : #accessing }
@@ -615,6 +665,12 @@ BaselineOfDuelMasters >> repositoryProviderSystemModelTestsPackage [
 		requiringAll: ( Array with: 'DM-SUnit' with: ( self moduleModelPackageNameFor: repositoryProviderPackageName ) )
 ]
 
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> requestModelPackage [
+
+	^ self modelPackageNamed: 'DM-Request' requiringAll: #(  )
+]
+
 { #category : #'private - packages set up' }
 BaselineOfDuelMasters >> requirementNamesOf: aPackageRepresentation [
 
@@ -677,6 +733,13 @@ BaselineOfDuelMasters >> setUpPackagesIn: aSpec [
 	self packages do: [ :package | self configure: package asPackageIn: aSpec ]
 ]
 
+{ #category : #'private - model package accessing' }
+BaselineOfDuelMasters >> stepModelPackage [
+
+	^ self modelPackageNamed: 'DM-Step'
+		  requiring: ( self modelPackageNameFor: 'DM-Player-Action-Descriptions' )
+]
+
 { #category : #'private - dependencies accessing' }
 BaselineOfDuelMasters >> superluminalDependency [
 
@@ -722,25 +785,27 @@ BaselineOfDuelMasters >> testPackageNames [
 BaselineOfDuelMasters >> testPackages [
 
 	^ OrderedCollection new
-		add: self civilizationModelTestsPackage;
-		add: self raceModelTestsPackage;
-		add: self cardModelTestsPackage;
-		add: self matchModelTestsPackage;
-		add: self repositoryProviderSystemModelTestsPackage;
-		add: self civilizationManagementSystemModelTestsPackage;
-		add: self raceManagementSystemModelTestsPackage;
-		add: self cardManagementSystemModelTestsPackage;
-		add: self repositoryProviderModuleModelTestsPackage;
-		add: self cardModuleModelTestsPackage;
-		add: self installationModelTestsPackage;
-		add: self exceptionModelTestsPackage;
-		add: self metaprogrammingModelTestsPackage;
-		add: self wikitextParsingModelTestsPackage;
-		add: self dependentSUnitTestsPackage;
-		add: self saganExtensionsTestsPackage;
-		add: self toolDependencyAnalyserCoreExtensionsTestsPackage;
-		add: self developmentSupportTestsPackage;
-		yourself
+		  add: self civilizationModelTestsPackage;
+		  add: self raceModelTestsPackage;
+		  add: self cardModelTestsPackage;
+		  add: self playerActionDescriptionsModelTestsPackage;
+		  add: self matchRequestModelTestsPackage;
+		  add: self matchModelTestsPackage;
+		  add: self repositoryProviderSystemModelTestsPackage;
+		  add: self civilizationManagementSystemModelTestsPackage;
+		  add: self raceManagementSystemModelTestsPackage;
+		  add: self cardManagementSystemModelTestsPackage;
+		  add: self repositoryProviderModuleModelTestsPackage;
+		  add: self cardModuleModelTestsPackage;
+		  add: self installationModelTestsPackage;
+		  add: self exceptionModelTestsPackage;
+		  add: self metaprogrammingModelTestsPackage;
+		  add: self wikitextParsingModelTestsPackage;
+		  add: self dependentSUnitTestsPackage;
+		  add: self saganExtensionsTestsPackage;
+		  add: self toolDependencyAnalyserCoreExtensionsTestsPackage;
+		  add: self developmentSupportTestsPackage;
+		  yourself
 ]
 
 { #category : #'private - test packages accessing' }
