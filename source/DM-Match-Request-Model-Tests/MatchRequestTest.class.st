@@ -19,51 +19,6 @@ MatchRequestTest class >> isAbstract [
 	^ self = MatchRequestTest
 ]
 
-{ #category : #'private - processing' }
-MatchRequestTest >> changeCurrentStepTo: aTurnStep [
-
-	match execute: ( ChangeCurrentStepRequest changingTo: aTurnStep ) requestedBy: self turnPlayer
-]
-
-{ #category : #'private - test support' }
-MatchRequestTest >> chargeManaWith: aCard [
-
-	match execute: ( ChargeManaRequest chargingManaWith: aCard ) requestedBy: self turnPlayer
-]
-
-{ #category : #'private - test support' }
-MatchRequestTest >> chargeManaWithAll: aCardCollection [
-
-	aCardCollection do: [ :aCard | 
-		self chargeManaWith: aCard.
-		2 timesRepeat: [ 
-			self
-				endTurn;
-				changeCurrentStepTo: DrawCardStep new;
-				drawCard;
-				changeCurrentStepTo: ChargeManaStep new
-			]
-		]
-]
-
-{ #category : #'private - test support' }
-MatchRequestTest >> directAttackFrom: aCreatureCard [
-
-	match execute: ( DirectAttackRequest attackingWith: aCreatureCard ) requestedBy: self turnPlayer
-]
-
-{ #category : #'private - test support' }
-MatchRequestTest >> drawCard [
-
-	match execute: DrawCardRequest new requestedBy: self turnPlayer
-]
-
-{ #category : #'private - test support' }
-MatchRequestTest >> endTurn [
-
-	match execute: EndTurnRequest new requestedBy: self turnPlayer
-]
-
 { #category : #'private - accessing' }
 MatchRequestTest >> knightDeck [
 
@@ -107,17 +62,4 @@ MatchRequestTest >> should: aBlock raiseIllegalPlayFrom: aPlayer because: anErro
 			assert: signal player equals: aPlayer;
 			assert: signal errorDescription equals: anErrorDescription
 		]
-]
-
-{ #category : #'private - test support' }
-MatchRequestTest >> summon: aCreatureCard tapping: aCard [
-
-	self summon: aCreatureCard tappingAll: { aCard }
-]
-
-{ #category : #'private - test support' }
-MatchRequestTest >> summon: aCreatureCard tappingAll: aCardCollection [
-
-	match execute: ( SummonCreatureRequest summoning: aCreatureCard tappingAll: aCardCollection )
-		requestedBy: self turnPlayer
 ]

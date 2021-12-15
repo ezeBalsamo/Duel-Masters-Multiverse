@@ -233,13 +233,16 @@ BaselineOfDuelMasters >> developmentSupportPackageNames [
 BaselineOfDuelMasters >> developmentSupportPackages [
 
 	^ OrderedCollection
-		with:
-			( self
-				packageNamed: 'DM-Development-Support'
-				requiringAll:
-					( Array
-						with: ( self testsPackageNameFor: ( self modelPackageNameFor: 'DM-Repository-Provider-System' ) )
-						with: ( self modelPackageNameFor: 'DM-Exception' ) ) )
+		  with: ( self packageNamed: 'DM-Development-Support' requiringAll: ( Array with:
+					      ( self testsPackageNameFor: ( self modelPackageNameFor: 'DM-Repository-Provider-System' ) )
+					      with: ( self modelPackageNameFor: 'DM-Exception' ) ) )
+		  with: ( self packageNamed: 'DM-Match-Tests-Support'
+				    requiringAll: ( Array with: ( self modelPackageNameFor: 'DM-Card' )
+						      with: ( self modelPackageNameFor: 'DM-Race' )
+						      with: ( self modelPackageNameFor: 'DM-Civilization' )
+						      with: ( self modelPackageNameFor: 'DM-Match-Request' )
+						      with: ( self modelPackageNameFor: 'DM-Match' )
+						      with: ( self modelPackageNameFor: 'DM-Step' ) ) )
 ]
 
 { #category : #'private - test packages accessing' }
@@ -389,19 +392,17 @@ BaselineOfDuelMasters >> matchModelTestsPackage [
 	| matchModelPackageName |
 
 	matchModelPackageName := self modelPackageNameFor: 'DM-Match'.
-	^ self
-		testsPackageNamed: matchModelPackageName
-		requiringAll:
-			( OrderedCollection new
-				add: matchModelPackageName;
-				add: 'DM-SUnit';
-				add: ( self modelPackageNameFor: 'DM-Race' );
-				add: ( self modelPackageNameFor: 'DM-Civilization' );
-				add: ( self modelPackageNameFor: 'DM-Card' );
-				add: ( self modelPackageNameFor: 'DM-Exception' );
-				add: ( self systemModelPackageNameFor: 'DM-Civilization-Management' );
-				add: ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) );
-				yourself )
+	^ self testsPackageNamed: matchModelPackageName requiringAll: ( OrderedCollection new
+			    add: matchModelPackageName;
+			    add: 'DM-SUnit';
+			    add: ( self modelPackageNameFor: 'DM-Step' );
+			    add: ( self modelPackageNameFor: 'DM-Card' );
+			    add: ( self modelPackageNameFor: 'DM-Exception' );
+			    add: 'DM-Match-Tests-Support';
+			    add: ( self systemModelPackageNameFor: 'DM-Civilization-Management' );
+			    add:
+				    ( self testsPackageNameFor: ( self systemModelPackageNameFor: 'DM-Repository-Provider' ) );
+			    yourself )
 ]
 
 { #category : #'private - model package accessing' }
@@ -422,19 +423,14 @@ BaselineOfDuelMasters >> matchRequestModelTestsPackage [
 	| matchModelPackageName |
 
 	matchModelPackageName := self modelPackageNameFor: 'DM-Match-Request'.
-	^ self 
-		testsPackageNamed: matchModelPackageName 
-		requiringAll: ( 
-			OrderedCollection new
-				add: matchModelPackageName;
-				add: 'DM-SUnit';
-				add: ( self modelPackageNameFor: 'DM-Match' );
-			   add: ( self modelPackageNameFor: 'DM-Step' );
-			   add: ( self modelPackageNameFor: 'DM-Exception' );
-			   add: ( self modelPackageNameFor: 'DM-Card' );
-			   add: ( self modelPackageNameFor: 'DM-Civilization' );
-			   add: ( self modelPackageNameFor: 'DM-Race' );
-			   yourself )
+	^ self testsPackageNamed: matchModelPackageName requiringAll: ( OrderedCollection new
+			    add: matchModelPackageName;
+			    add: 'DM-SUnit';
+			    add: ( self modelPackageNameFor: 'DM-Match' );
+			    add: ( self modelPackageNameFor: 'DM-Step' );
+			    add: ( self modelPackageNameFor: 'DM-Exception' );
+			    add: 'DM-Match-Tests-Support';
+			    yourself )
 ]
 
 { #category : #'private - model package accessing' }
